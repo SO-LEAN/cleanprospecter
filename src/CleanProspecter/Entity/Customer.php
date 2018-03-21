@@ -1,7 +1,7 @@
 <?php
 namespace Solean\CleanProspecter\Entity;
 
-class Customer extends User
+final class Customer extends User
 {
 
 }
