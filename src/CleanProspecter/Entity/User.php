@@ -35,6 +35,11 @@ class User extends Base
         $this->roles = $roles;
     }
 
+    public function addRole(string $role) : void
+    {
+        $this->roles[] = $role;
+    }
+
     public function getPassword() : string
     {
         return $this->password;
