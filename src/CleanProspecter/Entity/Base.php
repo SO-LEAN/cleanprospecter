@@ -1,7 +1,7 @@
 <?php
 namespace Solean\CleanProspecter\Entity;
 
-class Base
+abstract class Base
 {
     private $id;
 
