@@ -1,5 +1,5 @@
 <?php
-namespace Solean\CleanProspector;
+namespace Solean\CleanProspecter;
 
 interface Presenter
 {

@@ -1,7 +1,7 @@
 <?php
-namespace Solean\CleanProspector\Gateway\Database;
+namespace Solean\CleanProspecter\Gateway\Database;
 
-use Solean\CleanProspector\Entity\User;
+use Solean\CleanProspecter\Entity\User;
 
 interface UserGateway extends TransactionGateway
 {

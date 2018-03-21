@@ -1,5 +1,5 @@
 <?php
-namespace Solean\CleanProspector\UseCase;
+namespace Solean\CleanProspecter\UseCase;
 
 abstract class AuthenticatedRequest implements UseCaseRequest
 {

@@ -1,5 +1,5 @@
 <?php
-namespace Solean\CleanProspector\UseCase\Login;
+namespace Solean\CleanProspecter\UseCase\Login;
 
 final class LoginRequest
 {

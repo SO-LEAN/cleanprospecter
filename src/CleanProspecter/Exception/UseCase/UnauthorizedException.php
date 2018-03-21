@@ -1,5 +1,5 @@
 <?php
-namespace Solean\CleanProspector\Exception;
+namespace Solean\CleanProspecter\Exception;
 
 use RuntimeException;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Solean\CleanProspector\Gateway\Database;
+namespace Solean\CleanProspecter\Gateway\Database;
 
 use Countable, IteratorAggregate, ArrayAccess;
 

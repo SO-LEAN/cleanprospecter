@@ -1,7 +1,7 @@
 <?php
-namespace Solean\CleanProspector\UseCase\CreateProject;
+namespace Solean\CleanProspecter\UseCase\CreateProject;
 
-use Solean\CleanProspector\UseCase\AuthenticatedRequest;
+use Solean\CleanProspecter\UseCase\AuthenticatedRequest;
 
 final class CreateProspectRequest extends AuthenticatedRequest
 {

@@ -1,10 +1,10 @@
 <?php
-namespace Solean\CleanProspector\UseCase\Login;
+namespace Solean\CleanProspecter\UseCase\Login;
 
-use Solean\CleanProspector\Exception\UnauthorizedException;
-use Solean\CleanProspector\Presenter;
-use Solean\CleanProspector\Entity\User;
-use Solean\CleanProspector\Gateway\Database\UserGateway;
+use Solean\CleanProspecter\Exception\UnauthorizedException;
+use Solean\CleanProspecter\Presenter;
+use Solean\CleanProspecter\Entity\User;
+use Solean\CleanProspecter\Gateway\Database\UserGateway;
 
 final class Login
 {

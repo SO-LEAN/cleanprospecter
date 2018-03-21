@@ -1,5 +1,5 @@
 <?php
-namespace Solean\CleanProspector\UseCase\CreateProject;
+namespace Solean\CleanProspecter\UseCase\CreateProject;
 
 final class CreateProspect
 {
