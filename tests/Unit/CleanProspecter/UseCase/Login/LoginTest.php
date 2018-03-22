@@ -39,7 +39,7 @@ class LoginTest extends TestCase
         $request = LoginRequestFactory::regular();
         $expectedResponse = LoginResponseFactory::regular();
 
-        $this->prophesy(UserGateway::class)->findOneBy(['login' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
+        $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
         $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturn(new stdClass());
 
         $this->assertEquals(new stdClass(), $this->target()->execute($request));
@@ -50,7 +50,7 @@ class LoginTest extends TestCase
     {
         $request = LoginRequestFactory::typo();
 
-        $this->prophesy(UserGateway::class)->findOneBy(['login' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
+        $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
         $this->expectExceptionObject(new BadCredentialException());
 
         $this->target()->execute($request);
@@ -60,7 +60,7 @@ class LoginTest extends TestCase
     {
         $request = LoginRequestFactory::typo();
 
-        $this->prophesy(UserGateway::class)->findOneBy(['login' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
+        $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
         $this->expectExceptionObject(new BadCredentialException());
 
         $this->target()->execute($request);

@@ -32,7 +32,7 @@ class Login extends UseCase
         /**
          * @var ?User $user
          */
-        $user = $this->userGateway->findOneBy(['login' => $request->getLogin()]);
+        $user = $this->userGateway->findOneBy(['userName' => $request->getLogin()]);
 
         if ($user && $this->isCorrectLogin($request, $user)) {
             return $this->presenter->present(new LoginResponse($user->getRoles(), $user->getUserName(), $request->getPassword()));
@@ -46,7 +46,7 @@ class Login extends UseCase
         return md5(sprintf('%s%s', $password, $salt));
     }
 
-    private function isCorrectLogin(LoginRequest $request, $user): bool
+    private function isCorrectLogin(LoginRequest $request, User $user): bool
     {
         return $this->encodePassword($request->getPassword(), $user->getSalt()) === $user->getPassword();
     }
