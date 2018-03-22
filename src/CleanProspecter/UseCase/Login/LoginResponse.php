@@ -1,4 +1,7 @@
 <?php
+
+declare( strict_types = 1 );
+
 namespace Solean\CleanProspecter\UseCase\Login;
 
 final class LoginResponse
@@ -10,13 +13,13 @@ final class LoginResponse
     /**
      * @var string
      */
-    private $password;
+    private $userName;
     /**
      * @var string
      */
-    private $userName;
+    private $password;
 
-    public function __construct(array $roles, string $password, string $userName)
+    public function __construct(array $roles, string $userName, string $password)
     {
         $this->roles = $roles;
         $this->password = $password;

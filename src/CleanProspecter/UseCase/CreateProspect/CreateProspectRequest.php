@@ -1,4 +1,7 @@
 <?php
+
+declare( strict_types = 1 );
+
 namespace Solean\CleanProspecter\UseCase\CreateProject;
 
 use Solean\CleanProspecter\UseCase\AuthenticatedRequest;

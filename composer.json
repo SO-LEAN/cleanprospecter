@@ -9,7 +9,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\Unit\\Solean\\": "tests/Unit"
         }
     },
     "require-dev": {

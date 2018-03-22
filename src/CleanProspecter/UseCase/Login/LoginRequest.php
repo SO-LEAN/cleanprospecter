@@ -1,7 +1,12 @@
 <?php
+
+declare( strict_types = 1 );
+
 namespace Solean\CleanProspecter\UseCase\Login;
 
-final class LoginRequest
+use Solean\CleanProspecter\UseCase\UseCaseRequest;
+
+final class LoginRequest implements UseCaseRequest
 {
     /**
      * @var string

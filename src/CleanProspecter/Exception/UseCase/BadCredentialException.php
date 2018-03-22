@@ -6,7 +6,7 @@ namespace Solean\CleanProspecter\Exception\UseCase;
 
 use RuntimeException;
 
-class UnauthorizedException extends RuntimeException
+class BadCredentialException extends RuntimeException
 {
 
 }
