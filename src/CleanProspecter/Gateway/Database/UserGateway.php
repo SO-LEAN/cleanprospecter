@@ -8,7 +8,7 @@ use Solean\CleanProspecter\Entity\User;
 
 interface UserGateway extends TransactionGateway
 {
-    public function getUser(User $user) : User;
+    public function getUser($id) : User;
     public function createUser(User $user) : User;
     public function saveUser(User $user) : User;
     public function findOneBy(array $criteria) : ?User;
