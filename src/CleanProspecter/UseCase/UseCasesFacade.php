@@ -5,7 +5,12 @@ declare( strict_types = 1 );
 namespace Solean\CleanProspecter\UseCase;
 
 use BadFunctionCallException;
+use Solean\CleanProspecter\UseCase;
 
+/**
+ * @method login(UseCase\Login\LoginRequest $request)
+ * @method findByUserName(UseCase\FindByUserName\FindByUserNameRequest $request)
+ */
 class UseCasesFacade
 {
     /**
@@ -13,7 +18,7 @@ class UseCasesFacade
      */
     private $useCases;
 
-    public function addUseCase(UseCase $useCase): void
+    public function addUseCase(UseCase\UseCase $useCase): void
     {
         $this->useCases[lcfirst($this->getShortClassName($useCase))] = $useCase;
     }
