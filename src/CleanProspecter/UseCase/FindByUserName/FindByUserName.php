@@ -31,7 +31,7 @@ class FindByUserName extends UseCase
         /**
          * @var ?User $user
          */
-        $user = $this->userGateway->findOneBy(['login' => $request->getLogin()]);
+        $user = $this->userGateway->findOneBy(['userName' => $request->getLogin()]);
 
         if ($user) {
             return $this->presenter->present(

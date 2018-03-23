@@ -36,7 +36,7 @@ class FindByUserNameTest extends TestCase
         $request = FindByUserNameRequestFactory::regular();
         $expectedResponse = FindByUserNameResponseFactory::regular();
 
-        $this->prophesy(UserGateway::class)->findOneBy(['login' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
+        $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
         $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturn(new stdClass());
 
         $this->assertEquals(new stdClass(), $this->target()->execute($request));
@@ -47,7 +47,7 @@ class FindByUserNameTest extends TestCase
     {
         $request = FindByUserNameRequestFactory::regular();
 
-        $this->prophesy(UserGateway::class)->findOneBy(['login' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
+        $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
 
         $this->assertNull($this->target()->execute($request));
     }

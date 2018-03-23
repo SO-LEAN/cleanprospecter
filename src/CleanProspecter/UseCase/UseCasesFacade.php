@@ -18,6 +18,12 @@ class UseCasesFacade
      */
     private $useCases;
 
+    public function __construct()
+    {
+        $this->useCases = [];
+    }
+
+
     public function addUseCase(UseCase\UseCase $useCase): void
     {
         $this->useCases[lcfirst($this->getShortClassName($useCase))] = $useCase;
@@ -39,7 +45,9 @@ class UseCasesFacade
 
     private function getShortClassName($useCase)
     {
-        return end(explode('\\', get_class($useCase)));
+        $shortName = explode('\\', get_class($useCase));
+
+        return end($shortName);
     }
 
 }
