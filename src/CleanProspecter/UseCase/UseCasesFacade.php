@@ -33,7 +33,7 @@ class UseCasesFacade
         return array_key_exists($name, $this->useCases);
     }
 
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
         if (!$this->hasUseCase($name)) {
             throw new BadFunctionCallException(sprintf('Call to undefined method %s::%s()', get_class($this), $name));
@@ -42,7 +42,7 @@ class UseCasesFacade
         return call_user_func_array([$this->useCases[$name], 'execute'], $arguments);
     }
 
-    private function getShortClassName($useCase)
+    private function getShortClassName(object $useCase)
     {
         $shortName = explode('\\', preg_replace('/(Impl$)/', '', get_class($useCase)));
 
