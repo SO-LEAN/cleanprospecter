@@ -22,7 +22,7 @@ abstract class AuthenticatedRequest implements UseCaseRequest
         return $this->userId;
     }
 
-    public function isAuthenticated() : bool
+    public function isAuthenticated(): bool
     {
         return !empty($this->userId);
     }

@@ -9,11 +9,11 @@ use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\Gateway\Database\UserGateway;
 use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
-use Solean\CleanProspecter\UseCase\FindByUserName\FindByUserName;
+use Solean\CleanProspecter\UseCase\FindByUserName\FindByUserNameImpl;
 
-class FindByUserNameTest extends TestCase
+class FindByUserNameImplTest extends TestCase
 {
-    public function target() : FindByUserName
+    public function target() : FindByUserNameImpl
     {
         return parent::target();
     }
@@ -22,7 +22,6 @@ class FindByUserNameTest extends TestCase
     {
         return [
             $this->prophesy(UserGateway::class)->reveal(),
-            $this->prophesy(Presenter::class)->reveal(),
         ];
     }
 
@@ -39,8 +38,7 @@ class FindByUserNameTest extends TestCase
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
         $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturn(new stdClass());
 
-        $this->assertEquals(new stdClass(), $this->target()->execute($request));
-
+        $this->assertEquals(new stdClass(), $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal()));
     }
 
     public function testReturnNullWhenUserNotFound()
@@ -49,7 +47,7 @@ class FindByUserNameTest extends TestCase
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
 
-        $this->assertNull($this->target()->execute($request));
+        $this->assertNull($this->target()->execute($request, $this->prophesy(Presenter::class)->reveal()));
     }
 
 }

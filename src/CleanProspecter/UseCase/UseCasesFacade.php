@@ -24,7 +24,7 @@ class UseCasesFacade
     }
 
 
-    public function addUseCase(UseCase\UseCase $useCase): void
+    public function addUseCase(AbstractUseCase $useCase): void
     {
         $this->useCases[lcfirst($this->getShortClassName($useCase))] = $useCase;
     }

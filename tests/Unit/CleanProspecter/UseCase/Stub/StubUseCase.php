@@ -4,14 +4,14 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\Stub;
 
-use Solean\CleanProspecter\UseCase\UseCase;
+use Solean\CleanProspecter\UseCase\Presenter;
+use Solean\CleanProspecter\UseCase\AbstractUseCase;
 
-class StubUseCase extends UseCase
+class StubUseCase extends AbstractUseCase
 {
-    public function execute(StubUseCaseRequest $request)
+    public function execute(StubUseCaseRequest $request, Presenter $presenter) : object
     {
-        unset($request);
-
-        return 'executed';
+        unset($request, $presenter);
+        return (object)['action' => 'executed'];
     }
 }

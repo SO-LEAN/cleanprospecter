@@ -2,7 +2,7 @@
 
 namespace Solean\CleanProspecter\UseCase;
 
-abstract class UseCase
+abstract class AbstractUseCase
 {
     /**
      * empty mean everybody

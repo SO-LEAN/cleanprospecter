@@ -6,6 +6,7 @@ namespace Tests\Unit\Solean\CleanProspecter\UseCase;
 
 use BadFunctionCallException;
 use Tests\Unit\Solean\Base\TestCase;
+use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\UseCasesFacade;
 use Tests\Unit\Solean\CleanProspecter\UseCase\Stub\StubUseCase;
 use Tests\Unit\Solean\CleanProspecter\UseCase\Stub\StubUseCaseRequest;
@@ -29,7 +30,8 @@ class UseCasesFacadeTest extends TestCase
 
     public function testMethodFromUseCaseIsCorrectlyCalled() : void
     {
-        $this->assertEquals('executed', $this->target()->stubUseCase(new StubUseCaseRequest()));
+        $response = $this->target()->stubUseCase(new StubUseCaseRequest(), $this->prophesy(Presenter::class)->reveal());
+        $this->assertEquals('executed', $response->action);
     }
 
     public function testMethodCalledOnUnknownUseCaseThrowsABadFunctionCallException() : void
@@ -37,7 +39,7 @@ class UseCasesFacadeTest extends TestCase
         $this->expectException(BadFunctionCallException::class);
         $this->expectExceptionMessage('Solean\CleanProspecter\UseCase\UseCasesFacade::unknownUseCase()');
 
-        $this->assertEquals('executed', $this->target()->unknownUseCase(new StubUseCaseRequest()));
+        $response = $this->target()->unknownUseCase(new StubUseCaseRequest(), $this->prophesy(Presenter::class)->reveal());
+        $this->assertEquals('executed', $response->action);
     }
-
 }

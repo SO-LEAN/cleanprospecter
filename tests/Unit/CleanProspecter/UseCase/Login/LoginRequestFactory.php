@@ -24,7 +24,7 @@ class LoginRequestFactory
         return new LoginRequest('login', 'passwerd');
     }
     /**
-     * User with unknown
+     * Unknown user
      */
     public static function unknown()
     {

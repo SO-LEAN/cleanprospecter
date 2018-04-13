@@ -8,15 +8,15 @@ use Solean\CleanProspecter\Exception\UseCase\BadCredentialException;
 use stdClass;
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\UseCase\Presenter;
-use Solean\CleanProspecter\UseCase\Login\Login;
+use Solean\CleanProspecter\UseCase\Login\LoginImpl;
 use Solean\CleanProspecter\Gateway\Database\UserGateway;
 use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
 use Solean\CleanProspecter\Exception\UseCase\UnauthorizedException;
 
 
-class LoginTest extends TestCase
+class LoginImplTest extends TestCase
 {
-    public function target() : Login
+    public function target() : LoginImpl
     {
         return parent::target();
     }
@@ -25,7 +25,6 @@ class LoginTest extends TestCase
     {
         return [
             $this->prophesy(UserGateway::class)->reveal(),
-            $this->prophesy(Presenter::class)->reveal(),
         ];
     }
 
@@ -42,7 +41,7 @@ class LoginTest extends TestCase
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
         $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturn(new stdClass());
 
-        $this->assertEquals(new stdClass(), $this->target()->execute($request));
+        $this->assertEquals(new stdClass(), $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal()));
 
     }
 
@@ -53,7 +52,7 @@ class LoginTest extends TestCase
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
         $this->expectExceptionObject(new BadCredentialException());
 
-        $this->target()->execute($request);
+        $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
     }
 
     public function testBadCredentialExceptionIsThrownWhenUserIsUnknown()
@@ -63,7 +62,7 @@ class LoginTest extends TestCase
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
         $this->expectExceptionObject(new BadCredentialException());
 
-        $this->target()->execute($request);
+        $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
     }
 
 }
