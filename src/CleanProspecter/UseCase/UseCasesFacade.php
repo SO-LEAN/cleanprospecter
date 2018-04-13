@@ -8,8 +8,8 @@ use BadFunctionCallException;
 use Solean\CleanProspecter\UseCase;
 
 /**
- * @method login(UseCase\Login\LoginRequest $request)
- * @method findByUserName(UseCase\FindByUserName\FindByUserNameRequest $request)
+ * @method login(UseCase\Login\LoginRequest $request, Presenter $presenter)
+ * @method findByUserName(UseCase\FindByUserName\FindByUserNameRequest $request, Presenter $presenter)
  */
 class UseCasesFacade
 {
