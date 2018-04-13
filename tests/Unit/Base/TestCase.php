@@ -67,7 +67,6 @@ abstract class TestCase extends PhpUnitTestCase
         $class = $this->getTargetClassName();
 
         return $this->instantiateTarget($class);
-
     }
 
     private function instantiateTarget($class)
@@ -80,5 +79,4 @@ abstract class TestCase extends PhpUnitTestCase
 
         return $r->newInstanceArgs($this->setupArgs());
     }
-
 }

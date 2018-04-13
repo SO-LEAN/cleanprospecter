@@ -2,7 +2,6 @@
 
 namespace Solean\CleanProspecter\UseCase\Login;
 
-
 use Solean\CleanProspecter\UseCase\Presenter;
 
 interface Login

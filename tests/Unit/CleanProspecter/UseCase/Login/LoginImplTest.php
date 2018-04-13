@@ -13,7 +13,6 @@ use Solean\CleanProspecter\Gateway\Database\UserGateway;
 use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
 use Solean\CleanProspecter\Exception\UseCase\UnauthorizedException;
 
-
 class LoginImplTest extends TestCase
 {
     public function target() : LoginImpl
@@ -42,7 +41,6 @@ class LoginImplTest extends TestCase
         $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturn(new stdClass());
 
         $this->assertEquals(new stdClass(), $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal()));
-
     }
 
     public function testBadCredentialExceptionIsThrownWhenPasswordHasTypo()
@@ -64,5 +62,4 @@ class LoginImplTest extends TestCase
 
         $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
     }
-
 }

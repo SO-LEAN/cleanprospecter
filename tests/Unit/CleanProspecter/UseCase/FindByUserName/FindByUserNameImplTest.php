@@ -49,5 +49,4 @@ class FindByUserNameImplTest extends TestCase
 
         $this->assertNull($this->target()->execute($request, $this->prophesy(Presenter::class)->reveal()));
     }
-
 }

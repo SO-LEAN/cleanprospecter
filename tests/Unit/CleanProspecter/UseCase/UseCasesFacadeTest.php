@@ -20,7 +20,7 @@ class UseCasesFacadeTest extends TestCase
 
     public function initialize(): void
     {
-       $this->target()->addUseCase(new StubUseCase());
+        $this->target()->addUseCase(new StubUseCase());
     }
 
     public function testUseCaseCanBeAdded() : void
