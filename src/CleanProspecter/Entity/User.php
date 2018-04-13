@@ -4,7 +4,7 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\Entity;
 
-class User extends Person
+final class User extends Person
 {
     /**
      * @var array

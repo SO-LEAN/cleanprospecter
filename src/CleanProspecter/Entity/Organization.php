@@ -4,7 +4,7 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\Entity;
 
-class Organization extends Person
+final class Organization extends Person
 {
     /**
      * @var string
