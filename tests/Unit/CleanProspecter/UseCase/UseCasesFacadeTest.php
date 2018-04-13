@@ -8,7 +8,7 @@ use BadFunctionCallException;
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\UseCasesFacade;
-use Tests\Unit\Solean\CleanProspecter\UseCase\Stub\StubUseCase;
+use Tests\Unit\Solean\CleanProspecter\UseCase\Stub\StubUseCaseImpl;
 use Tests\Unit\Solean\CleanProspecter\UseCase\Stub\StubUseCaseRequest;
 
 class UseCasesFacadeTest extends TestCase
@@ -20,7 +20,7 @@ class UseCasesFacadeTest extends TestCase
 
     public function initialize(): void
     {
-        $this->target()->addUseCase(new StubUseCase());
+        $this->target()->addUseCase(new StubUseCaseImpl());
     }
 
     public function testUseCaseCanBeAdded() : void

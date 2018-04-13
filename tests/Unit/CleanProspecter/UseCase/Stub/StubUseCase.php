@@ -7,11 +7,7 @@ namespace Tests\Unit\Solean\CleanProspecter\UseCase\Stub;
 use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 
-class StubUseCase extends AbstractUseCase
+interface StubUseCase
 {
-    public function execute(StubUseCaseRequest $request, Presenter $presenter) : object
-    {
-        unset($request, $presenter);
-        return (object)['action' => 'executed'];
-    }
+    public function execute(StubUseCaseRequest $request, Presenter $presenter) : object;
 }
