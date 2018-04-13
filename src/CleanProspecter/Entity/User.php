@@ -4,7 +4,7 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\Entity;
 
-class User extends Base
+class User extends Person
 {
     /**
      * @var array
@@ -22,6 +22,18 @@ class User extends Base
      * @var string
      */
     private $salt;
+    /**
+     * @var string
+     */
+    private $firstName;
+    /**
+     * @var string
+     */
+    private $lastName;
+    /**
+     * @var Organization
+     */
+    private $organization;
 
     public function __construct()
     {
@@ -71,5 +83,40 @@ class User extends Base
     public function setSalt(string $salt): void
     {
         $this->salt = $salt;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
+    }
+
+    public function getOrganization(): Organization
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(Organization $organization): void
+    {
+        $this->organization = $organization;
+    }
+
+    public function getFullName(): string
+    {
+        return sprintf('%s %s', $this->firstName, $this->lastName);
     }
 }
