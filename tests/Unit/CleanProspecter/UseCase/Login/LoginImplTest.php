@@ -9,7 +9,7 @@ use stdClass;
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\Login\LoginImpl;
-use Solean\CleanProspecter\Gateway\Database\UserGateway;
+use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
 use Solean\CleanProspecter\Exception\UseCase\UnauthorizedException;
 

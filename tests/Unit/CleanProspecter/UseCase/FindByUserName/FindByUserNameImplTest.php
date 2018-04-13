@@ -7,7 +7,7 @@ namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindByUserName;
 use stdClass;
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\UseCase\Presenter;
-use Solean\CleanProspecter\Gateway\Database\UserGateway;
+use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
 use Solean\CleanProspecter\UseCase\FindByUserName\FindByUserNameImpl;
 

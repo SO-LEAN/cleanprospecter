@@ -2,11 +2,11 @@
 
 declare( strict_types = 1 );
 
-namespace Solean\CleanProspecter\Gateway\Database;
+namespace Solean\CleanProspecter\Gateway\Entity;
 
 use Solean\CleanProspecter\Entity\User;
 
-interface UserGateway extends TransactionGateway
+interface UserGateway
 {
     public function getUser($id) : User;
     public function createUser(User $user) : User;

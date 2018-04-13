@@ -7,7 +7,7 @@ namespace Solean\CleanProspecter\UseCase\Login;
 use Solean\CleanProspecter\Entity\User;
 use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
-use Solean\CleanProspecter\Gateway\Database\UserGateway;
+use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Solean\CleanProspecter\Exception\UseCase\BadCredentialException;
 
 final class LoginImpl extends AbstractUseCase implements Login
@@ -22,12 +22,7 @@ final class LoginImpl extends AbstractUseCase implements Login
         $this->userGateway = $userGateway;
     }
 
-    /**
-     * @param LoginRequest $request (@hack missing contravariance feature)
-     * @param Presenter $presenter
-     * @return object
-     */
-    public function execute($request, Presenter $presenter) : object
+    public function execute(LoginRequest $request, Presenter $presenter) : object
     {
         /**
          * @var ?User $user

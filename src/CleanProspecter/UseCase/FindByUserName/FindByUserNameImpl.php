@@ -6,7 +6,7 @@ namespace Solean\CleanProspecter\UseCase\FindByUserName;
 
 use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
-use Solean\CleanProspecter\Gateway\Database\UserGateway;
+use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 
 final class FindByUserNameImpl extends AbstractUseCase implements FindByUserName
 {
