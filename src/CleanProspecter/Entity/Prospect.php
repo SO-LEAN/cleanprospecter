@@ -14,6 +14,14 @@ final class Prospect extends Person
      * @var string
      */
     private $lastName;
+    /**
+     * @var User
+     */
+    private $createdBy;
+    /**
+     * @var Organization
+     */
+    private $ownedBy;
 
     public function getFirstName(): string
     {
@@ -38,5 +46,26 @@ final class Prospect extends Person
     public function getFullName(): string
     {
         return sprintf('%s %s', $this->firstName, $this->lastName);
+    }
+
+    public function getCreatedBy(): User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(User $createdBy): void
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    public function getOwnedBy(): Organization
+    {
+        return $this->ownedBy;
+    }
+
+    public function setOwnedBy(Organization $ownedBy): void
+    {
+        $this->ownedBy = $ownedBy;
+        $ownedBy->addOwnedProspects($this);
     }
 }

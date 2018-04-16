@@ -10,7 +10,7 @@ interface UserGateway
 {
     public function getUser($id) : User;
     public function createUser(User $user) : User;
-    public function saveUser(User $user) : User;
+    public function saveUser($id, User $user) : User;
     public function findOneBy(array $criteria) : ?User;
     public function findBy(array $criteria) : array;
 }

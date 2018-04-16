@@ -10,6 +10,10 @@ abstract class Person extends Base
      * @var string
      */
     private $email;
+    /**
+     * @var string
+     */
+    private $country;
 
     public function getEmail(): string
     {
@@ -19,6 +23,16 @@ abstract class Person extends Base
     public function setEmail(string $email): void
     {
         $this->email = $email;
+    }
+
+    public function getCountry(): string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): void
+    {
+        $this->country = $country;
     }
 
     abstract public function getFullName(): string;

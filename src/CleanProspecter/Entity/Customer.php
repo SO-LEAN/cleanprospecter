@@ -14,6 +14,14 @@ final class Customer extends Person
      * @var string
      */
     private $lastName;
+    /**
+     * @var User
+     */
+    private $createdBy;
+    /**
+     * @var Organization
+     */
+    private $ownedBy;
 
     public function getFirstName(): string
     {
