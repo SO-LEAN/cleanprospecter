@@ -4,6 +4,7 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindByUserName;
 
+use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
 use Solean\CleanProspecter\UseCase\FindByUserName\FindByUserNameResponse;
 
 class FindByUserNameResponseFactory
@@ -13,6 +14,6 @@ class FindByUserNameResponseFactory
      */
     public static function regular()
     {
-        return new FindByUserNameResponse(['ROLE'], 'login', 'password');
+        return new FindByUserNameResponse(['ROLE'], 'login', UserFactory::regular()->getPassword());
     }
 }

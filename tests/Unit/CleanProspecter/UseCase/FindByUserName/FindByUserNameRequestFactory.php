@@ -13,6 +13,6 @@ class FindByUserNameRequestFactory
      */
     public static function regular()
     {
-        return new FindByUserNameRequest('login', 'password');
+        return new FindByUserNameRequest('login');
     }
 }
