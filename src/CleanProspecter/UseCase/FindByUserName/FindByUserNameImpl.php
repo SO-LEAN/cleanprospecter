@@ -20,7 +20,7 @@ final class FindByUserNameImpl extends AbstractUseCase implements FindByUserName
         $this->userGateway = $userGateway;
     }
 
-    public function execute(FindByUserNameRequest $request, Presenter $presenter) : ?object
+    public function execute(FindByUserNameRequest $request, Presenter $presenter): ?object
     {
         /**
          * @var ?User $user

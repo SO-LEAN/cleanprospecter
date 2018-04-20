@@ -22,7 +22,7 @@ final class LoginImpl extends AbstractUseCase implements Login
         $this->userGateway = $userGateway;
     }
 
-    public function execute(LoginRequest $request, Presenter $presenter) : object
+    public function execute(LoginRequest $request, Presenter $presenter): object
     {
         /**
          * @var ?User $user
@@ -36,7 +36,7 @@ final class LoginImpl extends AbstractUseCase implements Login
         throw new BadCredentialException();
     }
 
-    private function encodePassword(string $password, string $salt) : string
+    private function encodePassword(string $password, string $salt): string
     {
         return md5(sprintf('%s%s', $password, $salt));
     }

@@ -5,5 +5,5 @@ use Solean\CleanProspecter\UseCase\Presenter;
 
 interface FindByUserName
 {
-    public function execute(FindByUserNameRequest $request, Presenter $presenter) : ?object;
+    public function execute(FindByUserNameRequest $request, Presenter $presenter): ?object;
 }

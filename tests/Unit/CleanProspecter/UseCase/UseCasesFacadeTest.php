@@ -39,7 +39,6 @@ class UseCasesFacadeTest extends TestCase
         $this->expectException(BadFunctionCallException::class);
         $this->expectExceptionMessage('Solean\CleanProspecter\UseCase\UseCasesFacade::unknownUseCase()');
 
-        $response = $this->target()->unknownUseCase(new StubUseCaseRequest(), $this->prophesy(Presenter::class)->reveal());
-        $this->assertEquals('executed', $response->action);
+        $this->target()->unknownUseCase(new StubUseCaseRequest(), $this->prophesy(Presenter::class)->reveal());
     }
 }

@@ -42,7 +42,7 @@ class UseCasesFacade
         return call_user_func_array([$this->useCases[$name], 'execute'], $arguments);
     }
 
-    private function getShortClassName(object $useCase)
+    private function getShortClassName(object $useCase): string
     {
         $shortName = explode('\\', preg_replace('/(Impl$)/', '', get_class($useCase)));
 
