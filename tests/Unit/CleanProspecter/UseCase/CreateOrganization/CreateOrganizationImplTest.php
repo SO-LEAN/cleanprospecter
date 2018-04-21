@@ -14,7 +14,6 @@ use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationImpl;
 use Tests\Unit\Solean\CleanProspecter\Factory\OrganizationFactory;
 
-
 class CreateOrganizationImplTest extends TestCase
 {
     public function target() : CreateOrganizationImpl
@@ -78,5 +77,4 @@ class CreateOrganizationImplTest extends TestCase
         $this->prophesy(OrganizationGateway::class)->create($notPersisted)->shouldBeCalled()->willReturn($persisted);
         $this->prophesy(Presenter::class)->present($persisted)->shouldBeCalled()->willReturn(new stdClass());
     }
-
 }

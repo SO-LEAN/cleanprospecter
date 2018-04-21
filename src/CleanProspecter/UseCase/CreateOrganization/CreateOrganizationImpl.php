@@ -25,7 +25,7 @@ final class CreateOrganizationImpl implements CreateOrganization
     public function execute(CreateOrganizationRequest $request, Presenter $presenter): ?object
     {
         $organization = $this->buildOrganization($request);
-        $this->AppendToHoldingIfNeeded($request, $organization);
+        $this->appendToHoldingIfNeeded($request, $organization);
 
         $persisted = $this->organizationGateway->create($organization);
 
@@ -43,7 +43,7 @@ final class CreateOrganizationImpl implements CreateOrganization
         return $organization;
     }
 
-    private function AppendToHoldingIfNeeded(CreateOrganizationRequest $request, Organization $organization): void
+    private function appendToHoldingIfNeeded(CreateOrganizationRequest $request, Organization $organization): void
     {
         if ($request->getHoldBy()) {
             try {
@@ -53,5 +53,4 @@ final class CreateOrganizationImpl implements CreateOrganization
             }
         }
     }
-
 }

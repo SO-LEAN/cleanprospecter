@@ -2,7 +2,6 @@
 
 namespace Solean\CleanProspecter\UseCase\CreateOrganization;
 
-
 class CreateOrganizationResponse
 {
     /**
