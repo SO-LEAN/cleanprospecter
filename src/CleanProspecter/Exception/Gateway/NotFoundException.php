@@ -2,7 +2,7 @@
 
 declare( strict_types = 1 );
 
-namespace Solean\CleanProspecter\Exception\Gateway;
+namespace Solean\CleanProspecter\Exception\GateWay;
 
 use RuntimeException;
 

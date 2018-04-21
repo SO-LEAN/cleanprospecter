@@ -30,7 +30,7 @@ class FindByUserNameImplTest extends TestCase
         $this->assertInstanceOf($this->getTargetClassName(), $this->target());
     }
 
-    public function testThePresentationIsReturnedWhenUserFound()
+    public function testThePresenterIsReturnedWhenUserFound()
     {
         $request = FindByUserNameRequestFactory::regular();
         $expectedResponse = FindByUserNameResponseFactory::regular();
