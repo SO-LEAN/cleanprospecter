@@ -10,6 +10,7 @@ use Solean\CleanProspecter\UseCase;
 /**
  * @method login(UseCase\Login\LoginRequest $request, Presenter $presenter)
  * @method findByUserName(UseCase\FindByUserName\FindByUserNameRequest $request, Presenter $presenter)
+ * @method createOrganization(UseCase\CreateOrganization\CreateOrganizationRequest $request, Presenter $presenter)
  */
 class UseCasesFacade
 {
