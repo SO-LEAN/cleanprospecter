@@ -5,12 +5,13 @@ declare( strict_types = 1 );
 namespace Solean\CleanProspecter\UseCase\CreateOrganization;
 
 use Solean\CleanProspecter\Exception\GateWay;
-use Solean\CleanProspecter\Exception\UseCase\NotFoundException;
 use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\Entity\Organization;
+use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
+use Solean\CleanProspecter\Exception\UseCase\NotFoundException;
 
-final class CreateOrganizationImpl implements CreateOrganization
+final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrganization
 {
     /**
      * @var OrganizationGateway
