@@ -6,5 +6,5 @@ namespace Solean\CleanProspecter\UseCase;
 
 interface Presenter
 {
-    public function present(object $response): object;
+    public function present($response);
 }
