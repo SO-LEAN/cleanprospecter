@@ -9,9 +9,9 @@ abstract class Base
     private $id;
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getId(): string
+    public function getId()
     {
         return $this->id;
     }
