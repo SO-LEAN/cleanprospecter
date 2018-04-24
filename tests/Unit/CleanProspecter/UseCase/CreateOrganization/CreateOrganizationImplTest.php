@@ -68,7 +68,20 @@ class CreateOrganizationImplTest extends TestCase
         $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
     }
 
-    /**
+    public function testThrowAnUseCaseUniqueConstraintViolationExceptionIfGatewayThrowOne()
+    {
+        $request = CreateOrganizationRequestFactory::regular();
+        $notPersisted = OrganizationFactory::notPersistedRegular();
+        $gatewayException = new Gateway\UniqueConstraintViolationException();
+
+        $this->prophesy(OrganizationGateway::class)->create($notPersisted)->shouldBeCalled()->willThrow($gatewayException);
+        $this->expectExceptionObject(new UseCase\UniqueConstraintViolationException('Email already used', 412, $gatewayException));
+
+        $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+    }
+
+
+    /**t
      * @param Organization $notPersisted
      * @param Organization $persisted
      */
