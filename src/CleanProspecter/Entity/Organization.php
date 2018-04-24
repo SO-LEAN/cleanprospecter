@@ -53,6 +53,7 @@ class Organization extends Person
 
     public function __construct()
     {
+        $this->hasAddress = false;
         $this->subsidiaries = [];
         $this->applicationUsers = [];
         $this->ownedProspectedOrganizations = [];

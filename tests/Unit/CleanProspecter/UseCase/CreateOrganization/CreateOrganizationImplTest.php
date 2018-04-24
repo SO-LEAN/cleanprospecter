@@ -4,6 +4,7 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\CreateOrganization;
 
+use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationRequest;
 use Stdclass;
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\UseCase\Presenter;
@@ -33,15 +34,28 @@ class CreateOrganizationImplTest extends TestCase
         $this->assertInstanceOf($this->getTargetClassName(), $this->target());
     }
 
-    public function testExecuteOnRegular()
+    /**
+     * @param CreateOrganizationRequest $request
+     * @param Organization $notPersisted
+     * @param Organization $persisted
+     * @dataProvider provideExecute
+     */
+    public function testExecute(CreateOrganizationRequest $request, Organization $notPersisted, Organization $persisted)
     {
-        $request = CreateOrganizationRequestFactory::regular();
-        $notPersisted = OrganizationFactory::notPersistedRegular();
-        $persisted = OrganizationFactory::regular();
-
         $this->mock($notPersisted, $persisted);
 
         $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+    }
+
+    /**
+     * @return array
+     */
+    public function provideExecute()
+    {
+        return [
+            'on regular' => [CreateOrganizationRequestFactory::regular(), OrganizationFactory::notPersistedRegular(), OrganizationFactory::regular()],
+            'on without address' => [CreateOrganizationRequestFactory::withoutAddress(), OrganizationFactory::notPersistedWithoutAddress(), OrganizationFactory::withoutAddress()],
+        ];
     }
 
     public function testExecuteOnHold()
@@ -80,6 +94,14 @@ class CreateOrganizationImplTest extends TestCase
         $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
     }
 
+    public function testThrowUseCaseExceptionIfMissingCorporateNameAndEmail()
+    {
+        $request = CreateOrganizationRequestFactory::missingMandatory();
+
+        $this->expectExceptionObject(new UseCase\UseCaseException('At least one is mandatory : corporate name or email', 412));
+
+        $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+    }
 
     /**t
      * @param Organization $notPersisted

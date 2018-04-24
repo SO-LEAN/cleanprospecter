@@ -25,14 +25,23 @@ class OrganizationFactory
     /**
      * Default test organization not persisted
      */
-    public static function notPersistedRegular() : Organization
+    public static function notPersistedRegular(): Organization
     {
         $organization = OrganizationFactory::regular();
         $organization->setId(null);
 
         return $organization;
     }
+    /**
+     * Default test organization without address
+     */
+    public static function withoutAddress(): Organization
+    {
+        $organization = OrganizationFactory::regular();
+        $organization->setAddress(null);
 
+        return $organization;
+    }
     /**
      * holding
      */
@@ -52,7 +61,7 @@ class OrganizationFactory
     /**
      * hold
      */
-    public static function hold() : Organization
+    public static function hold(): Organization
     {
         $organization = OrganizationFactory::regular();
         $holding = OrganizationFactory::holding();
@@ -65,9 +74,19 @@ class OrganizationFactory
     /**
      * hold not persisted
      */
-    public static function notPersistedHold() : Organization
+    public static function notPersistedHold(): Organization
     {
         $organization = OrganizationFactory::hold();
+        $organization->setId(null);
+
+        return $organization;
+    }
+    /**
+     * Default test organization without address and not persisted
+     */
+    public static function notPersistedWithoutAddress(): Organization
+    {
+        $organization = OrganizationFactory::withoutAddress();
         $organization->setId(null);
 
         return $organization;

@@ -7,7 +7,7 @@ namespace Solean\CleanProspecter\Exception\UseCase;
 use \Throwable;
 use RuntimeException;
 
-abstract class UseCaseException extends RuntimeException
+class UseCaseException extends RuntimeException
 {
     /**
      * @var array

@@ -43,19 +43,7 @@ final class CreateOrganizationRequest
      */
     private $holdBy;
 
-    /**
-     * CreateOrganizationRequest constructor.
-     * @param string $email
-     * @param string $language
-     * @param string $corporateName
-     * @param string $form
-     * @param string $street
-     * @param string $postalCode
-     * @param string $city
-     * @param string $country
-     * @param string $holdBy
-     */
-    public function __construct(string $email, string $language, string $corporateName, string $form, string $street, string $postalCode, string $city, string $country, $holdBy)
+    public function __construct(?string $email, ?string $language, ?string $corporateName, ?string $form, ?string $street, ?string $postalCode, ?string $city, ?string $country, $holdBy)
     {
         $this->email = $email;
         $this->language = $language;
@@ -68,75 +56,53 @@ final class CreateOrganizationRequest
         $this->holdBy = $holdBy;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @return string
-     */
-    public function getLanguage(): string
+    public function getLanguage(): ?string
     {
         return $this->language;
     }
 
-    /**
-     * @return string
-     */
-    public function getCorporateName(): string
+    public function getCorporateName(): ?string
     {
         return $this->corporateName;
     }
 
-    /**
-     * @return string
-     */
-    public function getForm(): string
+    public function getForm(): ?string
     {
         return $this->form;
     }
 
-    /**
-     * @return string
-     */
-    public function getStreet(): string
+    public function getStreet(): ?string
     {
         return $this->street;
     }
 
-    /**
-     * @return string
-     */
-    public function getPostalCode(): string
+    public function getPostalCode(): ?string
     {
         return $this->postalCode;
     }
 
-    /**
-     * @return string
-     */
-    public function getCity(): string
+    public function getCity(): ?string
     {
         return $this->city;
     }
 
-    /**
-     * @return string
-     */
-    public function getCountry(): string
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
-    /**
-     * @return mixed
-     */
     public function getHoldBy()
     {
         return $this->holdBy;
+    }
+
+    public function hasAddress()
+    {
+        return !(null === $this->street &&  null === $this->postalCode && null === $this->city && null == $this->country);
     }
 }
