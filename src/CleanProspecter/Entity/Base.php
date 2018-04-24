@@ -6,6 +6,9 @@ namespace Solean\CleanProspecter\Entity;
 
 abstract class Base
 {
+    /**
+     * @var mixed
+     */
     private $id;
 
     /**

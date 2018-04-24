@@ -13,13 +13,33 @@ class CreateOrganizationRequestFactory
      */
     public static function regular()
     {
-        return new CreateOrganizationRequest('org@organization.com', 'DE', 'Organization', 'GMBH', null);
+        return new CreateOrganizationRequest(
+            'org@organization.com',
+            'EN',
+            'Organization',
+            'Limited Company',
+            '10 Downing Street',
+            'SW1A 2AA',
+            'London',
+            'EN',
+            null
+            );
     }
     /**
      * Default test organization
      */
     public static function hold()
     {
-        return new CreateOrganizationRequest('org@organization.com', 'DE', 'Organization', 'GMBH', 456);
+        return new CreateOrganizationRequest(
+            'org@organization.com',
+            'EN',
+            'Organization',
+            'Limited Company',
+            '10 Downing Street',
+            'SW1A 2AA',
+            'London',
+            'EN',
+            456
+        );
     }
 }

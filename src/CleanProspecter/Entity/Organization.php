@@ -15,6 +15,14 @@ class Organization extends Person
      */
     private $form;
     /**
+     * @var Address
+     */
+    private $address;
+    /**
+     * @var bool
+     */
+    private $hasAddress;
+    /**
      * @var Organization
      */
     private $holdBy;
@@ -70,6 +78,17 @@ class Organization extends Person
     public function setForm(string $form): void
     {
         $this->form = $form;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->hasAddress ? $this->address : null;
+    }
+
+    public function setAddress(?Address $address): void
+    {
+        $this->address = $address;
+        $this->address = $address ? true : false;
     }
 
     public function getHoldBy(): Organization

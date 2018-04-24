@@ -4,6 +4,8 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\Entity;
 
+use InvalidArgumentException;
+
 abstract class Person extends Base
 {
     /**
@@ -13,7 +15,7 @@ abstract class Person extends Base
     /**
      * @var string
      */
-    private $country;
+    private $language;
 
     public function getEmail(): string
     {
@@ -22,17 +24,20 @@ abstract class Person extends Base
 
     public function setEmail(string $email): void
     {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new InvalidArgumentException(sprintf('Email "%s" is not valid', $email));
+        }
         $this->email = $email;
     }
 
-    public function getCountry(): string
+    public function getLanguage(): string
     {
-        return $this->country;
+        return $this->language;
     }
 
-    public function setCountry(string $country): void
+    public function setLanguage(string $language): void
     {
-        $this->country = $country;
+        $this->language = $language;
     }
 
     abstract public function getFullName(): string;

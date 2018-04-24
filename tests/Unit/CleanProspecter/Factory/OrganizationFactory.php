@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Unit\Solean\CleanProspecter\Factory;
 
+use Solean\CleanProspecter\Entity\Address;
 use Solean\CleanProspecter\Entity\Organization;
 
 class OrganizationFactory
@@ -13,10 +14,11 @@ class OrganizationFactory
         $organization = new Organization();
 
         $organization->setId(123);
-        $organization->setCountry('DE');
+        $organization->setLanguage('EN');
         $organization->setEmail('org@organization.com');
         $organization->setCorporateName('Organization');
-        $organization->setForm('GMBH');
+        $organization->setForm('Limited Company');
+        $organization->setAddress(Address::fromValues('10 Downing Street', 'SW1A 2AA', 'London','EN'));
 
         return $organization;
     }
@@ -39,7 +41,7 @@ class OrganizationFactory
         $holding = new Organization();
 
         $holding->setId(456);
-        $holding->setCountry('LU');
+        $holding->setLanguage('LU');
         $holding->setCorporateName('Organization holding');
         $holding->setEmail('org@organization-holding.com');
         $holding->setForm('GMBH');

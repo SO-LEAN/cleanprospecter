@@ -13,7 +13,7 @@ final class CreateOrganizationRequest
     /**
      * @var string
      */
-    private $country;
+    private $language;
     /**
      * @var string
      */
@@ -23,6 +23,22 @@ final class CreateOrganizationRequest
      */
     private $form;
     /**
+     * @var string
+     */
+    private $street;
+    /**
+     * @var string
+     */
+    private $postalCode;
+    /**
+     * @var string
+     */
+    private $city;
+    /**
+     * @var string
+     */
+    private $country;
+    /**
      * @var mixed
      */
     private $holdBy;
@@ -30,17 +46,25 @@ final class CreateOrganizationRequest
     /**
      * CreateOrganizationRequest constructor.
      * @param string $email
-     * @param string $country
+     * @param string $language
      * @param string $corporateName
      * @param string $form
+     * @param string $street
+     * @param string $postalCode
+     * @param string $city
+     * @param string $country
      * @param string $holdBy
      */
-    public function __construct(string $email, string $country, string $corporateName, string $form, $holdBy)
+    public function __construct(string $email, string $language, string $corporateName, string $form, string $street, string $postalCode, string $city, string $country, $holdBy)
     {
         $this->email = $email;
-        $this->country = $country;
+        $this->language = $language;
         $this->corporateName = $corporateName;
         $this->form = $form;
+        $this->street = $street;
+        $this->postalCode = $postalCode;
+        $this->city = $city;
+        $this->country = $country;
         $this->holdBy = $holdBy;
     }
 
@@ -55,9 +79,9 @@ final class CreateOrganizationRequest
     /**
      * @return string
      */
-    public function getCountry(): string
+    public function getLanguage(): string
     {
-        return $this->country;
+        return $this->language;
     }
 
     /**
@@ -74,6 +98,38 @@ final class CreateOrganizationRequest
     public function getForm(): string
     {
         return $this->form;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreet(): string
+    {
+        return $this->street;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPostalCode(): string
+    {
+        return $this->postalCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity(): string
+    {
+        return $this->city;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountry(): string
+    {
+        return $this->country;
     }
 
     /**

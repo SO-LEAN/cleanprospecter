@@ -47,4 +47,25 @@ class Customer extends Person
     {
         return sprintf('%s %s', $this->firstName, $this->lastName);
     }
+
+    public function getCreatedBy(): User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(User $createdBy): void
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    public function getOwnedBy(): Organization
+    {
+        return $this->ownedBy;
+    }
+
+    public function setOwnedBy(Organization $ownedBy): void
+    {
+        $this->ownedBy = $ownedBy;
+        $ownedBy->addOwnedCustomers($this);
+    }
 }

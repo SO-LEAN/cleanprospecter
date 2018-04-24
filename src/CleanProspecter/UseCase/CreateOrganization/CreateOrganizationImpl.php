@@ -4,6 +4,7 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\UseCase\CreateOrganization;
 
+use Solean\CleanProspecter\Entity\Address;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
 use Solean\CleanProspecter\UseCase\Presenter;
@@ -36,10 +37,11 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
     private function buildOrganization(CreateOrganizationRequest $request): Organization
     {
         $organization = new Organization();
-        $organization->setCountry($request->getCountry());
+        $organization->setLanguage($request->getLanguage());
         $organization->setEmail($request->getEmail());
         $organization->setCorporateName($request->getCorporateName());
         $organization->setForm($request->getForm());
+        $organization->setAddress(Address::fromValues($request->getStreet(), $request->getPostalCode(), $request->getCity(), $request->getCountry()));
 
         return $organization;
     }
