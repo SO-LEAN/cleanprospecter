@@ -4,7 +4,7 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\UseCase\CreateOrganization;
 
-use Solean\CleanProspecter\Exception\GateWay;
+use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
 use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\Entity\Organization;
@@ -49,7 +49,7 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         if ($request->getHoldBy()) {
             try {
                 $organization->setHoldBy($this->organizationGateway->get($request->getHoldBy()));
-            } catch (GateWay\NotFoundException $e) {
+            } catch (Gateway\NotFoundException $e) {
                 throw new NotFoundException(sprintf('Holding with #ID %d not found', $request->getHoldBy()), 404, $e, ['holdBy' => 'Holding not found']);
             }
         }
@@ -59,7 +59,7 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
     {
         try {
             $persisted = $this->organizationGateway->create($organization);
-        } catch (GateWay\UniqueConstraintViolationException $e) {
+        } catch (Gateway\UniqueConstraintViolationException $e) {
             throw new UniqueConstraintViolationException('Email already used', 412, $e, ['email' => sprintf('Email "%s" already used', $organization->getEmail())]);
         }
 
