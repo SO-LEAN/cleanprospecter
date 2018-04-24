@@ -89,7 +89,7 @@ class Organization extends Person
     public function setAddress(?Address $address): void
     {
         $this->address = $address;
-        $this->address = $address ? true : false;
+        $this->hasAddress = $address ? true : false;
     }
 
     public function getHoldBy(): Organization
