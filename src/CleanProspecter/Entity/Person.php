@@ -17,7 +17,7 @@ abstract class Person extends Base
      */
     private $language;
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -30,7 +30,7 @@ abstract class Person extends Base
         $this->email = $email;
     }
 
-    public function getLanguage(): string
+    public function getLanguage(): ?string
     {
         return $this->language;
     }

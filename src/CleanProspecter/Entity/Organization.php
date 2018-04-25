@@ -61,7 +61,7 @@ class Organization extends Person
         $this->ownedCustomers = [];
     }
 
-    public function getCorporateName(): string
+    public function getCorporateName(): ?string
     {
         return $this->corporateName;
     }
@@ -71,7 +71,7 @@ class Organization extends Person
         $this->corporateName = $corporateName;
     }
 
-    public function getForm(): string
+    public function getForm(): ?string
     {
         return $this->form;
     }
@@ -114,7 +114,7 @@ class Organization extends Person
 
     public function getFullName(): string
     {
-        return sprintf('%s %s', $this->corporateName, $this->form);
+        return trim(sprintf('%s %s', $this->corporateName, $this->form));
     }
 
     public function getSubsidiaries(): array
