@@ -7,6 +7,10 @@ namespace Solean\CleanProspecter\UseCase\CreateOrganization;
 final class CreateOrganizationRequest
 {
     /**
+     * @var mixed
+     */
+    private $ownedBy;
+    /**
      * @var string
      */
     private $email;
@@ -43,8 +47,9 @@ final class CreateOrganizationRequest
      */
     private $holdBy;
 
-    public function __construct(?string $email, ?string $language, ?string $corporateName, ?string $form, ?string $street, ?string $postalCode, ?string $city, ?string $country, $holdBy)
+    public function __construct($ownedBy, ?string $email, ?string $language, ?string $corporateName, ?string $form, ?string $street, ?string $postalCode, ?string $city, ?string $country, $holdBy)
     {
+        $this->ownedBy = $ownedBy;
         $this->email = $email;
         $this->language = $language;
         $this->corporateName = $corporateName;
@@ -54,6 +59,14 @@ final class CreateOrganizationRequest
         $this->city = $city;
         $this->country = $country;
         $this->holdBy = $holdBy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwnedBy()
+    {
+        return $this->ownedBy;
     }
 
     public function getEmail(): ?string

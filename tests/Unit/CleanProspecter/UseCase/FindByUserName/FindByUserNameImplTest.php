@@ -4,12 +4,12 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindByUserName;
 
-use stdClass;
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
 use Solean\CleanProspecter\UseCase\FindByUserName\FindByUserNameImpl;
+use Solean\CleanProspecter\UseCase\FindByUserName\FindByUserNameResponse;
 
 class FindByUserNameImplTest extends TestCase
 {
@@ -30,15 +30,23 @@ class FindByUserNameImplTest extends TestCase
         $this->assertInstanceOf($this->getTargetClassName(), $this->target());
     }
 
-    public function testThePresenterIsReturnedWhenUserFound()
+    public function testResponseIsReturnedWhenUserFound()
     {
         $request = FindByUserNameRequestFactory::regular();
+        $entity = UserFactory::regular();
         $expectedResponse = FindByUserNameResponseFactory::regular();
 
-        $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
-        $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturn(new stdClass());
+        $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn($entity);
+        $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
+        /**
+         * @var FindByUserNameResponse $response
+         */
+        $response = $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
 
-        $this->assertEquals(new stdClass(), $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal()));
+        $this->assertInstanceOf(FindByUserNameResponse::class, $response);
+        $this->assertEquals($response->getUserName(), $entity->getUserName());
+        $this->assertEquals($response->getPassword(), $entity->getPassword());
+        $this->assertEquals($response->getRoles(), $entity->getRoles());
     }
 
     public function testReturnNullWhenUserNotFound()

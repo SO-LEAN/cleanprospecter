@@ -14,6 +14,7 @@ class CreateOrganizationRequestFactory
     public static function regular()
     {
         return new CreateOrganizationRequest(
+            777,
             'org@organization.com',
             'EN',
             'Organization',
@@ -23,7 +24,7 @@ class CreateOrganizationRequestFactory
             'London',
             'EN',
             null
-            );
+        );
     }
     /**
      * Default test organization
@@ -31,6 +32,7 @@ class CreateOrganizationRequestFactory
     public static function hold()
     {
         return new CreateOrganizationRequest(
+            777,
             'org@organization.com',
             'EN',
             'Organization',
@@ -48,6 +50,7 @@ class CreateOrganizationRequestFactory
     public static function missingMandatory()
     {
         return new CreateOrganizationRequest(
+            777,
             null,
             'EN',
             null,
@@ -65,6 +68,7 @@ class CreateOrganizationRequestFactory
     public static function withoutAddress()
     {
         return new CreateOrganizationRequest(
+            777,
             'org@organization.com',
             'EN',
             'Organization',

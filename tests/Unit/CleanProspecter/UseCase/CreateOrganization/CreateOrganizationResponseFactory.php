@@ -13,13 +13,56 @@ class CreateOrganizationResponseFactory
      */
     public static function regular()
     {
-        return new CreateOrganizationResponse(123);
+        return new CreateOrganizationResponse(
+            123,
+            777,
+            'org@organization.com',
+            'EN',
+            'Organization',
+            'Limited Company',
+            '10 Downing Street',
+            'SW1A 2AA',
+            'London',
+            'EN',
+            null
+            );
     }
     /**
      * Default test organization
      */
     public static function hold()
     {
-        return CreateOrganizationResponseFactory::regular();
+        return new CreateOrganizationResponse(
+            123,
+            777,
+            'org@organization.com',
+            'EN',
+            'Organization',
+            'Limited Company',
+            '10 Downing Street',
+            'SW1A 2AA',
+            'London',
+            'EN',
+            456
+        );
+    }
+    /**
+     * Default test organization
+     */
+    public static function withoutAddress()
+    {
+        return new CreateOrganizationResponse(
+            123,
+            777,
+            'org@organization.com',
+            'EN',
+            'Organization',
+            'Limited Company',
+            null,
+            null,
+            null,
+            null,
+            null
+        );
     }
 }

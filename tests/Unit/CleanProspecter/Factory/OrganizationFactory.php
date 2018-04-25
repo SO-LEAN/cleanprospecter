@@ -18,7 +18,8 @@ class OrganizationFactory
         $organization->setEmail('org@organization.com');
         $organization->setCorporateName('Organization');
         $organization->setForm('Limited Company');
-        $organization->setAddress(Address::fromValues('10 Downing Street', 'SW1A 2AA', 'London','EN'));
+        $organization->setAddress(Address::fromValues('10 Downing Street', 'SW1A 2AA', 'London', 'EN'));
+        $organization->setOwnedBy(self::creator());
 
         return $organization;
     }
@@ -81,6 +82,7 @@ class OrganizationFactory
 
         return $organization;
     }
+
     /**
      * Default test organization without address and not persisted
      */
@@ -88,6 +90,22 @@ class OrganizationFactory
     {
         $organization = OrganizationFactory::withoutAddress();
         $organization->setId(null);
+
+        return $organization;
+    }
+
+    /**
+     * Creator
+     */
+    public static function creator() : Organization
+    {
+        $organization = new Organization();
+
+        $organization->setId(777);
+        $organization->setLanguage('FR');
+        $organization->setEmail('org@organization.com');
+        $organization->setCorporateName('Prospector Organization');
+        $organization->setForm('Limited Company');
 
         return $organization;
     }

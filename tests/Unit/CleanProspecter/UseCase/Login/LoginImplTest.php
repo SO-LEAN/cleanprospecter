@@ -4,14 +4,13 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\Login;
 
-use Solean\CleanProspecter\Exception\UseCase\BadCredentialException;
-use stdClass;
+use Solean\CleanProspecter\UseCase\Login\LoginResponse;
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\Login\LoginImpl;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
-use Solean\CleanProspecter\Exception\UseCase\UnauthorizedException;
+use Solean\CleanProspecter\Exception\UseCase\BadCredentialException;
 
 class LoginImplTest extends TestCase
 {
@@ -32,15 +31,23 @@ class LoginImplTest extends TestCase
         $this->assertInstanceOf($this->getTargetClassName(), $this->target());
     }
 
-    public function testThePresentationIsReturnedWhenPasswordIsCorrectBeforeEncoding()
+    public function testResponseIsReturnedWhenPasswordIsCorrectBeforeEncoding()
     {
         $request = LoginRequestFactory::regular();
+        $entity  = UserFactory::regular();
         $expectedResponse = LoginResponseFactory::regular();
 
-        $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
-        $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturn(new stdClass());
+        $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn($entity);
+        $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
+        /**
+         * @var LoginResponse $response
+         */
+        $response = $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
 
-        $this->assertEquals(new stdClass(), $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal()));
+        $this->assertInstanceOf(LoginResponse::class, $response);
+        $this->assertEquals($response->getUserName(), $entity->getUserName());
+        $this->assertEquals($response->getPassword(), $request->getPassword());
+        $this->assertEquals($response->getRoles(), $entity->getRoles());
     }
 
     public function testBadCredentialExceptionIsThrownWhenPasswordHasTypo()

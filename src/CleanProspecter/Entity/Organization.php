@@ -92,7 +92,7 @@ class Organization extends Person
         $this->hasAddress = $address ? true : false;
     }
 
-    public function getHoldBy(): Organization
+    public function getHoldBy(): ?Organization
     {
         return $this->holdBy;
     }

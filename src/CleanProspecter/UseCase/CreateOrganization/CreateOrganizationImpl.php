@@ -29,11 +29,15 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
     public function execute(CreateOrganizationRequest $request, Presenter $presenter): ?object
     {
         $this->validateRequest($request);
-        $organization = $this->buildOrganization($request);
-        $this->appendToHoldingIfNeeded($request, $organization);
-        $persisted = $this->create($organization);
 
-        return $presenter->present($persisted);
+        $organization = $this->buildOrganization($request);
+        $this->joinToOwner($request, $organization);
+        $this->joinToHoldingIfNeeded($request, $organization);
+
+        $persisted = $this->create($organization);
+        $response = $this->buildResponse($persisted);
+
+        return $presenter->present($response);
     }
 
     private function validateRequest(CreateOrganizationRequest $request): void
@@ -47,16 +51,32 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
     private function buildOrganization(CreateOrganizationRequest $request): Organization
     {
         $organization = new Organization();
-        if ($request->getLanguage()) $organization->setLanguage($request->getLanguage());
-        if ($request->getEmail()) $organization->setEmail($request->getEmail());
-        if ($request->getCorporateName()) $organization->setCorporateName($request->getCorporateName());
-        if ($request->getForm()) $organization->setForm($request->getForm());
-        if ($request->hasAddress()) $organization->setAddress(Address::fromValues($request->getStreet(), $request->getPostalCode(), $request->getCity(), $request->getCountry()));
+        if ($request->getLanguage()) {
+            $organization->setLanguage($request->getLanguage());
+        }
+        if ($request->getEmail()) {
+            $organization->setEmail($request->getEmail());
+        }
+        if ($request->getCorporateName()) {
+            $organization->setCorporateName($request->getCorporateName());
+        }
+        if ($request->getForm()) {
+            $organization->setForm($request->getForm());
+        }
+        if ($request->hasAddress()) {
+            $organization->setAddress(Address::fromValues($request->getStreet(), $request->getPostalCode(), $request->getCity(), $request->getCountry()));
+        }
 
         return $organization;
     }
 
-    private function appendToHoldingIfNeeded(CreateOrganizationRequest $request, Organization $organization): void
+    private function joinToOwner(CreateOrganizationRequest $request, Organization $organization): void
+    {
+        $owner = $this->organizationGateway->get($request->getOwnedBy());
+        $organization->setOwnedBy($owner);
+    }
+
+    private function joinToHoldingIfNeeded(CreateOrganizationRequest $request, Organization $organization): void
     {
         if ($request->getHoldBy()) {
             try {
@@ -76,5 +96,24 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         }
 
         return $persisted;
+    }
+
+    private function buildResponse(Organization $persisted): CreateOrganizationResponse
+    {
+        $response = new CreateOrganizationResponse(
+            $persisted->getId(),
+            $persisted->getOwnedBy()->getId(),
+            $persisted->getEmail(),
+            $persisted->getLanguage(),
+            $persisted->getCorporateName(),
+            $persisted->getForm(),
+            $persisted->getAddress() ? $persisted->getAddress()->getStreet() : null,
+            $persisted->getAddress() ? $persisted->getAddress()->getPostalCode() : null,
+            $persisted->getAddress() ? $persisted->getAddress()->getCity() : null,
+            $persisted->getAddress() ? $persisted->getAddress()->getCountry() : null,
+            $persisted->getHoldBy() ? $persisted->getHoldBy()->getId() : null
+        );
+
+        return $response;
     }
 }

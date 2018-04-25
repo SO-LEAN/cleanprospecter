@@ -4,7 +4,6 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\Entity;
 
-
 final class Address
 {
     /**
@@ -67,5 +66,4 @@ final class Address
     {
         return $this->country;
     }
-
 }
