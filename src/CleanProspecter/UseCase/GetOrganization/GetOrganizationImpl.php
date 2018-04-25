@@ -25,7 +25,7 @@ final class GetOrganizationImpl extends AbstractUseCase implements GetOrganizati
         $this->organizationGateway = $organizationGateway;
     }
 
-    public function execute(GetOrganizationRequest $request, Presenter $presenter): ?object
+    public function execute(GetOrganizationRequest $request, Presenter $presenter)
     {
         $persisted = $this->getOrganization($request);
 
