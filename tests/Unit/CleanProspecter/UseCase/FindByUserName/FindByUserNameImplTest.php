@@ -47,6 +47,7 @@ class FindByUserNameImplTest extends TestCase
         $this->assertEquals($response->getUserName(), $entity->getUserName());
         $this->assertEquals($response->getPassword(), $entity->getPassword());
         $this->assertEquals($response->getRoles(), $entity->getRoles());
+        $this->assertEquals($response->getOrganizationId(), $entity->getOrganization()->getId());
     }
 
     public function testReturnNullWhenUserNotFound()

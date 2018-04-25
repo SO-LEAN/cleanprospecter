@@ -18,12 +18,17 @@ final class FindByUserNameResponse
      * @var string
      */
     private $password;
+    /**
+     * @var mixed
+     */
+    private $organizationId;
 
-    public function __construct(array $roles, string $userName, string $password)
+    public function __construct(array $roles, string $userName, string $password, $organizationId)
     {
         $this->roles = $roles;
         $this->password = $password;
         $this->userName = $userName;
+        $this->organizationId = $organizationId;
     }
 
     public function getRoles(): array
@@ -39,5 +44,10 @@ final class FindByUserNameResponse
     public function getUserName(): string
     {
         return $this->userName;
+    }
+
+    public function getOrganizationId()
+    {
+        return $this->organizationId;
     }
 }

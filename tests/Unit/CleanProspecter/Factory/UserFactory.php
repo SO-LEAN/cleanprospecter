@@ -18,6 +18,7 @@ class UserFactory
         $user->setPassword(md5(sprintf('%s%s', 'password', $user->getSalt())));
         $user->addRole('ROLE');
         $user->setLanguage('FR');
+        $user->setOrganization(OrganizationFactory::creator());
 
         return $user;
     }
