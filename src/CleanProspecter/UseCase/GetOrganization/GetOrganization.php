@@ -8,5 +8,5 @@ use Solean\CleanProspecter\UseCase\Presenter;
 
 interface GetOrganization
 {
-    public function execute(GetOrganizationRequest $request, Presenter $presenter): ?object;
+    public function execute(GetOrganizationRequest $request, Presenter $presenter);
 }
