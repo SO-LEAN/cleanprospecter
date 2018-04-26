@@ -26,6 +26,11 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         $this->organizationGateway = $organizationGateway;
     }
 
+    public function canBeExecutedBy(): array
+    {
+        return ['ROLE_PROSPECT'];
+    }
+
     public function execute(CreateOrganizationRequest $request, Presenter $presenter): ?object
     {
         $this->validateRequest($request);

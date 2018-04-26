@@ -37,7 +37,7 @@ final class GetOrganizationImpl extends AbstractUseCase implements GetOrganizati
         try {
             $persisted = $this->organizationGateway->get($request->getId());
         } catch (Gateway\NotFoundException $e) {
-            throw new NotFoundException(sprintf('Holding with #ID %d not found', $request->getId()), 404, $e, ['holdBy' => 'Holding not found']);
+            throw new NotFoundException(sprintf('Organization with #ID %d not found', $request->getId()), 404, $e, ['holdBy' => 'Holding not found']);
         }
 
         return $persisted;
@@ -47,7 +47,7 @@ final class GetOrganizationImpl extends AbstractUseCase implements GetOrganizati
     {
         return new GetOrganizationResponse(
             $persisted->getId(),
-            $persisted->getOwnedBy()->getId(),
+            $persisted->getOwnedBy() ? $persisted->getOwnedBy()->getId() : null,
             $persisted->getEmail(),
             $persisted->getLanguage(),
             $persisted->getCorporateName(),

@@ -7,7 +7,7 @@ abstract class AbstractUseCase
     /**
      * empty mean everybody
      */
-    public function executedBy(): array
+    public function canBeExecutedBy(): array
     {
         return [];
     }

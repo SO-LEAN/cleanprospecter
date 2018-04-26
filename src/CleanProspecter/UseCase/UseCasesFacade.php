@@ -6,12 +6,13 @@ namespace Solean\CleanProspecter\UseCase;
 
 use BadFunctionCallException;
 use Solean\CleanProspecter\UseCase;
+use Solean\CleanProspecter\Exception\UseCase\UnauthorizedException;
 
 /**
- * @method login(UseCase\Login\LoginRequest $request, Presenter $presenter)
- * @method findByUserName(UseCase\FindByUserName\FindByUserNameRequest $request, Presenter $presenter)
- * @method createOrganization(UseCase\CreateOrganization\CreateOrganizationRequest $request, Presenter $presenter)
- * @method getOrganization(UseCase\GetOrganization\GetOrganizationRequest $request, Presenter $presenter)
+ * @method login(UseCase\Login\LoginRequest $request, Presenter $presenter, ?UseCaseConsumer $consumer)
+ * @method findByUserName(UseCase\FindByUserName\FindByUserNameRequest $request, Presenter $presenter, ?UseCaseConsumer $consumer)
+ * @method createOrganization(UseCase\CreateOrganization\CreateOrganizationRequest $request, Presenter $presenter, ?UseCaseConsumer $consumer)
+ * @method getOrganization(UseCase\GetOrganization\GetOrganizationRequest $request, Presenter $presenter, ?UseCaseConsumer $consumer)
  */
 class UseCasesFacade
 {
@@ -37,9 +38,8 @@ class UseCasesFacade
 
     public function __call(string $name, array $arguments)
     {
-        if (!$this->hasUseCase($name)) {
-            throw new BadFunctionCallException(sprintf('Call to undefined method %s::%s()', get_class($this), $name));
-        }
+        $this->checkCalledMethod($name, $arguments);
+        $this->checkAccess($arguments, $name);
 
         return call_user_func_array([$this->useCases[$name], 'execute'], $arguments);
     }
@@ -50,4 +50,45 @@ class UseCasesFacade
 
         return end($shortName);
     }
+
+    private function checkCalledMethod(string $name, array $arguments): void
+    {
+        if (!$this->hasUseCase($name)) {
+            throw new BadFunctionCallException(sprintf('Call to undefined method %s::%s()', get_class($this), $name));
+        }
+
+        if (isset($arguments[2]) && !($arguments[2] instanceof UseCaseConsumer)) {
+            $type = is_object($arguments[2]) ? get_class($arguments[2]) : getType($arguments[2]);
+
+            throw new BadFunctionCallException(sprintf('Argument 3 passed to %s must be an instance of %s, instance of %s given', $name, UseCaseConsumer::class, $type));
+        }
+    }
+
+    private function checkAccess(array $arguments, string $name): void
+    {
+        $useCase = $this->useCases[$name];
+        $consumerRoles = $this->getConsumerRoles($arguments);
+
+        $isAdmin = in_array('ROLE_ADMIN', $consumerRoles);
+        $hasAppropriateRole = !empty(array_intersect($consumerRoles, $useCase->canBeExecutedBy()));
+        $isPublicUseCase = empty($useCase->canBeExecutedBy());
+
+        if ($isAdmin || $hasAppropriateRole || $isPublicUseCase) {
+            return;
+        }
+
+        throw new UnauthorizedException();
+    }
+
+    private function getConsumerRoles(array $arguments): array
+    {
+        if (isset($arguments[2])) {
+            $roles = $arguments[2]->getRoles();
+        } else {
+            $roles = [];
+        }
+
+        return $roles;
+    }
+
 }
