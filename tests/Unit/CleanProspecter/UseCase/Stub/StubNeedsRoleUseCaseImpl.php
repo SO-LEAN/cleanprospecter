@@ -14,7 +14,7 @@ class StubNeedsRoleUseCaseImpl extends AbstractUseCase
         return ['SPECIFIC_ROLE'];
     }
 
-    public function execute(StubUseCaseRequest $request, Presenter $presenter) : object
+    public function execute(StubUseCaseRequest $request, $presenter) : object
     {
         unset($request, $presenter);
         return (object)['action' => 'executed'];

@@ -5,11 +5,11 @@ declare( strict_types = 1 );
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\RefreshUser;
 
 use Tests\Unit\Solean\Base\TestCase;
-use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
 use Solean\CleanProspecter\UseCase\RefreshUser\RefreshUserImpl;
 use Solean\CleanProspecter\UseCase\RefreshUser\RefreshUserResponse;
+use Solean\CleanProspecter\UseCase\RefreshUser\RefreshUserPresenter;
 
 class RefreshUserImplTest extends TestCase
 {
@@ -37,11 +37,11 @@ class RefreshUserImplTest extends TestCase
         $expectedResponse = RefreshUserResponseFactory::regular();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn($entity);
-        $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
+        $this->prophesy(RefreshUserPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
         /**
          * @var RefreshUserResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->prophesy(RefreshUserPresenter::class)->reveal());
 
         $this->assertInstanceOf(RefreshUserResponse::class, $response);
         $this->assertEquals($response->getId(), $entity->getId());
@@ -57,6 +57,6 @@ class RefreshUserImplTest extends TestCase
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
 
-        $this->assertNull($this->target()->execute($request, $this->prophesy(Presenter::class)->reveal()));
+        $this->assertNull($this->target()->execute($request, $this->prophesy(RefreshUserPresenter::class)->reveal()));
     }
 }

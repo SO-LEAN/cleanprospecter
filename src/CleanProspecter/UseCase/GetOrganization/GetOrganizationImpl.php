@@ -6,9 +6,8 @@ namespace Solean\CleanProspecter\UseCase\GetOrganization;
 
 
 
-use Solean\CleanProspecter\Entity\Organization;
 use Solean\CleanProspecter\Exception\Gateway;
-use Solean\CleanProspecter\UseCase\Presenter;
+use Solean\CleanProspecter\Entity\Organization;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\Exception\UseCase\NotFoundException;
@@ -30,7 +29,7 @@ final class GetOrganizationImpl extends AbstractUseCase implements GetOrganizati
         return ['ROLE_PROSPECTOR'];
     }
 
-    public function execute(GetOrganizationRequest $request, Presenter $presenter)
+    public function execute(GetOrganizationRequest $request, GetOrganizationPresenter $presenter)
     {
         $persisted = $this->getOrganization($request);
 

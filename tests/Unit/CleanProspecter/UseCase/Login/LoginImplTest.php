@@ -4,11 +4,11 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\Login;
 
-use Solean\CleanProspecter\UseCase\Login\LoginResponse;
 use Tests\Unit\Solean\Base\TestCase;
-use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\Login\LoginImpl;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
+use Solean\CleanProspecter\UseCase\Login\LoginResponse;
+use Solean\CleanProspecter\UseCase\Login\LoginPresenter;
 use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
 use Solean\CleanProspecter\Exception\UseCase\BadCredentialException;
 
@@ -38,11 +38,11 @@ class LoginImplTest extends TestCase
         $expectedResponse = LoginResponseFactory::regular();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn($entity);
-        $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
+        $this->prophesy(LoginPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
         /**
          * @var LoginResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->prophesy(LoginPresenter::class)->reveal());
 
         $this->assertInstanceOf(LoginResponse::class, $response);
         $this->assertEquals($response->getUserName(), $entity->getUserName());
@@ -57,7 +57,7 @@ class LoginImplTest extends TestCase
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
         $this->expectExceptionObject(new BadCredentialException());
 
-        $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+        $this->target()->execute($request, $this->prophesy(LoginPresenter::class)->reveal());
     }
 
     public function testBadCredentialExceptionIsThrownWhenUserIsUnknown()
@@ -67,6 +67,6 @@ class LoginImplTest extends TestCase
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
         $this->expectExceptionObject(new BadCredentialException());
 
-        $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+        $this->target()->execute($request, $this->prophesy(LoginPresenter::class)->reveal());
     }
 }

@@ -5,7 +5,6 @@ declare( strict_types = 1 );
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\CreateOrganization;
 
 use Tests\Unit\Solean\Base\TestCase;
-use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Exception\UseCase;
 use Solean\CleanProspecter\Entity\Organization;
@@ -13,6 +12,7 @@ use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Tests\Unit\Solean\CleanProspecter\Factory\OrganizationFactory;
 use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationImpl;
 use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationResponse;
+use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationPresenter;
 
 class CreateOrganizationImplTest extends TestCase
 {
@@ -50,7 +50,7 @@ class CreateOrganizationImplTest extends TestCase
         /**
          * @var CreateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
 
         $this->assertResponseEquals($persisted, $response);
         $this->assertEquals($persisted->getAddress()->getStreet(), $response->getStreet());
@@ -71,7 +71,7 @@ class CreateOrganizationImplTest extends TestCase
         /**
          * @var CreateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
 
         $this->assertResponseEquals($persisted, $response);
     }
@@ -90,7 +90,7 @@ class CreateOrganizationImplTest extends TestCase
         /**
          * @var CreateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
 
         $this->assertEquals($persisted->getHoldBy()->getId(), $response->getHoldBy());
     }
@@ -104,7 +104,7 @@ class CreateOrganizationImplTest extends TestCase
         $this->prophesy(OrganizationGateway::class)->get($request->getHoldBy())->shouldBeCalled()->willThrow($gatewayException);
         $this->expectExceptionObject(new UseCase\NotFoundException(sprintf('Holding with #ID %d not found', $request->getHoldBy()), 404, $gatewayException));
 
-        $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+        $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
     }
 
     public function testThrowAnUseCaseUniqueConstraintViolationExceptionIfGatewayThrowOne()
@@ -117,7 +117,7 @@ class CreateOrganizationImplTest extends TestCase
         $this->prophesy(OrganizationGateway::class)->create($notPersisted)->shouldBeCalled()->willThrow($gatewayException);
         $this->expectExceptionObject(new UseCase\UniqueConstraintViolationException('Email already used', 412, $gatewayException));
 
-        $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+        $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
     }
 
     public function testThrowUseCaseExceptionIfMissingCorporateNameAndEmail()
@@ -126,14 +126,14 @@ class CreateOrganizationImplTest extends TestCase
 
         $this->expectExceptionObject(new UseCase\UseCaseException('At least one is mandatory : corporate name or email', 412));
 
-        $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
+        $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
     }
 
     private function mock(Organization $notPersisted, Organization $persisted, CreateOrganizationResponse $expectedResponse): void
     {
         $this->prophesy(OrganizationGateway::class)->get(777)->shouldBeCalled()->willReturn(OrganizationFactory::creator());
         $this->prophesy(OrganizationGateway::class)->create($notPersisted)->shouldBeCalled()->willReturn($persisted);
-        $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
+        $this->prophesy(CreateOrganizationPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
     }
 
     private function assertResponseEquals(Organization $persisted, CreateOrganizationResponse $response): void

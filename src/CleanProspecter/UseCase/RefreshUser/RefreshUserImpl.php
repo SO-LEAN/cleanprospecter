@@ -4,7 +4,6 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\UseCase\RefreshUser;
 
-use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 
@@ -20,7 +19,7 @@ final class RefreshUserImpl extends AbstractUseCase implements RefreshUser
         $this->userGateway = $userGateway;
     }
 
-    public function execute(RefreshUserRequest $request, Presenter $presenter): ?object
+    public function execute(RefreshUserRequest $request, RefreshUserPresenter $presenter)
     {
         /**
          * @var ?User $user

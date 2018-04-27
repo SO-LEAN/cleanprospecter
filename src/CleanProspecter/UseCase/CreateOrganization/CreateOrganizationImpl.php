@@ -6,13 +6,12 @@ namespace Solean\CleanProspecter\UseCase\CreateOrganization;
 
 use Solean\CleanProspecter\Entity\Address;
 use Solean\CleanProspecter\Exception\Gateway;
-use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
-use Solean\CleanProspecter\Exception\UseCase\UseCaseException;
-use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\Entity\Organization;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
+use Solean\CleanProspecter\Exception\UseCase\UseCaseException;
 use Solean\CleanProspecter\Exception\UseCase\NotFoundException;
+use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
 
 final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrganization
 {
@@ -31,7 +30,7 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         return ['ROLE_PROSPECTOR'];
     }
 
-    public function execute(CreateOrganizationRequest $request, Presenter $presenter): ?object
+    public function execute(CreateOrganizationRequest $request, CreateOrganizationPresenter $presenter): ?object
     {
         $this->validateRequest($request);
 

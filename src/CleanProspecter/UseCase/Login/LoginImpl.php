@@ -5,7 +5,6 @@ declare( strict_types = 1 );
 namespace Solean\CleanProspecter\UseCase\Login;
 
 use Solean\CleanProspecter\Entity\User;
-use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Solean\CleanProspecter\Exception\UseCase\BadCredentialException;
@@ -22,7 +21,7 @@ final class LoginImpl extends AbstractUseCase implements Login
         $this->userGateway = $userGateway;
     }
 
-    public function execute(LoginRequest $request, Presenter $presenter): object
+    public function execute(LoginRequest $request, LoginPresenter $presenter)
     {
         /**
          * @var ?User $user
