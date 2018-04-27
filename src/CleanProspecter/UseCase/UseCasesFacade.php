@@ -10,7 +10,7 @@ use Solean\CleanProspecter\Exception\UseCase\UnauthorizedException;
 
 /**
  * @method login(UseCase\Login\LoginRequest $request, Presenter $presenter, ?UseCaseConsumer $consumer)
- * @method findByUserName(UseCase\FindByUserName\FindByUserNameRequest $request, Presenter $presenter, ?UseCaseConsumer $consumer)
+ * @method findByUserName(UseCase\RefreshUser\RefreshUserRequest $request, Presenter $presenter, ?UseCaseConsumer $consumer)
  * @method createOrganization(UseCase\CreateOrganization\CreateOrganizationRequest $request, Presenter $presenter, ?UseCaseConsumer $consumer)
  * @method getOrganization(UseCase\GetOrganization\GetOrganizationRequest $request, Presenter $presenter, ?UseCaseConsumer $consumer)
  */

@@ -2,9 +2,9 @@
 
 declare( strict_types = 1 );
 
-namespace Solean\CleanProspecter\UseCase\FindByUserName;
+namespace Solean\CleanProspecter\UseCase\RefreshUser;
 
-final class FindByUserNameResponse
+final class RefreshUserResponse
 {
     /**
      * @var mixed

@@ -25,6 +25,11 @@ final class GetOrganizationImpl extends AbstractUseCase implements GetOrganizati
         $this->organizationGateway = $organizationGateway;
     }
 
+    public function canBeExecutedBy(): array
+    {
+        return ['ROLE_PROSPECTOR'];
+    }
+
     public function execute(GetOrganizationRequest $request, Presenter $presenter)
     {
         $persisted = $this->getOrganization($request);

@@ -2,13 +2,13 @@
 
 declare( strict_types = 1 );
 
-namespace Solean\CleanProspecter\UseCase\FindByUserName;
+namespace Solean\CleanProspecter\UseCase\RefreshUser;
 
 use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 
-final class FindByUserNameImpl extends AbstractUseCase implements FindByUserName
+final class RefreshUserImpl extends AbstractUseCase implements RefreshUser
 {
     /**
      * @var UserGateway
@@ -20,7 +20,7 @@ final class FindByUserNameImpl extends AbstractUseCase implements FindByUserName
         $this->userGateway = $userGateway;
     }
 
-    public function execute(FindByUserNameRequest $request, Presenter $presenter): ?object
+    public function execute(RefreshUserRequest $request, Presenter $presenter): ?object
     {
         /**
          * @var ?User $user
@@ -29,7 +29,7 @@ final class FindByUserNameImpl extends AbstractUseCase implements FindByUserName
 
         if ($user) {
             return $presenter->present(
-                new FindByUserNameResponse($user->getId(), $user->getRoles(), $user->getUserName(), $user->getPassword(), $user->getOrganization()->getId())
+                new RefreshUserResponse($user->getId(), $user->getRoles(), $user->getUserName(), $user->getPassword(), $user->getOrganization()->getId())
             );
         }
 

@@ -2,18 +2,18 @@
 
 declare( strict_types = 1 );
 
-namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindByUserName;
+namespace Tests\Unit\Solean\CleanProspecter\UseCase\RefreshUser;
 
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
-use Solean\CleanProspecter\UseCase\FindByUserName\FindByUserNameImpl;
-use Solean\CleanProspecter\UseCase\FindByUserName\FindByUserNameResponse;
+use Solean\CleanProspecter\UseCase\RefreshUser\RefreshUserImpl;
+use Solean\CleanProspecter\UseCase\RefreshUser\RefreshUserResponse;
 
-class FindByUserNameImplTest extends TestCase
+class RefreshUserImplTest extends TestCase
 {
-    public function target() : FindByUserNameImpl
+    public function target() : RefreshUserImpl
     {
         return parent::target();
     }
@@ -32,18 +32,18 @@ class FindByUserNameImplTest extends TestCase
 
     public function testResponseIsReturnedWhenUserFound()
     {
-        $request = FindByUserNameRequestFactory::regular();
+        $request = RefreshUserRequestFactory::regular();
         $entity = UserFactory::regular();
-        $expectedResponse = FindByUserNameResponseFactory::regular();
+        $expectedResponse = RefreshUserResponseFactory::regular();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn($entity);
         $this->prophesy(Presenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
         /**
-         * @var FindByUserNameResponse $response
+         * @var RefreshUserResponse $response
          */
         $response = $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
 
-        $this->assertInstanceOf(FindByUserNameResponse::class, $response);
+        $this->assertInstanceOf(RefreshUserResponse::class, $response);
         $this->assertEquals($response->getId(), $entity->getId());
         $this->assertEquals($response->getUserName(), $entity->getUserName());
         $this->assertEquals($response->getPassword(), $entity->getPassword());
@@ -53,7 +53,7 @@ class FindByUserNameImplTest extends TestCase
 
     public function testReturnNullWhenUserNotFound()
     {
-        $request = FindByUserNameRequestFactory::regular();
+        $request = RefreshUserRequestFactory::regular();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
 
