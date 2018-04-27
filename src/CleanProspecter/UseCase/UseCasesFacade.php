@@ -9,10 +9,10 @@ use Solean\CleanProspecter\UseCase;
 use Solean\CleanProspecter\Exception\UseCase\UnauthorizedException;
 
 /**
- * @method login(UseCase\Login\LoginRequest $request, Presenter $presenter)
- * @method refreshUser(UseCase\RefreshUser\RefreshUserRequest $request, Presenter $presenter)
- * @method createOrganization(UseCase\CreateOrganization\CreateOrganizationRequest $request, Presenter $presenter, ?UseCaseConsumer $consumer)
- * @method getOrganization(UseCase\GetOrganization\GetOrganizationRequest $request, Presenter $presenter, ?UseCaseConsumer $consumer)
+ * @method login(UseCase\Login\LoginRequest $request, UseCase\Login\LoginPresenter $presenter)
+ * @method refreshUser(UseCase\RefreshUser\RefreshUserRequest $request, UseCase\RefreshUser\RefreshUserPresenter $presenter)
+ * @method createOrganization(UseCase\CreateOrganization\CreateOrganizationRequest $request, UseCase\CreateOrganization\CreateOrganization $presenter, ?UseCaseConsumer $consumer)
+ * @method getOrganization(UseCase\GetOrganization\GetOrganizationRequest $request, UseCase\GetOrganization\GetOrganizationPresenter $presenter, ?UseCaseConsumer $consumer)
  */
 class UseCasesFacade
 {
