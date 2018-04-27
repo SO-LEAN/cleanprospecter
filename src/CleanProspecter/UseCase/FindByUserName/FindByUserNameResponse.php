@@ -7,6 +7,10 @@ namespace Solean\CleanProspecter\UseCase\FindByUserName;
 final class FindByUserNameResponse
 {
     /**
+     * @var mixed
+     */
+    private $id;
+    /**
      * @var array
      */
     private $roles;
@@ -23,12 +27,18 @@ final class FindByUserNameResponse
      */
     private $organizationId;
 
-    public function __construct(array $roles, string $userName, string $password, $organizationId)
+    public function __construct($id, array $roles, string $userName, string $password, $organizationId)
     {
+        $this->id = $id;
         $this->roles = $roles;
         $this->password = $password;
         $this->userName = $userName;
         $this->organizationId = $organizationId;
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     public function getRoles(): array

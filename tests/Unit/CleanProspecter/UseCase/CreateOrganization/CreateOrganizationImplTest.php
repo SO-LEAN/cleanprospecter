@@ -33,6 +33,11 @@ class CreateOrganizationImplTest extends TestCase
         $this->assertInstanceOf($this->getTargetClassName(), $this->target());
     }
 
+    public function testProspectorCanCreateOrganization()
+    {
+        $this->assertArraySubset(['ROLE_PROSPECTOR'], $this->target()->canBeExecutedBy());
+    }
+
     public function testExecuteOnRegular()
     {
         $request = CreateOrganizationRequestFactory::regular();

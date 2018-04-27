@@ -14,6 +14,6 @@ class FindByUserNameResponseFactory
      */
     public static function regular()
     {
-        return new FindByUserNameResponse(['ROLE'], 'login', UserFactory::regular()->getPassword(), 777);
+        return new FindByUserNameResponse(123, ['ROLE'], 'login', UserFactory::regular()->getPassword(), 777);
     }
 }

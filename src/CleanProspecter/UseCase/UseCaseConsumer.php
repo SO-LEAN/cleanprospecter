@@ -7,5 +7,6 @@ namespace Solean\CleanProspecter\UseCase;
 
 interface UseCaseConsumer
 {
-    public function  getRoles(): array;
+    public function getRoles(): array;
+    public function getUserId();
 }

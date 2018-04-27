@@ -29,7 +29,7 @@ final class FindByUserNameImpl extends AbstractUseCase implements FindByUserName
 
         if ($user) {
             return $presenter->present(
-                new FindByUserNameResponse($user->getRoles(), $user->getUserName(), $user->getPassword(), $user->getOrganization()->getId())
+                new FindByUserNameResponse($user->getId(), $user->getRoles(), $user->getUserName(), $user->getPassword(), $user->getOrganization()->getId())
             );
         }
 

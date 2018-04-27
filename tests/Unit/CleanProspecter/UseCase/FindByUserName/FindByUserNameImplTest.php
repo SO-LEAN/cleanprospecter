@@ -44,6 +44,7 @@ class FindByUserNameImplTest extends TestCase
         $response = $this->target()->execute($request, $this->prophesy(Presenter::class)->reveal());
 
         $this->assertInstanceOf(FindByUserNameResponse::class, $response);
+        $this->assertEquals($response->getId(), $entity->getId());
         $this->assertEquals($response->getUserName(), $entity->getUserName());
         $this->assertEquals($response->getPassword(), $entity->getPassword());
         $this->assertEquals($response->getRoles(), $entity->getRoles());

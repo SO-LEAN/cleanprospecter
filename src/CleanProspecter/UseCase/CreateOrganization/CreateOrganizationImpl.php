@@ -28,7 +28,7 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
 
     public function canBeExecutedBy(): array
     {
-        return ['ROLE_PROSPECT'];
+        return ['ROLE_PROSPECTOR'];
     }
 
     public function execute(CreateOrganizationRequest $request, Presenter $presenter): ?object
