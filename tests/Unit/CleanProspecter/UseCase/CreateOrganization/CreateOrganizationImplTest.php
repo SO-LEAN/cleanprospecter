@@ -139,10 +139,12 @@ class CreateOrganizationImplTest extends TestCase
     private function assertResponseEquals(Organization $persisted, CreateOrganizationResponse $response): void
     {
         $this->assertEquals($persisted->getId(), $response->getId());
+        $this->assertEquals($persisted->getPhoneNumber(), $response->getPhoneNumber());
         $this->assertEquals($persisted->getEmail(), $response->getEmail());
         $this->assertEquals($persisted->getLanguage(), $response->getLanguage());
         $this->assertEquals($persisted->getCorporateName(), $response->getCorporateName());
         $this->assertEquals($persisted->getForm(), $response->getForm());
+        $this->assertEquals($persisted->getObservations(), $response->getObservations());
         $this->assertEquals($persisted->getOwnedBy()->getId(), $response->getOwnedBy());
     }
 }

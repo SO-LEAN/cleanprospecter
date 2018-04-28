@@ -15,6 +15,7 @@ class CreateOrganizationRequestFactory
     {
         return new CreateOrganizationRequest(
             777,
+            '03777666888',
             'org@organization.com',
             'EN',
             'Organization',
@@ -23,6 +24,7 @@ class CreateOrganizationRequestFactory
             'SW1A 2AA',
             'London',
             'EN',
+            'observ.',
             null
         );
     }
@@ -33,6 +35,7 @@ class CreateOrganizationRequestFactory
     {
         return new CreateOrganizationRequest(
             777,
+            '03777666888',
             'org@organization.com',
             'EN',
             'Organization',
@@ -41,6 +44,7 @@ class CreateOrganizationRequestFactory
             'SW1A 2AA',
             'London',
             'EN',
+            'observ.',
             456
         );
     }
@@ -51,6 +55,7 @@ class CreateOrganizationRequestFactory
     {
         return new CreateOrganizationRequest(
             777,
+            '03333333333',
             null,
             'EN',
             null,
@@ -59,6 +64,7 @@ class CreateOrganizationRequestFactory
             'SW1A 2AA',
             'London',
             'EN',
+            'observ.',
             null
         );
     }
@@ -69,6 +75,7 @@ class CreateOrganizationRequestFactory
     {
         return new CreateOrganizationRequest(
             777,
+            '03777666888',
             'org@organization.com',
             'EN',
             'Organization',
@@ -77,6 +84,7 @@ class CreateOrganizationRequestFactory
             null,
             null,
             null,
+            'observ.',
             null
         );
     }

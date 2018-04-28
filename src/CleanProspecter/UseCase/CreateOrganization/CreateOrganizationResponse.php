@@ -15,6 +15,10 @@ class CreateOrganizationResponse
     /**
      * @var string
      */
+    private $phoneNumber;
+    /**
+     * @var string
+     */
     private $email;
     /**
      * @var string
@@ -45,14 +49,19 @@ class CreateOrganizationResponse
      */
     private $country;
     /**
+     * @var string
+     */
+    private $observations;
+    /**
      * @var mixed
      */
     private $holdBy;
 
-    public function __construct($id, $ownedBy, ?string $email, ?string $language, ?string $corporateName, ?string $form, ?string $street, ?string $postalCode, ?string $city, ?string $country, $holdBy)
+    public function __construct($id, $ownedBy, ?string $phoneNumber, ?string $email, ?string $language, ?string $corporateName, ?string $form, ?string $street, ?string $postalCode, ?string $city, ?string $country, ?string $observations, $holdBy)
     {
         $this->id = $id;
         $this->ownedBy = $ownedBy;
+        $this->phoneNumber = $phoneNumber;
         $this->email = $email;
         $this->language = $language;
         $this->corporateName = $corporateName;
@@ -61,6 +70,7 @@ class CreateOrganizationResponse
         $this->postalCode = $postalCode;
         $this->city = $city;
         $this->country = $country;
+        $this->observations = $observations;
         $this->holdBy = $holdBy;
     }
 
@@ -78,6 +88,16 @@ class CreateOrganizationResponse
     public function getOwnedBy()
     {
         return $this->ownedBy;
+    }
+
+    public function getPhoneNumber(): string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(string $phoneNumber): void
+    {
+        $this->phoneNumber = $phoneNumber;
     }
 
     public function getEmail(): ?string
@@ -118,6 +138,16 @@ class CreateOrganizationResponse
     public function getCountry(): ?string
     {
         return $this->country;
+    }
+
+    public function getObservations(): string
+    {
+        return $this->observations;
+    }
+
+    public function setObservations(string $observations): void
+    {
+        $this->observations = $observations;
     }
 
     /**

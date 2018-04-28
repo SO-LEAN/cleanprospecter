@@ -16,6 +16,7 @@ class CreateOrganizationResponseFactory
         return new CreateOrganizationResponse(
             123,
             777,
+            '03777666888',
             'org@organization.com',
             'EN',
             'Organization',
@@ -24,6 +25,7 @@ class CreateOrganizationResponseFactory
             'SW1A 2AA',
             'London',
             'EN',
+            'observ.',
             null
             );
     }
@@ -35,6 +37,7 @@ class CreateOrganizationResponseFactory
         return new CreateOrganizationResponse(
             123,
             777,
+            '03777666888',
             'org@organization.com',
             'EN',
             'Organization',
@@ -43,6 +46,7 @@ class CreateOrganizationResponseFactory
             'SW1A 2AA',
             'London',
             'EN',
+            'observ.',
             456
         );
     }
@@ -54,6 +58,7 @@ class CreateOrganizationResponseFactory
         return new CreateOrganizationResponse(
             123,
             777,
+            '03777666888',
             'org@organization.com',
             'EN',
             'Organization',
@@ -62,6 +67,7 @@ class CreateOrganizationResponseFactory
             null,
             null,
             null,
+            'observ.',
             null
         );
     }

@@ -13,6 +13,10 @@ final class CreateOrganizationRequest
     /**
      * @var string
      */
+    private $phoneNumber;
+    /**
+     * @var string
+     */
     private $email;
     /**
      * @var string
@@ -43,13 +47,18 @@ final class CreateOrganizationRequest
      */
     private $country;
     /**
+     * @var string
+     */
+    private $observations;
+    /**
      * @var mixed
      */
     private $holdBy;
 
-    public function __construct($ownedBy, ?string $email, ?string $language, ?string $corporateName, ?string $form, ?string $street, ?string $postalCode, ?string $city, ?string $country, $holdBy)
+    public function __construct($ownedBy, ?string $phoneNumber, ?string $email, ?string $language, ?string $corporateName, ?string $form, ?string $street, ?string $postalCode, ?string $city, ?string $country, ?string $observations, $holdBy)
     {
         $this->ownedBy = $ownedBy;
+        $this->phoneNumber = $phoneNumber;
         $this->email = $email;
         $this->language = $language;
         $this->corporateName = $corporateName;
@@ -58,6 +67,7 @@ final class CreateOrganizationRequest
         $this->postalCode = $postalCode;
         $this->city = $city;
         $this->country = $country;
+        $this->observations = $observations;
         $this->holdBy = $holdBy;
     }
 
@@ -67,6 +77,16 @@ final class CreateOrganizationRequest
     public function getOwnedBy()
     {
         return $this->ownedBy;
+    }
+
+    public function getPhoneNumber(): string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(string $phoneNumber): void
+    {
+        $this->phoneNumber = $phoneNumber;
     }
 
     public function getEmail(): ?string
@@ -107,6 +127,16 @@ final class CreateOrganizationRequest
     public function getCountry(): ?string
     {
         return $this->country;
+    }
+
+    public function getObservations(): string
+    {
+        return $this->observations;
+    }
+
+    public function setObservations(string $observations): void
+    {
+        $this->observations = $observations;
     }
 
     public function getHoldBy()

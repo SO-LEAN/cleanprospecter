@@ -52,6 +52,7 @@ final class GetOrganizationImpl extends AbstractUseCase implements GetOrganizati
         return new GetOrganizationResponse(
             $persisted->getId(),
             $persisted->getOwnedBy() ? $persisted->getOwnedBy()->getId() : null,
+            $persisted->getPhoneNumber(),
             $persisted->getEmail(),
             $persisted->getLanguage(),
             $persisted->getCorporateName(),
@@ -60,6 +61,7 @@ final class GetOrganizationImpl extends AbstractUseCase implements GetOrganizati
             $persisted->getAddress() ? $persisted->getAddress()->getPostalCode() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCity() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCountry() : null,
+            $persisted->getObservations(),
             $persisted->getHoldBy() ? $persisted->getHoldBy()->getId() : null
         );
     }

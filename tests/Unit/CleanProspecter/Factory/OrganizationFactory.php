@@ -15,10 +15,12 @@ class OrganizationFactory
 
         $organization->setId(123);
         $organization->setLanguage('EN');
+        $organization->setPhoneNumber('03777666888');
         $organization->setEmail('org@organization.com');
         $organization->setCorporateName('Organization');
         $organization->setForm('Limited Company');
         $organization->setAddress(Address::fromValues('10 Downing Street', 'SW1A 2AA', 'London', 'EN'));
+        $organization->setObservations('observ.');
         $organization->setOwnedBy(self::creator());
 
         return $organization;
@@ -53,8 +55,10 @@ class OrganizationFactory
         $holding->setId(456);
         $holding->setLanguage('LU');
         $holding->setCorporateName('Organization holding');
+        $holding->setPhoneNumber('03333333333');
         $holding->setEmail('org@organization-holding.com');
         $holding->setForm('GMBH');
+        $holding->setObservations('observ.');
 
         return $holding;
     }
@@ -103,9 +107,11 @@ class OrganizationFactory
 
         $organization->setId(777);
         $organization->setLanguage('FR');
+        $organization->setPhoneNumber('0999999999');
         $organization->setEmail('org@organization.com');
         $organization->setCorporateName('Prospector Organization');
         $organization->setForm('Limited Company');
+        $organization->setObservations('observ.');
 
         return $organization;
     }

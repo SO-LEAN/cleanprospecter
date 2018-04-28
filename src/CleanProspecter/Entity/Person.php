@@ -15,7 +15,15 @@ abstract class Person extends Base
     /**
      * @var string
      */
+    private $phoneNumber;
+    /**
+     * @var string
+     */
     private $language;
+    /**
+     * @var string
+     */
+    private $observations;
 
     public function getEmail(): ?string
     {
@@ -38,6 +46,26 @@ abstract class Person extends Base
     public function setLanguage(string $language): void
     {
         $this->language = $language;
+    }
+
+    public function getObservations(): string
+    {
+        return $this->observations;
+    }
+
+    public function setObservations(string $observations): void
+    {
+        $this->observations = $observations;
+    }
+
+    public function getPhoneNumber(): string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(string $phoneNumber): void
+    {
+        $this->phoneNumber = $phoneNumber;
     }
 
     abstract public function getFullName(): string;

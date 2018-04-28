@@ -58,6 +58,12 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         if ($request->getLanguage()) {
             $organization->setLanguage($request->getLanguage());
         }
+        if ($request->getPhoneNumber()) {
+            $organization->setPhoneNumber($request->getPhoneNumber());
+        }
+        if ($request->getObservations()) {
+            $organization->setObservations($request->getObservations());
+        }
         if ($request->getEmail()) {
             $organization->setEmail($request->getEmail());
         }
@@ -107,6 +113,7 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         $response = new CreateOrganizationResponse(
             $persisted->getId(),
             $persisted->getOwnedBy()->getId(),
+            $persisted->getPhoneNumber(),
             $persisted->getEmail(),
             $persisted->getLanguage(),
             $persisted->getCorporateName(),
@@ -115,6 +122,7 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
             $persisted->getAddress() ? $persisted->getAddress()->getPostalCode() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCity() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCountry() : null,
+            $persisted->getObservations(),
             $persisted->getHoldBy() ? $persisted->getHoldBy()->getId() : null
         );
 
