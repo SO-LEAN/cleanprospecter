@@ -88,7 +88,7 @@ class GetOrganizationResponse
         return $this->ownedBy;
     }
 
-    public function getPhoneNumber(): string
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
@@ -138,7 +138,7 @@ class GetOrganizationResponse
         return $this->country;
     }
 
-    public function getObservations(): string
+    public function getObservations(): ?string
     {
         return $this->observations;
     }
