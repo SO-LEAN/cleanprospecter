@@ -48,7 +48,7 @@ abstract class Person extends Base
         $this->language = $language;
     }
 
-    public function getObservations(): string
+    public function getObservations(): ?string
     {
         return $this->observations;
     }
@@ -58,7 +58,7 @@ abstract class Person extends Base
         $this->observations = $observations;
     }
 
-    public function getPhoneNumber(): string
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
