@@ -102,7 +102,7 @@ class Organization extends Person
         $this->holdBy = $holdBy;
     }
 
-    public function getOwnedBy(): Organization
+    public function getOwnedBy(): ?Organization
     {
         return $this->ownedBy;
     }

@@ -4,8 +4,6 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\UseCase\GetOrganization;
 
-
-
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Entity\Organization;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
@@ -41,7 +39,7 @@ final class GetOrganizationImpl extends AbstractUseCase implements GetOrganizati
         try {
             $persisted = $this->organizationGateway->get($request->getId());
         } catch (Gateway\NotFoundException $e) {
-            throw new NotFoundException(sprintf('Organization with #ID %d not found', $request->getId()), 404, $e, ['holdBy' => 'Holding not found']);
+            throw new NotFoundException(sprintf('Organization with #ID %d not found', $request->getId()), 404, $e, ['id' => 'Organization not found']);
         }
 
         return $persisted;
@@ -65,5 +63,4 @@ final class GetOrganizationImpl extends AbstractUseCase implements GetOrganizati
             $persisted->getHoldBy() ? $persisted->getHoldBy()->getId() : null
         );
     }
-
 }

@@ -2,18 +2,18 @@
 
 declare( strict_types = 1 );
 
-namespace Tests\Unit\Solean\CleanProspecter\UseCase\CreateOrganization;
+namespace Tests\Unit\Solean\CleanProspecter\UseCase\GetOrganization;
 
-use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationResponse;
+use Solean\CleanProspecter\UseCase\GetOrganization\GetOrganizationResponse;
 
-class CreateOrganizationResponseFactory
+class GetOrganizationResponseFactory
 {
     /**
      * Default test organization
      */
     public static function regular()
     {
-        return new CreateOrganizationResponse(
+        return new GetOrganizationResponse(
             123,
             777,
             '03777666888',
@@ -34,7 +34,7 @@ class CreateOrganizationResponseFactory
      */
     public static function hold()
     {
-        return new CreateOrganizationResponse(
+        return new GetOrganizationResponse(
             123,
             777,
             '03777666888',
@@ -55,7 +55,7 @@ class CreateOrganizationResponseFactory
      */
     public static function withoutAddress()
     {
-        return new CreateOrganizationResponse(
+        return new GetOrganizationResponse(
             123,
             777,
             '03777666888',
