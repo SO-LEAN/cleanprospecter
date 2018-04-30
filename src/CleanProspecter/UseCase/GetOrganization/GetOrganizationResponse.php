@@ -61,6 +61,7 @@ class GetOrganizationResponse
     {
         $this->id = $id;
         $this->ownedBy = $ownedBy;
+        $this->phoneNumber = $phoneNumber;
         $this->email = $email;
         $this->language = $language;
         $this->corporateName = $corporateName;
@@ -69,6 +70,7 @@ class GetOrganizationResponse
         $this->postalCode = $postalCode;
         $this->city = $city;
         $this->country = $country;
+        $this->observations = $observations;
         $this->holdBy = $holdBy;
     }
 
