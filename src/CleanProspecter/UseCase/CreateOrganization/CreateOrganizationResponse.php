@@ -135,7 +135,7 @@ class CreateOrganizationResponse
         return $this->country;
     }
 
-    public function getObservations(): string
+    public function getObservations(): ?string
     {
         return $this->observations;
     }

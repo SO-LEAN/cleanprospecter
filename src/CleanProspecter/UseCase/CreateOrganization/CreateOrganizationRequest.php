@@ -124,7 +124,7 @@ final class CreateOrganizationRequest
         return $this->country;
     }
 
-    public function getObservations(): string
+    public function getObservations(): ?string
     {
         return $this->observations;
     }
