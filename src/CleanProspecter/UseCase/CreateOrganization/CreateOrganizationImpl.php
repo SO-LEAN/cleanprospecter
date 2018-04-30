@@ -5,8 +5,10 @@ declare( strict_types = 1 );
 namespace Solean\CleanProspecter\UseCase\CreateOrganization;
 
 use Solean\CleanProspecter\Entity\Address;
+use Solean\CleanProspecter\Entity\File;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Entity\Organization;
+use Solean\CleanProspecter\Gateway\Storage;
 use Solean\CleanProspecter\Gateway\UserNotifier;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
@@ -21,13 +23,18 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
      */
     private $organizationGateway;
     /**
+     * @var Storage
+     */
+    private $storage;
+    /**
      * @var UserNotifier
      */
     private $userNotifier;
 
-    public function __construct(OrganizationGateway $organizationGateway,UserNotifier $userNotifier)
+    public function __construct(OrganizationGateway $organizationGateway, Storage $storage, UserNotifier $userNotifier)
     {
         $this->organizationGateway = $organizationGateway;
+        $this->storage = $storage;
         $this->userNotifier = $userNotifier;
     }
 
@@ -85,6 +92,10 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
             $organization->setAddress(Address::fromValues($request->getStreet(), $request->getPostalCode(), $request->getCity(), $request->getCountry()));
         }
 
+        if ($request->getLogo()) {
+            $organization->setLogo(File::fromValues($this->storage->add($request->getLogo()), $request->getLogo()->getExtension(), $request->getLogo()->getSize()));
+        }
+
         return $organization;
     }
 
@@ -131,12 +142,15 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
             $persisted->getAddress() ? $persisted->getAddress()->getCity() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCountry() : null,
             $persisted->getObservations(),
+            $persisted->getLogo() ? $persisted->getLogo()->getUrl() : null,
+            $persisted->getLogo() ? $persisted->getLogo()->getExtension() : null,
+            $persisted->getLogo() ? $persisted->getLogo()->getSize() : null,
             $persisted->getHoldBy() ? $persisted->getHoldBy()->getId() : null
         );
 
         return $response;
     }
-    
+
     private function notifySuccess(string $msg)
     {
         $this->userNotifier->addSuccess($msg);

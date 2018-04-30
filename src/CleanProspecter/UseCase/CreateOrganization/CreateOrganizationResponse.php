@@ -53,11 +53,40 @@ class CreateOrganizationResponse
      */
     private $observations;
     /**
+     * @var string
+     */
+    private $logoUrl;
+    /**
+     * @var string
+     */
+    private $logoExtension;
+    /**
+     * @var int
+     */
+    private $logoSize;
+    /**
      * @var mixed
      */
     private $holdBy;
 
-    public function __construct($id, $ownedBy, ?string $phoneNumber, ?string $email, ?string $language, ?string $corporateName, ?string $form, ?string $street, ?string $postalCode, ?string $city, ?string $country, ?string $observations, $holdBy)
+    public function __construct(
+        $id,
+        $ownedBy,
+        ?string $phoneNumber,
+        ?string $email,
+        ?string $language,
+        ?string $corporateName,
+        ?string $form,
+        ?string $street,
+        ?string $postalCode,
+        ?string $city,
+        ?string $country,
+        ?string $observations,
+        ?string $logoUrl,
+        ?string $logoExtension,
+        ?int $logoSize,
+        $holdBy
+    )
     {
         $this->id = $id;
         $this->ownedBy = $ownedBy;
@@ -71,6 +100,9 @@ class CreateOrganizationResponse
         $this->city = $city;
         $this->country = $country;
         $this->observations = $observations;
+        $this->logoUrl = $logoUrl;
+        $this->logoExtension = $logoExtension;
+        $this->logoSize = $logoSize;
         $this->holdBy = $holdBy;
     }
 
@@ -138,6 +170,21 @@ class CreateOrganizationResponse
     public function getObservations(): ?string
     {
         return $this->observations;
+    }
+
+    public function getLogoUrl(): ?string
+    {
+        return $this->logoUrl;
+    }
+
+    public function getLogoExtension(): ?string
+    {
+        return $this->logoExtension;
+    }
+
+    public function getLogoSize(): ?int
+    {
+        return $this->logoSize;
     }
 
     /**

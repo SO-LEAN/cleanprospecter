@@ -4,11 +4,15 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\CreateOrganization;
 
-use Solean\CleanProspecter\Gateway\UserNotifier;
+use Solean\CleanProspecter\Entity\File;
+use Solean\CleanProspecter\Gateway\Storage;
+use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationRequest;
+use \SplFileInfo;
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Exception\UseCase;
 use Solean\CleanProspecter\Entity\Organization;
+use Solean\CleanProspecter\Gateway\UserNotifier;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Tests\Unit\Solean\CleanProspecter\Factory\OrganizationFactory;
 use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationImpl;
@@ -26,6 +30,7 @@ class CreateOrganizationImplTest extends TestCase
     {
         return [
             $this->prophesy(OrganizationGateway::class)->reveal(),
+            $this->prophesy(Storage::class)->reveal(),
             $this->prophesy(UserNotifier::class)->reveal(),
         ];
     }
@@ -137,6 +142,34 @@ class CreateOrganizationImplTest extends TestCase
         $this->prophesy(OrganizationGateway::class)->create($notPersisted)->shouldBeCalled()->willReturn($persisted);
         $this->prophesy(UserNotifier::class)->addSuccess('Organization created !')->shouldBeCalled();
         $this->prophesy(CreateOrganizationPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
+    }
+
+    public function testExecuteWithLogo()
+    {
+        $url = 'https://domain.com/path/to/file.ext';
+        $ext = 'ext';
+        $size = 2000;
+
+        $this->prophesy(SplFileInfo::class)->getExtension()->shouldBeCalled()->willReturn($ext);
+        $this->prophesy(SplFileInfo::class)->getSize()->shouldBeCalled()->willReturn($size);
+        $file = $this->prophesy(SplFileInfo::class)->reveal();
+        $this->prophesy(Storage::class)->add($file)->shouldBeCalled()->willReturn($url);
+
+        $request  = new CreateOrganizationRequest(777, null, null, null, 'name', null, null, null, null, null, null, $file, null);
+
+        $entity = new Organization();
+        $entity->setCorporateName($request->getCorporateName());
+        $entity->setLogo(File::fromValues($url,  $ext, $size ));
+        $entity->setOwnedBy(OrganizationFactory::creator());
+
+        $persisted = clone $entity;
+        $persisted->setId(123);
+
+        $expected = new CreateOrganizationResponse($persisted->getId, 777, null, null, null, 'name', null, null, null, null, null, null, $url, $ext, $size, null);
+
+        $this->mock($entity, $entity, $expected);
+
+        $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
     }
 
     private function assertResponseEquals(Organization $persisted, CreateOrganizationResponse $response): void

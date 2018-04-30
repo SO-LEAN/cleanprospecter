@@ -4,6 +4,8 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\UseCase\CreateOrganization;
 
+use SplFileInfo;
+
 final class CreateOrganizationRequest
 {
     /**
@@ -51,11 +53,28 @@ final class CreateOrganizationRequest
      */
     private $observations;
     /**
+     * @var SplFileInfo
+     */
+    private $logo;
+    /**
      * @var mixed
      */
     private $holdBy;
 
-    public function __construct($ownedBy, ?string $phoneNumber, ?string $email, ?string $language, ?string $corporateName, ?string $form, ?string $street, ?string $postalCode, ?string $city, ?string $country, ?string $observations, $holdBy)
+    public function __construct(
+        $ownedBy,
+        ?string $phoneNumber,
+        ?string $email,
+        ?string $language,
+        ?string $corporateName,
+        ?string $form,
+        ?string $street,
+        ?string $postalCode,
+        ?string $city,
+        ?string $country,
+        ?string $observations,
+        ?SplFileInfo $logo,
+        $holdBy)
     {
         $this->ownedBy = $ownedBy;
         $this->phoneNumber = $phoneNumber;
@@ -68,6 +87,7 @@ final class CreateOrganizationRequest
         $this->city = $city;
         $this->country = $country;
         $this->observations = $observations;
+        $this->logo = $logo;
         $this->holdBy = $holdBy;
     }
 
@@ -127,6 +147,11 @@ final class CreateOrganizationRequest
     public function getObservations(): ?string
     {
         return $this->observations;
+    }
+
+    public function getLogo(): ?SplFileInfo
+    {
+        return $this->logo;
     }
 
     public function getHoldBy()

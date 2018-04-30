@@ -25,6 +25,7 @@ class CreateOrganizationRequestFactory
             'London',
             'EN',
             'observ.',
+            null,
             null
         );
     }
@@ -45,6 +46,7 @@ class CreateOrganizationRequestFactory
             'London',
             'EN',
             'observ.',
+            null,
             456
         );
     }
@@ -65,6 +67,7 @@ class CreateOrganizationRequestFactory
             'London',
             'EN',
             'observ.',
+            null,
             null
         );
     }
@@ -85,6 +88,7 @@ class CreateOrganizationRequestFactory
             null,
             null,
             'observ.',
+            null,
             null
         );
     }

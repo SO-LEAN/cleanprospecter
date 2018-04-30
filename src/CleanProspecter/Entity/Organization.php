@@ -31,6 +31,10 @@ class Organization extends Person
      */
     private $ownedBy;
     /**
+     * @var File
+     */
+    private $logo;
+    /**
      * @var Organization[]
      */
     private $subsidiaries;
@@ -110,6 +114,16 @@ class Organization extends Person
     public function setOwnedBy(Organization $ownedBy): void
     {
         $this->ownedBy = $ownedBy;
+    }
+
+    public function getLogo(): ?File
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(File $logo): void
+    {
+        $this->logo = $logo;
     }
 
     public function getFullName(): string
