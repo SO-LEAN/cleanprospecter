@@ -95,11 +95,6 @@ class CreateOrganizationResponse
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(string $phoneNumber): void
-    {
-        $this->phoneNumber = $phoneNumber;
-    }
-
     public function getEmail(): ?string
     {
         return $this->email;
@@ -143,11 +138,6 @@ class CreateOrganizationResponse
     public function getObservations(): string
     {
         return $this->observations;
-    }
-
-    public function setObservations(string $observations): void
-    {
-        $this->observations = $observations;
     }
 
     /**

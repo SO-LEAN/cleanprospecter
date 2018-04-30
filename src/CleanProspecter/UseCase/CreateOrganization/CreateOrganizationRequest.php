@@ -79,14 +79,9 @@ final class CreateOrganizationRequest
         return $this->ownedBy;
     }
 
-    public function getPhoneNumber(): string
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
-    }
-
-    public function setPhoneNumber(string $phoneNumber): void
-    {
-        $this->phoneNumber = $phoneNumber;
     }
 
     public function getEmail(): ?string
@@ -132,11 +127,6 @@ final class CreateOrganizationRequest
     public function getObservations(): string
     {
         return $this->observations;
-    }
-
-    public function setObservations(string $observations): void
-    {
-        $this->observations = $observations;
     }
 
     public function getHoldBy()
