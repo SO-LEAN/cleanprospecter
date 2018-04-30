@@ -7,6 +7,7 @@ namespace Solean\CleanProspecter\UseCase\CreateOrganization;
 use Solean\CleanProspecter\Entity\Address;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Entity\Organization;
+use Solean\CleanProspecter\Gateway\UserNotifier;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\Exception\UseCase\UseCaseException;
@@ -19,10 +20,15 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
      * @var OrganizationGateway
      */
     private $organizationGateway;
+    /**
+     * @var UserNotifier
+     */
+    private $userNotifier;
 
-    public function __construct(OrganizationGateway $organizationGateway)
+    public function __construct(OrganizationGateway $organizationGateway,UserNotifier $userNotifier)
     {
         $this->organizationGateway = $organizationGateway;
+        $this->userNotifier = $userNotifier;
     }
 
     public function canBeExecutedBy(): array
@@ -40,6 +46,8 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
 
         $persisted = $this->create($organization);
         $response = $this->buildResponse($persisted);
+
+        $this->notifySuccess('Organization created !');
 
         return $presenter->present($response);
     }
@@ -127,5 +135,10 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         );
 
         return $response;
+    }
+    
+    private function notifySuccess(string $msg)
+    {
+        $this->userNotifier->addSuccess($msg);
     }
 }

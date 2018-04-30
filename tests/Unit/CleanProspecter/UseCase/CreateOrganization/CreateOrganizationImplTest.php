@@ -4,6 +4,7 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\CreateOrganization;
 
+use Solean\CleanProspecter\Gateway\UserNotifier;
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Exception\UseCase;
@@ -25,6 +26,7 @@ class CreateOrganizationImplTest extends TestCase
     {
         return [
             $this->prophesy(OrganizationGateway::class)->reveal(),
+            $this->prophesy(UserNotifier::class)->reveal(),
         ];
     }
 
@@ -133,6 +135,7 @@ class CreateOrganizationImplTest extends TestCase
     {
         $this->prophesy(OrganizationGateway::class)->get(777)->shouldBeCalled()->willReturn(OrganizationFactory::creator());
         $this->prophesy(OrganizationGateway::class)->create($notPersisted)->shouldBeCalled()->willReturn($persisted);
+        $this->prophesy(UserNotifier::class)->addSuccess('Organization created !')->shouldBeCalled();
         $this->prophesy(CreateOrganizationPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
     }
 
