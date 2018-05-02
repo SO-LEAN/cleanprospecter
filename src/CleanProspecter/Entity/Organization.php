@@ -35,6 +35,10 @@ class Organization extends Person
      */
     private $logo;
     /**
+     * @var bool
+     */
+    private $hasLogo;
+    /**
      * @var Organization[]
      */
     private $subsidiaries;
@@ -58,6 +62,7 @@ class Organization extends Person
     public function __construct()
     {
         $this->hasAddress = false;
+        $this->hasLogo = false;
         $this->subsidiaries = [];
         $this->applicationUsers = [];
         $this->ownedProspectedOrganizations = [];
@@ -118,12 +123,13 @@ class Organization extends Person
 
     public function getLogo(): ?File
     {
-        return $this->logo;
+        return $this->hasLogo ? $this->logo : null;
     }
 
     public function setLogo(File $logo): void
     {
         $this->logo = $logo;
+        $this->hasLogo = $logo ? true : false;
     }
 
     public function getFullName(): string

@@ -28,7 +28,7 @@ final class File
     public static function fromValues(string $url, string $extension, int $size)
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new \InvalidArgumentException(sprintf('URL "%s" is not valid', $url));
+            throw new InvalidArgumentException(sprintf('URL "%s" is not valid', $url));
         }
 
         $file = new File();
