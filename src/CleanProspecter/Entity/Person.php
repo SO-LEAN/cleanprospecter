@@ -30,7 +30,7 @@ abstract class Person extends Base
         return $this->email;
     }
 
-    public function setEmail(string $email): void
+    public function setEmail(?string $email): void
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException(sprintf('Email "%s" is not valid', $email));
@@ -43,7 +43,7 @@ abstract class Person extends Base
         return $this->language;
     }
 
-    public function setLanguage(string $language): void
+    public function setLanguage(?string $language): void
     {
         $this->language = $language;
     }
@@ -53,7 +53,7 @@ abstract class Person extends Base
         return $this->observations;
     }
 
-    public function setObservations(string $observations): void
+    public function setObservations(?string $observations): void
     {
         $this->observations = $observations;
     }
@@ -63,7 +63,7 @@ abstract class Person extends Base
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(string $phoneNumber): void
+    public function setPhoneNumber(?string $phoneNumber): void
     {
         $this->phoneNumber = $phoneNumber;
     }
