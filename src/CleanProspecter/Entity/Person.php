@@ -32,7 +32,7 @@ abstract class Person extends Base
 
     public function setEmail(?string $email): void
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if ($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException(sprintf('Email "%s" is not valid', $email));
         }
         $this->email = $email;
