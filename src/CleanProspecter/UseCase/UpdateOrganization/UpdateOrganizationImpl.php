@@ -2,21 +2,22 @@
 
 declare( strict_types = 1 );
 
-namespace Solean\CleanProspecter\UseCase\CreateOrganization;
+namespace Solean\CleanProspecter\UseCase\UpdateOrganization;
 
 use Solean\CleanProspecter\Entity\Address;
 use Solean\CleanProspecter\Entity\File;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Entity\Organization;
+use Solean\CleanProspecter\Exception\UseCase\NotFoundException;
+use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
+use Solean\CleanProspecter\Exception\UseCase\UseCaseException;
 use Solean\CleanProspecter\Gateway\Storage;
 use Solean\CleanProspecter\Gateway\UserNotifier;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
-use Solean\CleanProspecter\Exception\UseCase\UseCaseException;
-use Solean\CleanProspecter\Exception\UseCase\NotFoundException;
-use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
+use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationRequest;
 
-final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrganization
+final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrganization
 {
     /**
      * @var OrganizationGateway
@@ -43,23 +44,23 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         return ['ROLE_PROSPECTOR'];
     }
 
-    public function execute(CreateOrganizationRequest $request, CreateOrganizationPresenter $presenter): ?object
+    public function execute(UpdateOrganizationRequest $request, UpdateOrganizationPresenter $presenter): ?object
     {
         $this->validateRequest($request);
 
-        $organization = $this->buildOrganization($request);
+        $organization = $this->updateOrganization($request, $this->organizationGateway->get($request->getId()));
         $this->joinToOwner($request, $organization);
         $this->joinToHoldingIfNeeded($request, $organization);
 
-        $persisted = $this->create($organization);
+        $persisted = $this->update($organization);
         $response = $this->buildResponse($persisted);
 
-        $this->notifySuccess('Organization created !');
+        $this->notifySuccess('Organization updated !');
 
         return $presenter->present($response);
     }
 
-    private function validateRequest(CreateOrganizationRequest $request): void
+    private function validateRequest(UpdateOrganizationRequest $request): void
     {
         if (!$request->getOwnedBy()) {
             $msg = 'Owner is missing';
@@ -72,45 +73,36 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         }
     }
 
-    private function buildOrganization(CreateOrganizationRequest $request): Organization
+    private function updateOrganization(UpdateOrganizationRequest $request, Organization $organization): Organization
     {
-        $organization = new Organization();
-        if ($request->getLanguage()) {
-            $organization->setLanguage($request->getLanguage());
-        }
-        if ($request->getPhoneNumber()) {
-            $organization->setPhoneNumber($request->getPhoneNumber());
-        }
-        if ($request->getObservations()) {
-            $organization->setObservations($request->getObservations());
-        }
-        if ($request->getEmail()) {
-            $organization->setEmail($request->getEmail());
-        }
-        if ($request->getCorporateName()) {
-            $organization->setCorporateName($request->getCorporateName());
-        }
-        if ($request->getForm()) {
-            $organization->setForm($request->getForm());
-        }
-        if ($request->hasAddress()) {
+
+        $organization->setLanguage($request->getLanguage());
+        $organization->setPhoneNumber($request->getPhoneNumber());
+        $organization->setObservations($request->getObservations());
+        $organization->setEmail($request->getEmail());
+        $organization->setCorporateName($request->getCorporateName());
+        $organization->setForm($request->getForm());
+
+        if ($organization->getAddress()) {
             $organization->setAddress(Address::fromValues($request->getStreet(), $request->getPostalCode(), $request->getCity(), $request->getCountry()));
+        } else {
+            $organization->setAddress(null);
         }
 
-        if ($request->getLogo()) {
+        if ($organization->getLogo()) {
             $organization->setLogo(File::fromValues($this->storage->add($request->getLogo()), $request->getLogo()->getExtension(), $request->getLogo()->getSize()));
         }
 
         return $organization;
     }
 
-    private function joinToOwner(CreateOrganizationRequest $request, Organization $organization): void
+    private function joinToOwner(UpdateOrganizationRequest $request, Organization $organization): void
     {
         $owner = $this->organizationGateway->get($request->getOwnedBy());
         $organization->setOwnedBy($owner);
     }
 
-    private function joinToHoldingIfNeeded(CreateOrganizationRequest $request, Organization $organization): void
+    private function joinToHoldingIfNeeded(UpdateOrganizationRequest $request, Organization $organization): void
     {
         if ($request->getHoldBy()) {
             try {
@@ -118,13 +110,15 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
             } catch (Gateway\NotFoundException $e) {
                 throw new NotFoundException(sprintf('Holding with #ID %d not found', $request->getHoldBy()), 404, $e, ['holdBy' => 'Holding not found']);
             }
+        } else {
+            $organization->setHoldBy(null);
         }
     }
 
-    private function create(Organization $organization): Organization
+    private function update(Organization $organization): Organization
     {
         try {
-            $persisted = $this->organizationGateway->create($organization);
+            $persisted = $this->organizationGateway->update($organization->getId(), $organization);
         } catch (Gateway\UniqueConstraintViolationException $e) {
             throw new UniqueConstraintViolationException('Email already used', 412, $e, ['email' => sprintf('Email "%s" already used', $organization->getEmail())]);
         }
@@ -132,9 +126,9 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         return $persisted;
     }
 
-    private function buildResponse(Organization $persisted): CreateOrganizationResponse
+    private function buildResponse(Organization $persisted): UpdateOrganizationResponse
     {
-        $response = new CreateOrganizationResponse(
+        $response = new UpdateOrganizationResponse(
             $persisted->getId(),
             $persisted->getOwnedBy()->getId(),
             $persisted->getPhoneNumber(),

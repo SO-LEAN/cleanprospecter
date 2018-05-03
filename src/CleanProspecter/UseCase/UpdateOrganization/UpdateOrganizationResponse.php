@@ -1,8 +1,8 @@
 <?php
 
-namespace Solean\CleanProspecter\UseCase\GetOrganization;
+namespace Solean\CleanProspecter\UseCase\UpdateOrganization;
 
-class GetOrganizationResponse
+class UpdateOrganizationResponse
 {
     /**
      * @var mixed
@@ -121,7 +121,7 @@ class GetOrganizationResponse
         return $this->ownedBy;
     }
 
-    public function getPhoneNumber(): ?string
+    public function getPhoneNumber(): string
     {
         return $this->phoneNumber;
     }

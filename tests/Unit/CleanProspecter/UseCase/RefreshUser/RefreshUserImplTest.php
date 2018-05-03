@@ -6,10 +6,12 @@ namespace Tests\Unit\Solean\CleanProspecter\UseCase\RefreshUser;
 
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
-use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
 use Solean\CleanProspecter\UseCase\RefreshUser\RefreshUserImpl;
 use Solean\CleanProspecter\UseCase\RefreshUser\RefreshUserResponse;
 use Solean\CleanProspecter\UseCase\RefreshUser\RefreshUserPresenter;
+
+use function Tests\Unit\Solean\Base\aUser;
+use function Tests\Unit\Solean\Base\anOrganization;
 
 class RefreshUserImplTest extends TestCase
 {
@@ -32,9 +34,13 @@ class RefreshUserImplTest extends TestCase
 
     public function testResponseIsReturnedWhenUserFound()
     {
-        $request = RefreshUserRequestFactory::regular();
-        $entity = UserFactory::regular();
-        $expectedResponse = RefreshUserResponseFactory::regular();
+        $request = aRefreshUserRequest()
+            ->build();
+        $entity = aUser()
+            ->with('organization', anOrganization()->withCreatorData())
+            ->build();
+
+        $expectedResponse = aRefreshUserResponse()->build();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn($entity);
         $this->prophesy(RefreshUserPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
@@ -43,20 +49,28 @@ class RefreshUserImplTest extends TestCase
          */
         $response = $this->target()->execute($request, $this->prophesy(RefreshUserPresenter::class)->reveal());
 
-        $this->assertInstanceOf(RefreshUserResponse::class, $response);
-        $this->assertEquals($response->getId(), $entity->getId());
-        $this->assertEquals($response->getUserName(), $entity->getUserName());
-        $this->assertEquals($response->getPassword(), $entity->getPassword());
-        $this->assertEquals($response->getRoles(), $entity->getRoles());
-        $this->assertEquals($response->getOrganizationId(), $entity->getOrganization()->getId());
+        $this->assertEquals($expectedResponse->getId(), $response->getId());
+        $this->assertEquals($expectedResponse->getUserName(), $response->getUserName());
+        $this->assertEquals($expectedResponse->getPassword(), $response->getPassword());
+        $this->assertEquals($expectedResponse->getRoles(), $response->getRoles());
+        $this->assertEquals($expectedResponse->getOrganizationId(), $response->getOrganizationId());
     }
 
     public function testReturnNullWhenUserNotFound()
     {
-        $request = RefreshUserRequestFactory::regular();
+        $request = aRefreshUserRequest()->build();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
 
         $this->assertNull($this->target()->execute($request, $this->prophesy(RefreshUserPresenter::class)->reveal()));
     }
+}
+
+function aRefreshUserRequest()
+{
+    return new RefreshUserRequestBuilder();
+}
+function aRefreshUserResponse()
+{
+    return new RefreshUserResponseBuilder();
 }

@@ -9,8 +9,9 @@ use Solean\CleanProspecter\UseCase\Login\LoginImpl;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Solean\CleanProspecter\UseCase\Login\LoginResponse;
 use Solean\CleanProspecter\UseCase\Login\LoginPresenter;
-use Tests\Unit\Solean\CleanProspecter\Factory\UserFactory;
 use Solean\CleanProspecter\Exception\UseCase\BadCredentialException;
+
+use function Tests\Unit\Solean\Base\aUser;
 
 class LoginImplTest extends TestCase
 {
@@ -33,9 +34,9 @@ class LoginImplTest extends TestCase
 
     public function testResponseIsReturnedWhenPasswordIsCorrectBeforeEncoding()
     {
-        $request = LoginRequestFactory::regular();
-        $entity  = UserFactory::regular();
-        $expectedResponse = LoginResponseFactory::regular();
+        $request = aLoginRequest()->build();
+        $entity  = aUser()->build();
+        $expectedResponse = aLoginResponse()->build();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn($entity);
         $this->prophesy(LoginPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
@@ -52,9 +53,11 @@ class LoginImplTest extends TestCase
 
     public function testBadCredentialExceptionIsThrownWhenPasswordHasTypo()
     {
-        $request = LoginRequestFactory::typo();
+        $request = aLoginRequest()
+            ->withTypo()
+            ->build();
 
-        $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(UserFactory::regular());
+        $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(aUser()->build());
         $this->expectExceptionObject(new BadCredentialException());
 
         $this->target()->execute($request, $this->prophesy(LoginPresenter::class)->reveal());
@@ -62,11 +65,20 @@ class LoginImplTest extends TestCase
 
     public function testBadCredentialExceptionIsThrownWhenUserIsUnknown()
     {
-        $request = LoginRequestFactory::typo();
+        $request = aLoginRequest()->build();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
         $this->expectExceptionObject(new BadCredentialException());
 
         $this->target()->execute($request, $this->prophesy(LoginPresenter::class)->reveal());
     }
+}
+
+function aLoginRequest()
+{
+    return new LoginRequestBuilder();
+}
+function aLoginResponse()
+{
+    return new LoginResponseBuilder();
 }

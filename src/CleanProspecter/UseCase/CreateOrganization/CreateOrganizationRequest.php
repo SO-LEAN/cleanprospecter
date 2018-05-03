@@ -74,8 +74,8 @@ final class CreateOrganizationRequest
         ?string $country,
         ?string $observations,
         ?SplFileInfo $logo,
-        $holdBy)
-    {
+        $holdBy
+    ) {
         $this->ownedBy = $ownedBy;
         $this->phoneNumber = $phoneNumber;
         $this->email = $email;

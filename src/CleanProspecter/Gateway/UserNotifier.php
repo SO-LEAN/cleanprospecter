@@ -4,7 +4,6 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\Gateway;
 
-
 interface UserNotifier
 {
     public function addSuccess(string $message): void;

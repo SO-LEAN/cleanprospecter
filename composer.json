@@ -8,6 +8,7 @@
         }
     },
     "autoload-dev": {
+        "files": ["tests/Unit/Base/functions.php"],
         "psr-4": {
             "Tests\\Unit\\Solean\\": "tests/Unit"
         }

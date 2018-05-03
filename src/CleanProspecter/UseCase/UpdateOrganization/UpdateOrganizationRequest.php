@@ -1,12 +1,16 @@
 <?php
 
-namespace Solean\CleanProspecter\UseCase\GetOrganization;
+declare( strict_types = 1 );
 
-class GetOrganizationResponse
+namespace Solean\CleanProspecter\UseCase\UpdateOrganization;
+
+use SplFileInfo;
+
+final class UpdateOrganizationRequest
 {
     /**
-     * @var mixed
-     */
+    * @var mixed
+    */
     private $id;
     /**
      * @var mixed
@@ -53,17 +57,9 @@ class GetOrganizationResponse
      */
     private $observations;
     /**
-     * @var string
+     * @var SplFileInfo
      */
-    private $logoUrl;
-    /**
-     * @var string
-     */
-    private $logoExtension;
-    /**
-     * @var int
-     */
-    private $logoSize;
+    private $logo;
     /**
      * @var mixed
      */
@@ -82,9 +78,7 @@ class GetOrganizationResponse
         ?string $city,
         ?string $country,
         ?string $observations,
-        ?string $logoUrl,
-        ?string $logoExtension,
-        ?int $logoSize,
+        ?SplFileInfo $logo,
         $holdBy
     ) {
         $this->id = $id;
@@ -99,9 +93,7 @@ class GetOrganizationResponse
         $this->city = $city;
         $this->country = $country;
         $this->observations = $observations;
-        $this->logoUrl = $logoUrl;
-        $this->logoExtension = $logoExtension;
-        $this->logoSize = $logoSize;
+        $this->logo = $logo;
         $this->holdBy = $holdBy;
     }
 
@@ -171,26 +163,18 @@ class GetOrganizationResponse
         return $this->observations;
     }
 
-    public function getLogoUrl(): ?string
+    public function getLogo(): ?SplFileInfo
     {
-        return $this->logoUrl;
+        return $this->logo;
     }
 
-    public function getLogoExtension(): ?string
-    {
-        return $this->logoExtension;
-    }
-
-    public function getLogoSize(): ?int
-    {
-        return $this->logoSize;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getHoldBy()
     {
         return $this->holdBy;
+    }
+
+    public function hasAddress()
+    {
+        return !(null === $this->street &&  null === $this->postalCode && null === $this->city && null == $this->country);
     }
 }

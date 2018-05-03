@@ -86,8 +86,7 @@ class CreateOrganizationResponse
         ?string $logoExtension,
         ?int $logoSize,
         $holdBy
-    )
-    {
+    ) {
         $this->id = $id;
         $this->ownedBy = $ownedBy;
         $this->phoneNumber = $phoneNumber;
