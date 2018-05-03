@@ -15,7 +15,6 @@ use Solean\CleanProspecter\Gateway\Storage;
 use Solean\CleanProspecter\Gateway\UserNotifier;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
-use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationRequest;
 
 final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrganization
 {
@@ -83,13 +82,13 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
         $organization->setCorporateName($request->getCorporateName());
         $organization->setForm($request->getForm());
 
-        if ($organization->getAddress()) {
+        if ($request->hasAddress()) {
             $organization->setAddress(Address::fromValues($request->getStreet(), $request->getPostalCode(), $request->getCity(), $request->getCountry()));
         } else {
             $organization->setAddress(null);
         }
 
-        if ($organization->getLogo()) {
+        if ($request->getLogo()) {
             $organization->setLogo(File::fromValues($this->storage->add($request->getLogo()), $request->getLogo()->getExtension(), $request->getLogo()->getSize()));
         }
 
