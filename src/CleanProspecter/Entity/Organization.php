@@ -106,7 +106,7 @@ class Organization extends Person
         return $this->holdBy;
     }
 
-    public function setHoldBy(Organization $holdBy): void
+    public function setHoldBy(?Organization $holdBy): void
     {
         $this->holdBy = $holdBy;
     }
