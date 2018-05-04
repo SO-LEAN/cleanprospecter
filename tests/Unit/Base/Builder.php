@@ -38,6 +38,8 @@ abstract class Builder
     public function reset()
     {
         $this->members = [];
+
+        return $this;
     }
 
     public function __call(string $name, array $arguments): void
@@ -109,6 +111,13 @@ abstract class Builder
             }
 
             (yield $param->name => isset($data[$param->name]) ? $data[$param->name] : null);
+        }
+    }
+
+    public static function resetAll(...$builders)
+    {
+        foreach($builders as $builder) {
+            $builder->reset();
         }
     }
 

@@ -10,10 +10,20 @@ class OrganizationBuilder extends Builder
     public function __construct()
     {
         parent::__construct();
-        $this->withRegularData();
+        $this->withData();
     }
 
-    public function withRegularData(): self
+    public function withId(): self
+    {
+        return $this->with('id', 123);
+    }
+
+    public function named(): self
+    {
+        return $this->with('corporateName', 'Organization');
+    }
+
+    public function withData(): self
     {
         return $this
             ->with('language', 'EN')
@@ -48,10 +58,26 @@ class OrganizationBuilder extends Builder
             ->with('observations', 'observ.');
     }
 
-    public function persistedAsRegular(): self
+    public function withNewData(): self
     {
         return $this
-            ->with('id', 123);
+            ->with('id', 123)
+            ->with('language', 'BE')
+            ->with('phoneNumber', '111111111')
+            ->with('email', 'org@new-organization.com')
+            ->with('corporateName', 'New Organization')
+            ->with('form', 'SARL')
+            ->with('observations', 'new observ.');
+    }
+
+    public function ownedBy($value): self
+    {
+        return $this->with('ownedBy', $value);
+    }
+
+    public function holdBy($value): self
+    {
+        return $this->with('holdBy', $value);
     }
 
     protected function getTargetClass(): string

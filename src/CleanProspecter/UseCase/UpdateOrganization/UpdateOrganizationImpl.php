@@ -47,7 +47,7 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
     {
         $this->validateRequest($request);
 
-        $organization = $this->updateOrganization($request, $this->organizationGateway->get($request->getId()));
+        $organization = $this->alterOrganization($request, $this->organizationGateway->get($request->getId()));
         $this->joinToOwner($request, $organization);
         $this->joinToHoldingIfNeeded($request, $organization);
 
@@ -72,7 +72,7 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
         }
     }
 
-    private function updateOrganization(UpdateOrganizationRequest $request, Organization $organization): Organization
+    private function alterOrganization(UpdateOrganizationRequest $request, Organization $organization): Organization
     {
 
         $organization->setLanguage($request->getLanguage());

@@ -40,7 +40,7 @@ class GetOrganizationImplTest extends TestCase
     {
         $request = aGetOrganizationRequest()->build();
         $persisted = anOrganization()
-            ->persistedAsRegular()
+            ->withId()
             ->build();
         $expectedResponse = aGetOrganizationResponse()->build();
 
@@ -58,8 +58,8 @@ class GetOrganizationImplTest extends TestCase
     {
         $request = aGetOrganizationRequest()->build();
         $persisted = anOrganization()
-            ->persistedAsRegular()
-            ->with('ownedBy', anOrganization()->withCreatorData())
+            ->withId()
+            ->ownedBy(anOrganization()->withCreatorData())
             ->build();
         $expectedResponse = aGetOrganizationResponse()
             ->ownedByCreator()
@@ -80,7 +80,7 @@ class GetOrganizationImplTest extends TestCase
     {
         $request = aGetOrganizationRequest()->build();
         $persisted = anOrganization()
-            ->persistedAsRegular()
+            ->withId()
             ->with('address', anAddress())
             ->build();
         $expectedResponse =  aGetOrganizationResponse()
@@ -102,7 +102,7 @@ class GetOrganizationImplTest extends TestCase
     {
         $request = aGetOrganizationRequest()->build();
         $persisted = anOrganization()
-            ->persistedAsRegular()
+            ->withId()
             ->with('logo', aFile()->withImageData())
             ->build();
         $expectedResponse = aGetOrganizationResponse()
@@ -124,7 +124,7 @@ class GetOrganizationImplTest extends TestCase
     {
         $request = aGetOrganizationRequest()->build();
         $persisted = anOrganization()
-            ->persistedAsRegular()
+            ->withId()
             ->with('holdBy', anOrganization()->withHoldingData())
             ->build();
         $expectedResponse = aGetOrganizationResponse()
@@ -146,9 +146,9 @@ class GetOrganizationImplTest extends TestCase
     {
         $request = aGetOrganizationRequest()->build();
         $persisted = anOrganization()
-            ->persistedAsRegular()
+            ->withId()
             ->with('address', anAddress())
-            ->with('ownedBy', anOrganization()->withCreatorData())
+            ->ownedBy(anOrganization()->withCreatorData())
             ->with('logo', aFile()->withImageData())
             ->with('holdBy', anOrganization()->withHoldingData())
             ->build();

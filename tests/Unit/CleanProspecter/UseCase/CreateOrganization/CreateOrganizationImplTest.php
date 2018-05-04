@@ -4,7 +4,7 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\CreateOrganization;
 
-use \SplFileInfo;
+use SplFileInfo;
 use Solean\CleanProspecter\Gateway\Storage;
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\Exception\Gateway;
@@ -37,11 +37,6 @@ class CreateOrganizationImplTest extends TestCase
         ];
     }
 
-    public function testCanCreateCreateOrganization()
-    {
-        $this->assertInstanceOf($this->getTargetClassName(), $this->target());
-    }
-
     public function testProspectorCanCreateOrganization()
     {
         $this->assertArraySubset(['ROLE_PROSPECTOR'], $this->target()->canBeExecutedBy());
@@ -54,9 +49,9 @@ class CreateOrganizationImplTest extends TestCase
             ->build();
 
         $organizationBuilder = anOrganization()
-            ->with('ownedBy', anOrganization()->withCreatorData());
+            ->ownedBy(anOrganization()->withCreatorData());
         $notPersisted = $organizationBuilder->build();
-        $persisted =  $organizationBuilder->persistedAsRegular()->build();
+        $persisted =  $organizationBuilder->withId()->build();
 
         $expectedResponse = aCreateOrganizationResponse()->build();
 
@@ -67,8 +62,7 @@ class CreateOrganizationImplTest extends TestCase
          */
         $response = $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
 
-        $this->assertOwnedByEquals($expectedResponse, $response);
-        $this->assertResponseEquals($expectedResponse, $response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnRegularWithAddress()
@@ -79,10 +73,11 @@ class CreateOrganizationImplTest extends TestCase
             ->build();
 
         $organizationBuilder = anOrganization()
-            ->with('ownedBy', anOrganization()->withCreatorData())
+            ->ownedBy(anOrganization()->withCreatorData())
             ->with('address', anAddress());
+
         $notPersisted = $organizationBuilder->build();
-        $persisted =  $organizationBuilder->persistedAsRegular()->build();
+        $persisted =  $organizationBuilder->withId()->build();
 
         $expectedResponse = aCreateOrganizationResponse()
             ->withRegularAddress()
@@ -95,19 +90,17 @@ class CreateOrganizationImplTest extends TestCase
          */
         $response = $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
 
-        $this->assertOwnedByEquals($expectedResponse, $response);
-        $this->assertResponseEquals($expectedResponse, $response);
-        $this->assertAddressEquals($expectedResponse, $response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnRegularWithLogo()
     {
         $organizationBuilder = anOrganization()
-            ->with('ownedBy', anOrganization()->withCreatorData())
+            ->ownedBy(anOrganization()->withCreatorData())
             ->with('logo', aFile()->withImageData());
 
         $notPersisted = $organizationBuilder->build();
-        $persisted =  $organizationBuilder->persistedAsRegular()->build();
+        $persisted =  $organizationBuilder->withId()->build();
 
         $file = $this->mockFile($notPersisted);
 
@@ -128,9 +121,7 @@ class CreateOrganizationImplTest extends TestCase
          */
         $response = $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
 
-        $this->assertOwnedByEquals($expectedResponse, $response);
-        $this->assertResponseEquals($expectedResponse, $response);
-        $this->assertLogoEquals($expectedResponse, $response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnHold()
@@ -141,11 +132,11 @@ class CreateOrganizationImplTest extends TestCase
             ->build();
 
         $organizationBuilder = anOrganization()
-            ->with('ownedBy', anOrganization()->withCreatorData())
+            ->ownedBy(anOrganization()->withCreatorData())
             ->with('holdBy', anOrganization()->withHoldingData());
 
         $notPersisted = $organizationBuilder->build();
-        $persisted =  $organizationBuilder->persistedAsRegular()->build();
+        $persisted =  $organizationBuilder->withId()->build();
 
         $expectedResponse = aCreateOrganizationResponse()
             ->hold()
@@ -159,9 +150,7 @@ class CreateOrganizationImplTest extends TestCase
          */
         $response = $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
 
-        $this->assertOwnedByEquals($expectedResponse, $response);
-        $this->assertResponseEquals($expectedResponse, $response);
-        $this->assertHoldByEquals($expectedResponse, $response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testThrowAnUseCaseNotFoundExceptionIfHoldingNotFoundInGatewayDuringExecuteOnHold()
@@ -187,7 +176,7 @@ class CreateOrganizationImplTest extends TestCase
             ->build();
 
         $notPersisted = anOrganization()
-            ->with('ownedBy', anOrganization()->withCreatorData())
+            ->ownedBy(anOrganization()->withCreatorData())
             ->build();
 
         $gatewayException = new Gateway\UniqueConstraintViolationException();
@@ -245,43 +234,6 @@ class CreateOrganizationImplTest extends TestCase
     private function mockOrganizationGateway(CreateOrganizationRequest $request): void
     {
         $this->prophesy(OrganizationGateway::class)->get($request->getHoldBy())->shouldBeCalled()->willReturn(anOrganization()->withHoldingData()->build());
-    }
-
-    private function assertResponseEquals(CreateOrganizationResponse $expectedResponse, CreateOrganizationResponse $response): void
-    {
-        $this->assertEquals($expectedResponse->getId(), $response->getId());
-        $this->assertEquals($expectedResponse->getPhoneNumber(), $response->getPhoneNumber());
-        $this->assertEquals($expectedResponse->getEmail(), $response->getEmail());
-        $this->assertEquals($expectedResponse->getLanguage(), $response->getLanguage());
-        $this->assertEquals($expectedResponse->getCorporateName(), $response->getCorporateName());
-        $this->assertEquals($expectedResponse->getForm(), $response->getForm());
-        $this->assertEquals($expectedResponse->getObservations(), $response->getObservations());
-        $this->assertEquals($expectedResponse->getOwnedBy(), $response->getOwnedBy());
-    }
-
-    private function assertAddressEquals(CreateOrganizationResponse $expectedResponse, CreateOrganizationResponse $response): void
-    {
-        $this->assertEquals($expectedResponse->getStreet(), $response->getStreet());
-        $this->assertEquals($expectedResponse->getPostalCode(), $response->getPostalCode());
-        $this->assertEquals($expectedResponse->getCity(), $response->getCity());
-        $this->assertEquals($expectedResponse->getCountry(), $response->getCountry());
-    }
-
-    private function assertLogoEquals(CreateOrganizationResponse $expectedResponse, CreateOrganizationResponse $response): void
-    {
-        $this->assertEquals($expectedResponse->getLogoUrl(), $response->getLogoUrl());
-        $this->assertEquals($expectedResponse->getLogoExtension(), $response->getLogoExtension());
-        $this->assertEquals($expectedResponse->getLogoSize(), $response->getLogoSize());
-    }
-
-    private function assertOwnedByEquals(CreateOrganizationResponse $expectedResponse, CreateOrganizationResponse $response): void
-    {
-        $this->assertEquals($expectedResponse->getOwnedBy(), $response->getOwnedBy());
-    }
-
-    private function assertHoldByEquals(CreateOrganizationResponse $expectedResponse, CreateOrganizationResponse $response): void
-    {
-        $this->assertEquals($expectedResponse->getHoldBy(), $response->getHoldBy());
     }
 }
 

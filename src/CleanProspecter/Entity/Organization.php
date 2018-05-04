@@ -75,7 +75,7 @@ class Organization extends Person
         return $this->corporateName;
     }
 
-    public function setCorporateName(string $corporateName): void
+    public function setCorporateName(?string $corporateName): void
     {
         $this->corporateName = $corporateName;
     }
@@ -85,7 +85,7 @@ class Organization extends Person
         return $this->form;
     }
 
-    public function setForm(string $form): void
+    public function setForm(?string $form): void
     {
         $this->form = $form;
     }
