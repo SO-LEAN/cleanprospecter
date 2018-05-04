@@ -23,6 +23,14 @@ class Organization extends Person
      */
     private $hasAddress;
     /**
+     * @var GeoPoint
+     */
+    private $geoPoint;
+    /**
+     * @var bool
+     */
+    private $hasGeoPoint;
+    /**
      * @var Organization
      */
     private $holdBy;
@@ -62,6 +70,7 @@ class Organization extends Person
     public function __construct()
     {
         $this->hasAddress = false;
+        $this->hasGeoPoint = false;
         $this->hasLogo = false;
         $this->subsidiaries = [];
         $this->applicationUsers = [];
@@ -99,6 +108,17 @@ class Organization extends Person
     {
         $this->address = $address;
         $this->hasAddress = $address ? true : false;
+    }
+
+    public function getGeoPoint(): ?GeoPoint
+    {
+        return $this->hasGeoPoint ? $this->geoPoint : null;
+    }
+
+    public function setGeoPoint(?GeoPoint $geoPoint): void
+    {
+        $this->geoPoint = $geoPoint;
+        $this->hasAddress = $geoPoint ? true : false;
     }
 
     public function getHoldBy(): ?Organization

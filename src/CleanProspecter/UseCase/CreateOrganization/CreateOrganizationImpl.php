@@ -6,8 +6,10 @@ namespace Solean\CleanProspecter\UseCase\CreateOrganization;
 
 use Solean\CleanProspecter\Entity\Address;
 use Solean\CleanProspecter\Entity\File;
+use Solean\CleanProspecter\Entity\GeoPoint;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Entity\Organization;
+use Solean\CleanProspecter\Gateway\GeoLocation;
 use Solean\CleanProspecter\Gateway\Storage;
 use Solean\CleanProspecter\Gateway\UserNotifier;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
@@ -30,12 +32,17 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
      * @var UserNotifier
      */
     private $userNotifier;
+    /**
+     * @var GeoLocation
+     */
+    private $geoLocation;
 
-    public function __construct(OrganizationGateway $organizationGateway, Storage $storage, UserNotifier $userNotifier)
+    public function __construct(OrganizationGateway $organizationGateway, Storage $storage, UserNotifier $userNotifier, GeoLocation $geoLocation)
     {
         $this->organizationGateway = $organizationGateway;
         $this->storage = $storage;
         $this->userNotifier = $userNotifier;
+        $this->geoLocation = $geoLocation;
     }
 
     public function canBeExecutedBy(): array
@@ -50,6 +57,7 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         $organization = $this->buildOrganization($request);
         $this->joinToOwner($request, $organization);
         $this->joinToHoldingIfNeeded($request, $organization);
+        $this->geolocalize($organization);
 
         $persisted = $this->create($organization);
         $response = $this->buildResponse($persisted);
@@ -118,6 +126,21 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
             } catch (Gateway\NotFoundException $e) {
                 throw new NotFoundException(sprintf('Holding with #ID %d not found', $request->getHoldBy()), 404, $e, ['holdBy' => 'Holding not found']);
             }
+        }
+    }
+
+    private function geoLocalize(Organization $organization)
+    {
+        if ($organization->getAddress()) {
+            $address = sprintf('%s %s %s %s', $organization->getAddress()->getStreet(), $organization->getAddress()->getPostalCode(), $organization->getAddress()->getCity(), $organization->getAddress()->getCountry());
+            $response = $this->geoLocation->find($address);
+            if ($response->isSucceeded()) {
+                $organization->setGeoPoint(GeoPoint::fromValues($response->getLongitude(), $response->getLatitude()));
+            } else {
+                $organization->setGeoPoint(null);
+            }
+        } else {
+            $organization->setGeoPoint(null);
         }
     }
 
