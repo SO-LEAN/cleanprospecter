@@ -118,7 +118,7 @@ class Organization extends Person
     public function setGeoPoint(?GeoPoint $geoPoint): void
     {
         $this->geoPoint = $geoPoint;
-        $this->hasAddress = $geoPoint ? true : false;
+        $this->hasGeoPoint = $geoPoint ? true : false;
     }
 
     public function getHoldBy(): ?Organization
