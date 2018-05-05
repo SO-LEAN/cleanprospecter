@@ -59,6 +59,8 @@ final class GetOrganizationImpl extends AbstractUseCase implements GetOrganizati
             $persisted->getAddress() ? $persisted->getAddress()->getPostalCode() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCity() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCountry() : null,
+            $persisted->getGeoPoint() ? $persisted->getGeoPoint()->getLongitude() : null,
+            $persisted->getGeoPoint() ? $persisted->getGeoPoint()->getLatitude() : null,
             $persisted->getObservations(),
             $persisted->getLogo() ? $persisted->getLogo()->getUrl() : null,
             $persisted->getLogo() ? $persisted->getLogo()->getExtension() : null,
