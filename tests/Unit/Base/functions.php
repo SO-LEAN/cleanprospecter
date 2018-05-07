@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Solean\Base;
 
 use Tests\Unit\Solean\CleanProspecter\EntityBuilder\FileBuilder;

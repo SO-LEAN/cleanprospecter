@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\CreateOrganization;
 
 use Tests\Unit\Solean\Base\Builder;

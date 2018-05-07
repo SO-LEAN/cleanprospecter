@@ -2,7 +2,7 @@
 
 namespace Solean\CleanProspecter\UseCase\GetOrganization;
 
-class GetOrganizationResponse
+final class GetOrganizationResponse
 {
     /**
      * @var mixed
