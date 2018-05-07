@@ -4,7 +4,6 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\Gateway\GeoLocation;
 
-
 class GeoPointResponse
 {
     /**
@@ -24,7 +23,7 @@ class GeoPointResponse
      */
     private $succeeded;
 
-    public function __construct(string $address, float $longitude,  float $latitude, $succeeded = true)
+    public function __construct(string $address, float $longitude, float $latitude, $succeeded = true)
     {
         $this->address = $address;
         $this->longitude = $longitude;

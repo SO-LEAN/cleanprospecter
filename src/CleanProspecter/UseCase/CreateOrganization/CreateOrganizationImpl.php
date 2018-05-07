@@ -4,15 +4,16 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\UseCase\CreateOrganization;
 
-use Solean\CleanProspecter\Entity\Address;
 use Solean\CleanProspecter\Entity\File;
-use Solean\CleanProspecter\Entity\GeoPoint;
+use Solean\CleanProspecter\Entity\Address;
+use Solean\CleanProspecter\Exception\Entity\ValidationException;
+use Solean\CleanProspecter\Gateway\Storage;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Entity\Organization;
 use Solean\CleanProspecter\Gateway\GeoLocation;
-use Solean\CleanProspecter\Gateway\Storage;
 use Solean\CleanProspecter\Gateway\UserNotifier;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
+use Solean\CleanProspecter\Traits\UseCase\GeoLocalizeTrait;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\Exception\UseCase\UseCaseException;
 use Solean\CleanProspecter\Exception\UseCase\NotFoundException;
@@ -20,6 +21,7 @@ use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
 
 final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrganization
 {
+    use GeoLocalizeTrait;
     /**
      * @var OrganizationGateway
      */
@@ -32,10 +34,6 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
      * @var UserNotifier
      */
     private $userNotifier;
-    /**
-     * @var GeoLocation
-     */
-    private $geoLocation;
 
     public function __construct(OrganizationGateway $organizationGateway, Storage $storage, UserNotifier $userNotifier, GeoLocation $geoLocation)
     {
@@ -59,6 +57,7 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         $this->joinToHoldingIfNeeded($request, $organization);
         $this->geolocalize($organization);
 
+        $this->validate($organization);
         $persisted = $this->create($organization);
         $response = $this->buildResponse($persisted);
 
@@ -70,13 +69,7 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
     private function validateRequest(CreateOrganizationRequest $request): void
     {
         if (!$request->getOwnedBy()) {
-            $msg = 'Owner is missing';
-            throw new UseCaseException('Owner is missing', 412, null, ['*' => $msg]);
-        }
-
-        if (!$request->getCorporateName() && !$request->getEmail()) {
-            $msg = 'At least one is mandatory : corporate name or email';
-            throw new UseCaseException($msg, 412, null, ['*' => $msg]);
+            throw new UseCaseException('Owner is missing', 412, null, ['ownedBy' => 'Owner is missing']);
         }
     }
 
@@ -129,18 +122,12 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         }
     }
 
-    private function geoLocalize(Organization $organization)
+    private function validate(Organization $organization): void
     {
-        if ($organization->getAddress()) {
-            $address = sprintf('%s %s %s %s', $organization->getAddress()->getStreet(), $organization->getAddress()->getPostalCode(), $organization->getAddress()->getCity(), $organization->getAddress()->getCountry());
-            $response = $this->geoLocation->find($address);
-            if ($response->isSucceeded()) {
-                $organization->setGeoPoint(GeoPoint::fromValues($response->getLongitude(), $response->getLatitude()));
-            } else {
-                $organization->setGeoPoint(null);
-            }
-        } else {
-            $organization->setGeoPoint(null);
+        try {
+            $organization->validate();
+        } catch (ValidationException $e) {
+            throw new UseCaseException($e->getMessage(), 412, $e, [$e->getField() => $e->getMessage()]);
         }
     }
 
@@ -169,6 +156,8 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
             $persisted->getAddress() ? $persisted->getAddress()->getPostalCode() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCity() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCountry() : null,
+            $persisted->getGeoPoint() ? $persisted->getGeoPoint()->getLongitude() : null,
+            $persisted->getGeoPoint() ? $persisted->getGeoPoint()->getLatitude() : null,
             $persisted->getObservations(),
             $persisted->getLogo() ? $persisted->getLogo()->getUrl() : null,
             $persisted->getLogo() ? $persisted->getLogo()->getExtension() : null,

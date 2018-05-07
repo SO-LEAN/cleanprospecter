@@ -31,7 +31,10 @@ class GetOrganizationResponseBuilder extends Builder
             ->with('street', '10 Downing Street')
             ->with('postalCode', 'SW1A 2AA')
             ->with('city', 'London')
-            ->with('country', 'EN');
+            ->with('country', 'EN')
+            ->with('longitude', 7.7663456)
+            ->with('latitude', 48.5554971)
+            ;
     }
 
     public function hold(): self

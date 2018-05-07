@@ -5,10 +5,13 @@ declare( strict_types = 1 );
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\CreateOrganization;
 
 use SplFileInfo;
-use Solean\CleanProspecter\Gateway\Storage;
+use Prophecy\Argument;
 use Tests\Unit\Solean\Base\TestCase;
+use Solean\CleanProspecter\Entity\GeoPoint;
+use Solean\CleanProspecter\Gateway\Storage;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Exception\UseCase;
+use Solean\CleanProspecter\Gateway\GeoLocation;
 use Solean\CleanProspecter\Entity\Organization;
 use Solean\CleanProspecter\Gateway\UserNotifier;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
@@ -18,6 +21,7 @@ use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationResponse
 use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationPresenter;
 
 use function Tests\Unit\Solean\Base\anOrganization;
+use function Tests\Unit\Solean\Base\aGeoPoint;
 use function Tests\Unit\Solean\Base\anAddress;
 use function Tests\Unit\Solean\Base\aFile;
 
@@ -34,6 +38,7 @@ class CreateOrganizationImplTest extends TestCase
             $this->prophesy(OrganizationGateway::class)->reveal(),
             $this->prophesy(Storage::class)->reveal(),
             $this->prophesy(UserNotifier::class)->reveal(),
+            $this->prophesy(GeoLocation::class)->reveal(),
         ];
     }
 
@@ -74,7 +79,9 @@ class CreateOrganizationImplTest extends TestCase
 
         $organizationBuilder = anOrganization()
             ->ownedBy(anOrganization()->withCreatorData())
-            ->with('address', anAddress());
+            ->with('address', anAddress())
+            ->with('geoPoint', $geoPoint = aGeoPoint())
+        ;
 
         $notPersisted = $organizationBuilder->build();
         $persisted =  $organizationBuilder->withId()->build();
@@ -84,6 +91,7 @@ class CreateOrganizationImplTest extends TestCase
             ->build();
 
         $this->mock($notPersisted, $persisted, $expectedResponse);
+        $this->mockGeoLocation($geoPoint->build());
 
         /**
          * @var CreateOrganizationResponse $response
@@ -142,7 +150,7 @@ class CreateOrganizationImplTest extends TestCase
             ->hold()
             ->build();
 
-        $this->mockOrganizationGateway($request);
+        $this->mockGetHolding($request);
         $this->mock($notPersisted, $persisted, $expectedResponse);
 
         /**
@@ -195,6 +203,7 @@ class CreateOrganizationImplTest extends TestCase
             ->missingMandatoryData()
             ->build();
 
+        $this->mockGetCreator();
         $this->expectExceptionObject(new UseCase\UseCaseException('At least one is mandatory : corporate name or email', 412));
 
         $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
@@ -212,10 +221,15 @@ class CreateOrganizationImplTest extends TestCase
 
     private function mock(Organization $notPersisted, Organization $persisted, CreateOrganizationResponse $expectedResponse): void
     {
-        $this->prophesy(OrganizationGateway::class)->get(777)->shouldBeCalled()->willReturn(anOrganization()->withCreatorData()->build());
+        $this->mockGetCreator();
         $this->prophesy(OrganizationGateway::class)->create($notPersisted)->shouldBeCalled()->willReturn($persisted);
         $this->prophesy(UserNotifier::class)->addSuccess('Organization created !')->shouldBeCalled();
         $this->prophesy(CreateOrganizationPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
+    }
+
+    private function mockGetCreator(): void
+    {
+        $this->prophesy(OrganizationGateway::class)->get(777)->shouldBeCalled()->willReturn(anOrganization()->withCreatorData()->build());
     }
 
     private function mockFile(Organization $notPersisted): SplFileInfo
@@ -231,9 +245,14 @@ class CreateOrganizationImplTest extends TestCase
         $this->prophesy(Storage::class)->add($file)->shouldBeCalled()->willReturn($notPersisted->getLogo()->getUrl());
     }
 
-    private function mockOrganizationGateway(CreateOrganizationRequest $request): void
+    private function mockGetHolding(CreateOrganizationRequest $request): void
     {
         $this->prophesy(OrganizationGateway::class)->get($request->getHoldBy())->shouldBeCalled()->willReturn(anOrganization()->withHoldingData()->build());
+    }
+
+    private function mockGeoLocation(GeoPoint $expectedPoint): void
+    {
+        $this->prophesy(GeoLocation::class)->find(Argument::type('string'))->shouldBeCalled()->willReturn(new GeoLocation\GeoPointResponse('address', $expectedPoint->getLongitude(), $expectedPoint->getLatitude(), true));
     }
 }
 

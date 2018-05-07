@@ -62,7 +62,20 @@ class UpdateOrganizationResponseBuilder extends Builder
             ->with('street', '20 avenue du Neuhof')
             ->with('postalCode', '67100')
             ->with('city', 'Strasbourg')
-            ->with('country', 'FR');
+            ->with('country', 'FR')
+            ->with('longitude', 7.7663456)
+            ->with('latitude', 48.5554971);
+    }
+
+    public function withUnLocatableAddress(): self
+    {
+        return $this
+            ->with('street', '20 avenue du Not found')
+            ->with('postalCode', '67100')
+            ->with('city', 'Not found')
+            ->with('country', 'FR')
+            ->with('longitude', null)
+            ->with('latitude', null);
     }
 
     public function ownedByCreator(): self

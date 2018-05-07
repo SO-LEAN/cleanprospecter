@@ -116,7 +116,7 @@ abstract class Builder
 
     public static function resetAll(...$builders)
     {
-        foreach($builders as $builder) {
+        foreach ($builders as $builder) {
             $builder->reset();
         }
     }

@@ -47,12 +47,6 @@ class UpdateOrganizationRequestBuilder extends Builder
             ->with('observations', 'new observ.');
     }
 
-    public function ownedByCreator(): self
-    {
-        return $this
-            ->with('ownedBy', 777);
-    }
-
     public function hold(): self
     {
         return $this
@@ -74,6 +68,15 @@ class UpdateOrganizationRequestBuilder extends Builder
             ->with('street', '20 avenue du Neuhof')
             ->with('postalCode', '67100')
             ->with('city', 'Strasbourg')
+            ->with('country', 'FR');
+    }
+
+    public function withUnLocatableAddress(): self
+    {
+        return $this
+            ->with('street', '20 avenue du Not found')
+            ->with('postalCode', '67100')
+            ->with('city', 'Not found')
             ->with('country', 'FR');
     }
 

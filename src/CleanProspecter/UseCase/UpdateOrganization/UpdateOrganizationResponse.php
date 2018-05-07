@@ -9,10 +9,6 @@ class UpdateOrganizationResponse
      */
     private $id;
     /**
-     * @var mixed
-     */
-    private $ownedBy;
-    /**
      * @var string
      */
     private $phoneNumber;
@@ -51,6 +47,14 @@ class UpdateOrganizationResponse
     /**
      * @var string
      */
+    private $longitude;
+    /**
+     * @var string
+     */
+    private $latitude;
+    /**
+     * @var string
+     */
     private $observations;
     /**
      * @var string
@@ -71,7 +75,6 @@ class UpdateOrganizationResponse
 
     public function __construct(
         $id,
-        $ownedBy,
         ?string $phoneNumber,
         ?string $email,
         ?string $language,
@@ -81,6 +84,8 @@ class UpdateOrganizationResponse
         ?string $postalCode,
         ?string $city,
         ?string $country,
+        ?float $longitude,
+        ?float $latitude,
         ?string $observations,
         ?string $logoUrl,
         ?string $logoExtension,
@@ -88,7 +93,6 @@ class UpdateOrganizationResponse
         $holdBy
     ) {
         $this->id = $id;
-        $this->ownedBy = $ownedBy;
         $this->phoneNumber = $phoneNumber;
         $this->email = $email;
         $this->language = $language;
@@ -98,6 +102,8 @@ class UpdateOrganizationResponse
         $this->postalCode = $postalCode;
         $this->city = $city;
         $this->country = $country;
+        $this->longitude = $longitude;
+        $this->latitude = $latitude;
         $this->observations = $observations;
         $this->logoUrl = $logoUrl;
         $this->logoExtension = $logoExtension;
@@ -111,14 +117,6 @@ class UpdateOrganizationResponse
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOwnedBy()
-    {
-        return $this->ownedBy;
     }
 
     public function getPhoneNumber(): string

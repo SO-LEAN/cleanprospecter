@@ -51,6 +51,14 @@ class CreateOrganizationResponse
     /**
      * @var string
      */
+    private $longitude;
+    /**
+     * @var string
+     */
+    private $latitude;
+    /**
+     * @var string
+     */
     private $observations;
     /**
      * @var string
@@ -81,6 +89,8 @@ class CreateOrganizationResponse
         ?string $postalCode,
         ?string $city,
         ?string $country,
+        ?float $longitude,
+        ?float $latitude,
         ?string $observations,
         ?string $logoUrl,
         ?string $logoExtension,
@@ -98,6 +108,8 @@ class CreateOrganizationResponse
         $this->postalCode = $postalCode;
         $this->city = $city;
         $this->country = $country;
+        $this->longitude = $longitude;
+        $this->latitude = $latitude;
         $this->observations = $observations;
         $this->logoUrl = $logoUrl;
         $this->logoExtension = $logoExtension;
@@ -164,6 +176,16 @@ class CreateOrganizationResponse
     public function getCountry(): ?string
     {
         return $this->country;
+    }
+
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
+    }
+
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
     }
 
     public function getObservations(): ?string

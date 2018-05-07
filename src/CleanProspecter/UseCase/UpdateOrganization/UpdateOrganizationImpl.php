@@ -4,20 +4,24 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\UseCase\UpdateOrganization;
 
-use Solean\CleanProspecter\Entity\Address;
 use Solean\CleanProspecter\Entity\File;
+use Solean\CleanProspecter\Entity\Address;
+use Solean\CleanProspecter\Gateway\Storage;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Entity\Organization;
-use Solean\CleanProspecter\Exception\UseCase\NotFoundException;
-use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
-use Solean\CleanProspecter\Exception\UseCase\UseCaseException;
-use Solean\CleanProspecter\Gateway\Storage;
+use Solean\CleanProspecter\Gateway\GeoLocation;
 use Solean\CleanProspecter\Gateway\UserNotifier;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
+use Solean\CleanProspecter\Traits\UseCase\GeoLocalizeTrait;
+use Solean\CleanProspecter\Exception\UseCase\UseCaseException;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
+use Solean\CleanProspecter\Exception\UseCase\NotFoundException;
+use Solean\CleanProspecter\Exception\Entity\ValidationException;
+use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
 
 final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrganization
 {
+    use GeoLocalizeTrait;
     /**
      * @var OrganizationGateway
      */
@@ -31,11 +35,12 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
      */
     private $userNotifier;
 
-    public function __construct(OrganizationGateway $organizationGateway, Storage $storage, UserNotifier $userNotifier)
+    public function __construct(OrganizationGateway $organizationGateway, Storage $storage, UserNotifier $userNotifier, GeoLocation $geoLocation)
     {
         $this->organizationGateway = $organizationGateway;
         $this->storage = $storage;
         $this->userNotifier = $userNotifier;
+        $this->geoLocation = $geoLocation;
     }
 
     public function canBeExecutedBy(): array
@@ -45,12 +50,12 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
 
     public function execute(UpdateOrganizationRequest $request, UpdateOrganizationPresenter $presenter): ?object
     {
-        $this->validateRequest($request);
 
         $organization = $this->alterOrganization($request, $this->organizationGateway->get($request->getId()));
-        $this->joinToOwner($request, $organization);
         $this->joinToHoldingIfNeeded($request, $organization);
+        $this->geolocalize($organization);
 
+        $this->validate($organization);
         $persisted = $this->update($organization);
         $response = $this->buildResponse($persisted);
 
@@ -59,16 +64,12 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
         return $presenter->present($response);
     }
 
-    private function validateRequest(UpdateOrganizationRequest $request): void
+    private function validate(Organization $organization): void
     {
-        if (!$request->getOwnedBy()) {
-            $msg = 'Owner is missing';
-            throw new UseCaseException('Owner is missing', 412, null, ['*' => $msg]);
-        }
-
-        if (!$request->getCorporateName() && !$request->getEmail()) {
-            $msg = 'At least one is mandatory : corporate name or email';
-            throw new UseCaseException($msg, 412, null, ['*' => $msg]);
+        try {
+            $organization->validate();
+        } catch (ValidationException $e) {
+            throw new UseCaseException($e->getMessage(), 412, $e, [$e->getField() => $e->getMessage()]);
         }
     }
 
@@ -93,12 +94,6 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
         }
 
         return $organization;
-    }
-
-    private function joinToOwner(UpdateOrganizationRequest $request, Organization $organization): void
-    {
-        $owner = $this->organizationGateway->get($request->getOwnedBy());
-        $organization->setOwnedBy($owner);
     }
 
     private function joinToHoldingIfNeeded(UpdateOrganizationRequest $request, Organization $organization): void
@@ -129,7 +124,6 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
     {
         $response = new UpdateOrganizationResponse(
             $persisted->getId(),
-            $persisted->getOwnedBy()->getId(),
             $persisted->getPhoneNumber(),
             $persisted->getEmail(),
             $persisted->getLanguage(),
@@ -139,6 +133,8 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
             $persisted->getAddress() ? $persisted->getAddress()->getPostalCode() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCity() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCountry() : null,
+            $persisted->getGeoPoint() ? $persisted->getGeoPoint()->getLongitude() : null,
+            $persisted->getGeoPoint() ? $persisted->getGeoPoint()->getLatitude() : null,
             $persisted->getObservations(),
             $persisted->getLogo() ? $persisted->getLogo()->getUrl() : null,
             $persisted->getLogo() ? $persisted->getLogo()->getExtension() : null,

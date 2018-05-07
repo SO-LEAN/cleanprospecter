@@ -4,6 +4,9 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\UpdateOrganization;
 
+use Prophecy\Argument;
+use Solean\CleanProspecter\Entity\GeoPoint;
+use Solean\CleanProspecter\Gateway\GeoLocation;
 use Solean\CleanProspecter\UseCase\UpdateOrganization\UpdateOrganizationRequest;
 use SplFileInfo;
 use Tests\Unit\Solean\Base\TestCase;
@@ -17,9 +20,9 @@ use Solean\CleanProspecter\UseCase\UpdateOrganization\UpdateOrganizationImpl;
 use Solean\CleanProspecter\UseCase\UpdateOrganization\UpdateOrganizationResponse;
 use Solean\CleanProspecter\UseCase\UpdateOrganization\UpdateOrganizationPresenter;
 
-
 use function Tests\Unit\Solean\Base\anOrganization;
 use function Tests\Unit\Solean\Base\anAddress;
+use function Tests\Unit\Solean\Base\aGeoPoint;
 use function Tests\Unit\Solean\Base\aFile;
 
 class UpdateOrganizationImplTest extends TestCase
@@ -35,6 +38,7 @@ class UpdateOrganizationImplTest extends TestCase
             $this->prophesy(OrganizationGateway::class)->reveal(),
             $this->prophesy(Storage::class)->reveal(),
             $this->prophesy(UserNotifier::class)->reveal(),
+            $this->prophesy(GeoLocation::class)->reveal(),
         ];
     }
 
@@ -66,29 +70,114 @@ class UpdateOrganizationImplTest extends TestCase
 
         (yield 'no change' => [
             $resp->ownedByCreator()->build(),
-            $req->ownedByCreator()->build(),
+            $req->build(),
             $org->withId()->ownedBy(anOrganization()->withCreatorData())->build(),
             $org->build(),
         ]);
         (yield 'full (with address) to empty (almost)' => [
             $resp->reset()->withId()->ownedByCreator()->named()->build(),
-            $req->reset()->withId()->ownedByCreator()->named()->build(),
+            $req->reset()->withId()->named()->build(),
             $org->reset()->withId()->withData()->ownedBy(anOrganization()->withCreatorData())->with('address', anAddress())->build(),
             $org->reset()->withId()->ownedBy(anOrganization()->withCreatorData())->named()->build(),
         ]);
-        (yield 'new address' => [
-            $resp->reset()->withId()->ownedByCreator()->named()->withNewAddress()->build(),
-            $req->reset()->withId()->ownedByCreator()->named()->withNewAddress()->build(),
-            $org->reset()->withId()->named()->ownedBy(anOrganization()->withCreatorData())->with('address', anAddress())->build(),
-            $org->reset()->withId()->named()->ownedBy(anOrganization()->withCreatorData())->with('address', anAddress()->withNewData())->build(),
-        ]);
+    }
 
-        (yield 'empty to full' => [
-            $resp->reset()->withId()->ownedByCreator()->withData()->withNewAddress()->build(),
-            $req->reset()->withId()->ownedByCreator()->withData()->withNewAddress()->build(),
-            $org->reset()->withId()->ownedBy(anOrganization()->withCreatorData())->named()->build(),
-            $org->reset()->withId()->ownedBy(anOrganization()->withCreatorData())->withData()->ownedBy(anOrganization()->withCreatorData())->with('address', anAddress()->withNewData())->build(),
-        ]);
+    public function testExecuteWithNewAddress()
+    {
+        $request = anUpdateOrganizationRequest()->withNewAddress()->build();
+
+        $orgBuilder  = anOrganization()
+            ->ownedBy(anOrganization()->withCreatorData());
+
+        $initial = $orgBuilder
+            ->withId()
+            ->with('address', anAddress())->build();
+
+        $updated = $orgBuilder
+            ->with('address', anAddress()->withNewData())
+            ->with('geoPoint', $geoPointBuilder = aGeoPoint())
+            ->build();
+        $expectedResponse = anUpdateOrganizationResponse()->withNewAddress()->build();
+
+        $this->mock($initial, $updated, $expectedResponse);
+        $this->mockGeoLocation($geoPointBuilder->build());
+
+        /**
+         * @var UpdateOrganizationResponse $response
+         */
+        $response = $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
+
+        $this->assertEquals($expectedResponse, $response);
+    }
+
+    public function testExecuteWithNewAddressButNotFoundByGeoLocation()
+    {
+        $request = anUpdateOrganizationRequest()
+            ->withUnLocatableAddress()
+            ->build();
+
+        $orgBuilder  = anOrganization()
+            ->ownedBy(anOrganization()->withCreatorData());
+
+        $initial = $orgBuilder
+            ->withId()
+            ->with('address', anAddress())
+            ->with('geoPoint', aGeoPoint())
+            ->build();
+
+        $updated = $orgBuilder
+            ->with('address', anAddress()->withUnLocatableAddress())
+            ->with('geoPoint', null)
+            ->build();
+
+        $expectedResponse = anUpdateOrganizationResponse()->withUnLocatableAddress()->build();
+
+        $this->mock($initial, $updated, $expectedResponse);
+        $this->mockGeoLocation(aGeoPoint()->notFound()->build(), false);
+
+        /**
+         * @var UpdateOrganizationResponse $response
+         */
+        $response = $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
+
+        $this->assertEquals($expectedResponse, $response);
+    }
+
+    public function testExecuteEmptyToFull()
+    {
+
+        $request = anUpdateOrganizationRequest()
+            ->withNewData()
+            ->withNewAddress()
+            ->build();
+
+        $orgBuilder  = anOrganization()
+            ->ownedBy(anOrganization()->withCreatorData());
+
+        $initial = $orgBuilder
+            ->reset()
+            ->withId()
+            ->with('ownedBy', anOrganization()->withCreatorData())
+            ->build();
+
+        $updated = $orgBuilder
+            ->withNewData()
+            ->with('ownedBy', anOrganization()->withCreatorData())
+            ->with('address', anAddress()->withNewData())
+            ->with('geoPoint', $geoPointBuilder = aGeoPoint())
+            ->build();
+
+        $expectedResponse = anUpdateOrganizationResponse()->withNewData()->withNewAddress()->build();
+
+        $this->mock($initial, $updated, $expectedResponse);
+        $this->mockGeoLocation($geoPointBuilder->build());
+
+        /**
+         * @var UpdateOrganizationResponse $response
+         */
+        $response = $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
+
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnRegularWithLogo()
@@ -103,7 +192,6 @@ class UpdateOrganizationImplTest extends TestCase
         $file = $this->mockFile($updated);
 
         $request = anUpdateOrganizationRequest()
-            ->ownedByCreator()
             ->withLogo($file)
             ->build();
 
@@ -126,7 +214,6 @@ class UpdateOrganizationImplTest extends TestCase
     public function testExecuteOnHold()
     {
         $request = anUpdateOrganizationRequest()
-            ->ownedByCreator()
             ->hold()
             ->build();
 
@@ -154,13 +241,11 @@ class UpdateOrganizationImplTest extends TestCase
     public function testThrowAnUseCaseNotFoundExceptionIfHoldingNotFoundInGatewayDuringExecuteOnHold()
     {
         $request = anUpdateOrganizationRequest()
-            ->ownedByCreator()
             ->hold()
             ->build();
 
         $gatewayException = new Gateway\NotFoundException();
         $this->prophesy(OrganizationGateway::class)->get($request->getId())->shouldBeCalled()->willReturn(anOrganization()->build());
-        $this->prophesy(OrganizationGateway::class)->get($request->getOwnedBy())->shouldBeCalled()->willReturn(anOrganization()->withCreatorData()->build());
         $this->prophesy(OrganizationGateway::class)->get($request->getHoldBy())->shouldBeCalled()->willThrow($gatewayException);
         $this->expectExceptionObject(new UseCase\NotFoundException(sprintf('Holding with #ID %d not found', $request->getHoldBy()), 404, $gatewayException));
 
@@ -170,7 +255,6 @@ class UpdateOrganizationImplTest extends TestCase
     public function testThrowAnUseCaseUniqueConstraintViolationExceptionIfGatewayThrowOne()
     {
         $request = anUpdateOrganizationRequest()
-            ->ownedByCreator()
             ->withId()
             ->build();
 
@@ -180,8 +264,7 @@ class UpdateOrganizationImplTest extends TestCase
             ->build();
 
         $gatewayException = new Gateway\UniqueConstraintViolationException();
-        $this->prophesy(OrganizationGateway::class)->get($request->getId())->shouldBeCalled()->willReturn(anOrganization()->withId()->build());
-        $this->prophesy(OrganizationGateway::class)->get($request->getOwnedBy())->shouldBeCalled()->willReturn(anOrganization()->withCreatorData()->build());
+        $this->prophesy(OrganizationGateway::class)->get($request->getId())->shouldBeCalled()->willReturn($updated);
         $this->prophesy(OrganizationGateway::class)->update($request->getId(), $updated)->shouldBeCalled()->willThrow($gatewayException);
         $this->expectExceptionObject(new UseCase\UniqueConstraintViolationException('Email already used', 412, $gatewayException));
 
@@ -191,21 +274,16 @@ class UpdateOrganizationImplTest extends TestCase
     public function testThrowUseCaseExceptionIfMissingCorporateNameAndEmail()
     {
         $request = anUpdateOrganizationRequest()
-            ->ownedByCreator()
             ->missingMandatoryData()
             ->build();
 
-        $this->expectExceptionObject(new UseCase\UseCaseException('At least one is mandatory : corporate name or email', 412));
-
-        $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
-    }
-
-    public function testThrowUseCaseExceptionIfMissingOwner()
-    {
-        $request = anUpdateOrganizationRequest()
+        $get = anOrganization()
+            ->withId()
+            ->ownedBy(anOrganization()->withCreatorData())
             ->build();
 
-        $this->expectExceptionObject(new UseCase\UseCaseException('Owner is missing', 412));
+        $this->expectExceptionObject(new UseCase\UseCaseException('At least one is mandatory : corporate name or email', 412));
+        $this->prophesy(OrganizationGateway::class)->get($request->getId())->shouldBeCalled()->willReturn($get);
 
         $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
     }
@@ -213,7 +291,6 @@ class UpdateOrganizationImplTest extends TestCase
     private function mock(Organization $get, Organization $updated, UpdateOrganizationResponse $expectedResponse): void
     {
         $this->prophesy(OrganizationGateway::class)->get(123)->shouldBeCalled()->willReturn($get);
-        $this->prophesy(OrganizationGateway::class)->get(777)->shouldBeCalled()->willReturn(anOrganization()->withCreatorData()->build());
         $this->prophesy(OrganizationGateway::class)->update($updated->getId(), $updated)->shouldBeCalled()->willReturn($updated);
         $this->prophesy(UserNotifier::class)->addSuccess('Organization updated !')->shouldBeCalled();
         $this->prophesy(UpdateOrganizationPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
@@ -235,6 +312,11 @@ class UpdateOrganizationImplTest extends TestCase
     private function mockStorage($file, Organization $updated): void
     {
         $this->prophesy(Storage::class)->add($file)->shouldBeCalled()->willReturn($updated->getLogo()->getUrl());
+    }
+
+    private function mockGeoLocation(GeoPoint $expectedPoint, $found = true): void
+    {
+        $this->prophesy(GeoLocation::class)->find(Argument::type('string'))->shouldBeCalled()->willReturn(new GeoLocation\GeoPointResponse('address', $expectedPoint->getLongitude(), $expectedPoint->getLatitude(), $found));
     }
 }
 

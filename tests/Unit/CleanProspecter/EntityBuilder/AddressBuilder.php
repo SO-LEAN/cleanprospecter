@@ -32,6 +32,15 @@ class AddressBuilder extends Builder
             ->with('country', 'FR');
     }
 
+    public function withUnLocatableAddress(): self
+    {
+        return $this
+            ->with('street', '20 avenue du Not found')
+            ->with('postalCode', '67100')
+            ->with('city', 'Not found')
+            ->with('country', 'FR');
+    }
+
     protected function getTargetClass(): string
     {
         return Address::class;

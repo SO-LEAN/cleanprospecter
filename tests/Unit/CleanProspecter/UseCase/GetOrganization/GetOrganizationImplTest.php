@@ -15,6 +15,7 @@ use Solean\CleanProspecter\UseCase\GetOrganization\GetOrganizationPresenter;
 
 use function Tests\Unit\Solean\Base\anOrganization;
 use function Tests\Unit\Solean\Base\anAddress;
+use function Tests\Unit\Solean\Base\aGeoPoint;
 use function Tests\Unit\Solean\Base\aFile;
 
 class GetOrganizationImplTest extends TestCase
@@ -51,7 +52,7 @@ class GetOrganizationImplTest extends TestCase
          */
         $response = $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
 
-        $this->assertResponseEquals($expectedResponse, $response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnRegularWithOwner()
@@ -72,8 +73,7 @@ class GetOrganizationImplTest extends TestCase
          */
         $response = $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
 
-        $this->assertResponseEquals($expectedResponse, $response);
-        $this->assertOwnedByEquals($expectedResponse, $response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnRegularWithAddress()
@@ -82,6 +82,7 @@ class GetOrganizationImplTest extends TestCase
         $persisted = anOrganization()
             ->withId()
             ->with('address', anAddress())
+            ->with('geoPoint', aGeoPoint())
             ->build();
         $expectedResponse =  aGetOrganizationResponse()
             ->withRegularAddress()
@@ -94,8 +95,7 @@ class GetOrganizationImplTest extends TestCase
          */
         $response = $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
 
-        $this->assertResponseEquals($expectedResponse, $response);
-        $this->assertAddressEquals($expectedResponse, $response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnRegularWithLogo()
@@ -116,8 +116,7 @@ class GetOrganizationImplTest extends TestCase
          */
         $response = $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
 
-        $this->assertResponseEquals($expectedResponse, $response);
-        $this->assertLogoEquals($expectedResponse, $response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnHold()
@@ -138,8 +137,7 @@ class GetOrganizationImplTest extends TestCase
          */
         $response = $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
 
-        $this->assertResponseEquals($expectedResponse, $response);
-        $this->assertHoldByEquals($expectedResponse, $response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnFullFilled()
@@ -149,6 +147,7 @@ class GetOrganizationImplTest extends TestCase
             ->withId()
             ->with('address', anAddress())
             ->ownedBy(anOrganization()->withCreatorData())
+            ->with('geoPoint', aGeoPoint())
             ->with('logo', aFile()->withImageData())
             ->with('holdBy', anOrganization()->withHoldingData())
             ->build();
@@ -166,11 +165,7 @@ class GetOrganizationImplTest extends TestCase
          */
         $response = $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
 
-        $this->assertResponseEquals($expectedResponse, $response);
-        $this->assertOwnedByEquals($expectedResponse, $response);
-        $this->assertAddressEquals($expectedResponse, $response);
-        $this->assertHoldByEquals($expectedResponse, $response);
-        $this->assertLogoEquals($expectedResponse, $response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     public function testThrowAnUseCaseNotFoundExceptionIfOrganizationNotFoundInGateway()
@@ -188,42 +183,6 @@ class GetOrganizationImplTest extends TestCase
     {
         $this->prophesy(OrganizationGateway::class)->get(777)->shouldBeCalled()->willReturn($persisted);
         $this->prophesy(GetOrganizationPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
-    }
-
-    private function assertResponseEquals(GetOrganizationResponse $expectedResponse, GetOrganizationResponse $response): void
-    {
-        $this->assertEquals($expectedResponse->getId(), $response->getId());
-        $this->assertEquals($expectedResponse->getPhoneNumber(), $response->getPhoneNumber());
-        $this->assertEquals($expectedResponse->getEmail(), $response->getEmail());
-        $this->assertEquals($expectedResponse->getLanguage(), $response->getLanguage());
-        $this->assertEquals($expectedResponse->getCorporateName(), $response->getCorporateName());
-        $this->assertEquals($expectedResponse->getForm(), $response->getForm());
-        $this->assertEquals($expectedResponse->getObservations(), $response->getObservations());
-    }
-
-    private function assertOwnedByEquals(GetOrganizationResponse $expectedResponse, GetOrganizationResponse $response): void
-    {
-        $this->assertEquals($expectedResponse->getOwnedBy(), $response->getOwnedBy());
-    }
-
-    private function assertHoldByEquals(GetOrganizationResponse $expectedResponse, GetOrganizationResponse $response): void
-    {
-        $this->assertEquals($expectedResponse->getHoldBy(), $response->getHoldBy());
-    }
-
-    private function assertAddressEquals(GetOrganizationResponse $expectedResponse, GetOrganizationResponse $response): void
-    {
-        $this->assertEquals($expectedResponse->getStreet(), $response->getStreet());
-        $this->assertEquals($expectedResponse->getPostalCode(), $response->getPostalCode());
-        $this->assertEquals($expectedResponse->getCity(), $response->getCity());
-        $this->assertEquals($expectedResponse->getCountry(), $response->getCountry());
-    }
-
-    private function assertLogoEquals(GetOrganizationResponse $expectedResponse, GetOrganizationResponse $response): void
-    {
-        $this->assertEquals($expectedResponse->getLogoUrl(), $response->getLogoUrl());
-        $this->assertEquals($expectedResponse->getLogoExtension(), $response->getLogoExtension());
-        $this->assertEquals($expectedResponse->getLogoSize(), $response->getLogoSize());
     }
 }
 

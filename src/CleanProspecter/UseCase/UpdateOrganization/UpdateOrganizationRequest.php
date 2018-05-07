@@ -67,7 +67,6 @@ final class UpdateOrganizationRequest
 
     public function __construct(
         $id,
-        $ownedBy,
         ?string $phoneNumber,
         ?string $email,
         ?string $language,
@@ -82,7 +81,6 @@ final class UpdateOrganizationRequest
         $holdBy
     ) {
         $this->id = $id;
-        $this->ownedBy = $ownedBy;
         $this->phoneNumber = $phoneNumber;
         $this->email = $email;
         $this->language = $language;
@@ -103,14 +101,6 @@ final class UpdateOrganizationRequest
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOwnedBy()
-    {
-        return $this->ownedBy;
     }
 
     public function getPhoneNumber(): ?string

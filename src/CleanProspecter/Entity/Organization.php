@@ -4,7 +4,9 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\Entity;
 
-class Organization extends Person
+use Solean\CleanProspecter\Exception\Entity\ValidationException;
+
+class Organization extends Person implements GeoLocatable
 {
     /**
      * @var string
@@ -236,5 +238,16 @@ class Organization extends Person
     {
         $this->ownedProspects[] = $ownedCustomer;
         $ownedCustomer->setOwnedBy($this);
+    }
+
+    public function validate()
+    {
+        if (!$this->getOwnedBy()) {
+            throw new ValidationException('Owner is missing', 412, null, 'ownedBy');
+        }
+
+        if (!$this->getCorporateName() && !$this->getEmail()) {
+            throw new ValidationException('At least one is mandatory : corporate name or email', 412, null, '*');
+        }
     }
 }
