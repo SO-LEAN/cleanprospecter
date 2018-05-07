@@ -22,7 +22,6 @@ final class FindOrganizationResponse
     private $organizations;
 
     /**
-     * FindOrganizationResponse constructor.
      * @param int $currentPage
      * @param int $total
      * @param Organization[] $organizations
