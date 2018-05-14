@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Solean\Base;
 
-use Tests\Unit\Solean\CleanProspecter\EntityBuilder\FileBuilder;
-use Tests\Unit\Solean\CleanProspecter\EntityBuilder\UserBuilder;
-use Tests\Unit\Solean\CleanProspecter\EntityBuilder\AddressBuilder;
-use Tests\Unit\Solean\CleanProspecter\EntityBuilder\GeoPointBuilder;
-use Tests\Unit\Solean\CleanProspecter\EntityBuilder\OrganizationBuilder;
+use Tests\Unit\Solean\CleanProspecter\Builder\FileBuilder;
+use Tests\Unit\Solean\CleanProspecter\Builder\PageBuilder;
+use Tests\Unit\Solean\CleanProspecter\Builder\UserBuilder;
+use Tests\Unit\Solean\CleanProspecter\Builder\AddressBuilder;
+use Tests\Unit\Solean\CleanProspecter\Builder\GeoPointBuilder;
+use Tests\Unit\Solean\CleanProspecter\Builder\OrganizationBuilder;
+
+function aPage()
+{
+    return new PageBuilder();
+}
 
 function anAddress()
 {

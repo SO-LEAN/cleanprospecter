@@ -37,12 +37,10 @@ final class GetOrganizationImpl extends AbstractUseCase implements GetOrganizati
     private function getOrganization(GetOrganizationRequest $request): Organization
     {
         try {
-            $persisted = $this->organizationGateway->get($request->getId());
+            return $this->organizationGateway->get($request->getId());
         } catch (Gateway\NotFoundException $e) {
             throw new NotFoundException(sprintf('Organization with #ID %d not found', $request->getId()), 404, $e, ['id' => 'Organization not found']);
         }
-
-        return $persisted;
     }
 
     private function buildResponse(Organization $persisted): GetOrganizationResponse

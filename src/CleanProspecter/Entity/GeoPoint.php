@@ -25,7 +25,6 @@ final class GeoPoint
         $geoPoint->longitude = $longitude;
         $geoPoint->latitude = $latitude;
 
-
         return $geoPoint;
     }
 

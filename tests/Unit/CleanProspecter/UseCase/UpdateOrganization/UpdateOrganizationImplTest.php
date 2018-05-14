@@ -4,12 +4,12 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\UpdateOrganization;
 
+use SplFileInfo;
 use Prophecy\Argument;
+use Tests\Unit\Solean\Base\UseCaseTest;
 use Solean\CleanProspecter\Entity\GeoPoint;
 use Solean\CleanProspecter\Gateway\GeoLocation;
 use Solean\CleanProspecter\UseCase\UpdateOrganization\UpdateOrganizationRequest;
-use SplFileInfo;
-use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\Gateway\Storage;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Exception\UseCase;
@@ -18,14 +18,13 @@ use Solean\CleanProspecter\Gateway\UserNotifier;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\UseCase\UpdateOrganization\UpdateOrganizationImpl;
 use Solean\CleanProspecter\UseCase\UpdateOrganization\UpdateOrganizationResponse;
-use Solean\CleanProspecter\UseCase\UpdateOrganization\UpdateOrganizationPresenter;
 
 use function Tests\Unit\Solean\Base\anOrganization;
 use function Tests\Unit\Solean\Base\anAddress;
 use function Tests\Unit\Solean\Base\aGeoPoint;
 use function Tests\Unit\Solean\Base\aFile;
 
-class UpdateOrganizationImplTest extends TestCase
+class UpdateOrganizationImplTest extends UseCaseTest
 {
     public function target() : UpdateOrganizationImpl
     {
@@ -52,21 +51,21 @@ class UpdateOrganizationImplTest extends TestCase
      */
     public function testExecute($expectedResponse, $request, $initial, $updated)
     {
-        $this->mock($initial, $updated, $expectedResponse);
+        $this->mock($initial, $updated);
 
         /**
          * @var UpdateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function provideExecute()
     {
-        $req  = anUpdateOrganizationRequest();
+        $req  = aRequest();
         $org  = anOrganization();
-        $resp = anUpdateOrganizationResponse();
+        $resp = aResponse();
 
         (yield 'no change' => [
             $resp->ownedByCreator()->build(),
@@ -84,7 +83,7 @@ class UpdateOrganizationImplTest extends TestCase
 
     public function testExecuteWithNewAddress()
     {
-        $request = anUpdateOrganizationRequest()->withNewAddress()->build();
+        $request = aRequest()->withNewAddress()->build();
 
         $orgBuilder  = anOrganization()
             ->ownedBy(anOrganization()->withCreatorData());
@@ -97,22 +96,22 @@ class UpdateOrganizationImplTest extends TestCase
             ->with('address', anAddress()->withNewData())
             ->with('geoPoint', $geoPointBuilder = aGeoPoint())
             ->build();
-        $expectedResponse = anUpdateOrganizationResponse()->withNewAddress()->build();
+        $expectedResponse = aResponse()->withNewAddress()->build();
 
-        $this->mock($initial, $updated, $expectedResponse);
+        $this->mock($initial, $updated);
         $this->mockGeoLocation($geoPointBuilder->build());
 
         /**
          * @var UpdateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteWithNewAddressButNotFoundByGeoLocation()
     {
-        $request = anUpdateOrganizationRequest()
+        $request = aRequest()
             ->withUnLocatableAddress()
             ->build();
 
@@ -130,15 +129,15 @@ class UpdateOrganizationImplTest extends TestCase
             ->with('geoPoint', null)
             ->build();
 
-        $expectedResponse = anUpdateOrganizationResponse()->withUnLocatableAddress()->build();
+        $expectedResponse = aResponse()->withUnLocatableAddress()->build();
 
-        $this->mock($initial, $updated, $expectedResponse);
+        $this->mock($initial, $updated);
         $this->mockGeoLocation(aGeoPoint()->notFound()->build(), false);
 
         /**
          * @var UpdateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
@@ -146,7 +145,7 @@ class UpdateOrganizationImplTest extends TestCase
     public function testExecuteEmptyToFull()
     {
 
-        $request = anUpdateOrganizationRequest()
+        $request = aRequest()
             ->withNewData()
             ->withNewAddress()
             ->build();
@@ -167,15 +166,15 @@ class UpdateOrganizationImplTest extends TestCase
             ->with('geoPoint', $geoPointBuilder = aGeoPoint())
             ->build();
 
-        $expectedResponse = anUpdateOrganizationResponse()->withNewData()->withNewAddress()->build();
+        $expectedResponse = aResponse()->withNewData()->withNewAddress()->build();
 
-        $this->mock($initial, $updated, $expectedResponse);
+        $this->mock($initial, $updated);
         $this->mockGeoLocation($geoPointBuilder->build());
 
         /**
          * @var UpdateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
@@ -191,29 +190,29 @@ class UpdateOrganizationImplTest extends TestCase
 
         $file = $this->mockFile($updated);
 
-        $request = anUpdateOrganizationRequest()
+        $request = aRequest()
             ->withLogo($file)
             ->build();
 
-        $expectedResponse = anUpdateOrganizationResponse()
+        $expectedResponse = aResponse()
             ->ownedByCreator()
             ->withLogo()
             ->build();
 
-        $this->mock($get, $updated, $expectedResponse);
+        $this->mock($get, $updated);
         $this->mockStorage($file, $updated);
 
         /**
          * @var UpdateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnHold()
     {
-        $request = anUpdateOrganizationRequest()
+        $request = aRequest()
             ->hold()
             ->build();
 
@@ -222,25 +221,25 @@ class UpdateOrganizationImplTest extends TestCase
         $get = $organizationBuilder->build();
         $updated =  $organizationBuilder->holdBy(anOrganization()->withHoldingData())->build();
 
-        $expectedResponse = anUpdateOrganizationResponse()
+        $expectedResponse = aResponse()
             ->ownedByCreator()
             ->hold()
             ->build();
 
         $this->mockOrganizationGateway($request);
-        $this->mock($get, $updated, $expectedResponse);
+        $this->mock($get, $updated);
 
         /**
          * @var UpdateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testThrowAnUseCaseNotFoundExceptionIfHoldingNotFoundInGatewayDuringExecuteOnHold()
     {
-        $request = anUpdateOrganizationRequest()
+        $request = aRequest()
             ->hold()
             ->build();
 
@@ -249,12 +248,12 @@ class UpdateOrganizationImplTest extends TestCase
         $this->prophesy(OrganizationGateway::class)->get($request->getHoldBy())->shouldBeCalled()->willThrow($gatewayException);
         $this->expectExceptionObject(new UseCase\NotFoundException(sprintf('Holding with #ID %d not found', $request->getHoldBy()), 404, $gatewayException));
 
-        $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
+        $this->target()->execute($request, $this->getMockedPresenter());
     }
 
     public function testThrowAnUseCaseUniqueConstraintViolationExceptionIfGatewayThrowOne()
     {
-        $request = anUpdateOrganizationRequest()
+        $request = aRequest()
             ->withId()
             ->build();
 
@@ -268,12 +267,12 @@ class UpdateOrganizationImplTest extends TestCase
         $this->prophesy(OrganizationGateway::class)->update($request->getId(), $updated)->shouldBeCalled()->willThrow($gatewayException);
         $this->expectExceptionObject(new UseCase\UniqueConstraintViolationException('Email already used', 412, $gatewayException));
 
-        $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
+        $this->target()->execute($request, $this->getMockedPresenter());
     }
 
     public function testThrowUseCaseExceptionIfMissingCorporateNameAndEmail()
     {
-        $request = anUpdateOrganizationRequest()
+        $request = aRequest()
             ->missingMandatoryData()
             ->build();
 
@@ -285,15 +284,14 @@ class UpdateOrganizationImplTest extends TestCase
         $this->expectExceptionObject(new UseCase\UseCaseException('At least one is mandatory : corporate name or email', 412));
         $this->prophesy(OrganizationGateway::class)->get($request->getId())->shouldBeCalled()->willReturn($get);
 
-        $this->target()->execute($request, $this->prophesy(UpdateOrganizationPresenter::class)->reveal());
+        $this->target()->execute($request, $this->getMockedPresenter());
     }
 
-    private function mock(Organization $get, Organization $updated, UpdateOrganizationResponse $expectedResponse): void
+    private function mock(Organization $get, Organization $updated): void
     {
         $this->prophesy(OrganizationGateway::class)->get(123)->shouldBeCalled()->willReturn($get);
         $this->prophesy(OrganizationGateway::class)->update($updated->getId(), $updated)->shouldBeCalled()->willReturn($updated);
         $this->prophesy(UserNotifier::class)->addSuccess('Organization updated !')->shouldBeCalled();
-        $this->prophesy(UpdateOrganizationPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
     }
 
     private function mockOrganizationGateway(UpdateOrganizationRequest $request): void
@@ -320,11 +318,11 @@ class UpdateOrganizationImplTest extends TestCase
     }
 }
 
-function anUpdateOrganizationRequest()
+function aRequest()
 {
     return new UpdateOrganizationRequestBuilder();
 }
-function anUpdateOrganizationResponse()
+function aResponse()
 {
     return new UpdateOrganizationResponseBuilder();
 }

@@ -15,14 +15,19 @@ class Page
      */
     private $total;
     /**
+     * @var int
+     */
+    private $totalPages;
+    /**
      * @var array
      */
     private $content;
 
-    public function __construct(int $number, int $total, array $content)
+    public function __construct(int $number, int $total, int $totalPages, array $content)
     {
         $this->number = $number;
         $this->total = $total;
+        $this->totalPages = $totalPages;
         $this->content = $content;
     }
 
@@ -39,5 +44,10 @@ class Page
     public function getContent(): array
     {
         return $this->content;
+    }
+
+    public function getTotalPages()
+    {
+        return $this->totalPages;
     }
 }

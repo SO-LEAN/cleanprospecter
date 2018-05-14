@@ -4,16 +4,15 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\Login;
 
-use Tests\Unit\Solean\Base\TestCase;
+use Tests\Unit\Solean\Base\UseCaseTest;
 use Solean\CleanProspecter\UseCase\Login\LoginImpl;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Solean\CleanProspecter\UseCase\Login\LoginResponse;
-use Solean\CleanProspecter\UseCase\Login\LoginPresenter;
 use Solean\CleanProspecter\Exception\UseCase\BadCredentialException;
 
 use function Tests\Unit\Solean\Base\aUser;
 
-class LoginImplTest extends TestCase
+class LoginImplTest extends UseCaseTest
 {
     public function target() : LoginImpl
     {
@@ -34,16 +33,16 @@ class LoginImplTest extends TestCase
 
     public function testResponseIsReturnedWhenPasswordIsCorrectBeforeEncoding()
     {
-        $request = aLoginRequest()->build();
+        $request = aRequest()->build();
         $entity  = aUser()->build();
-        $expectedResponse = aLoginResponse()->build();
+        $expectedResponse = aResponse()->build();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn($entity);
-        $this->prophesy(LoginPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
+
         /**
          * @var LoginResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(LoginPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertInstanceOf(LoginResponse::class, $response);
         $this->assertEquals($response->getUserName(), $entity->getUserName());
@@ -53,32 +52,32 @@ class LoginImplTest extends TestCase
 
     public function testBadCredentialExceptionIsThrownWhenPasswordHasTypo()
     {
-        $request = aLoginRequest()
+        $request = aRequest()
             ->withTypo()
             ->build();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(aUser()->build());
         $this->expectExceptionObject(new BadCredentialException());
 
-        $this->target()->execute($request, $this->prophesy(LoginPresenter::class)->reveal());
+        $this->target()->execute($request, $this->getMockedPresenter());
     }
 
     public function testBadCredentialExceptionIsThrownWhenUserIsUnknown()
     {
-        $request = aLoginRequest()->build();
+        $request = aRequest()->build();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
         $this->expectExceptionObject(new BadCredentialException());
 
-        $this->target()->execute($request, $this->prophesy(LoginPresenter::class)->reveal());
+        $this->target()->execute($request, $this->getMockedPresenter());
     }
 }
 
-function aLoginRequest()
+function aRequest()
 {
     return new LoginRequestBuilder();
 }
-function aLoginResponse()
+function aResponse()
 {
     return new LoginResponseBuilder();
 }

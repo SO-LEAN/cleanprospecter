@@ -6,7 +6,7 @@ namespace Tests\Unit\Solean\CleanProspecter\UseCase\CreateOrganization;
 
 use SplFileInfo;
 use Prophecy\Argument;
-use Tests\Unit\Solean\Base\TestCase;
+use Tests\Unit\Solean\Base\UseCaseTest;
 use Solean\CleanProspecter\Entity\GeoPoint;
 use Solean\CleanProspecter\Gateway\Storage;
 use Solean\CleanProspecter\Exception\Gateway;
@@ -18,14 +18,13 @@ use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationImpl;
 use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationRequest;
 use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationResponse;
-use Solean\CleanProspecter\UseCase\CreateOrganization\CreateOrganizationPresenter;
 
 use function Tests\Unit\Solean\Base\anOrganization;
 use function Tests\Unit\Solean\Base\aGeoPoint;
 use function Tests\Unit\Solean\Base\anAddress;
 use function Tests\Unit\Solean\Base\aFile;
 
-class CreateOrganizationImplTest extends TestCase
+class CreateOrganizationImplTest extends UseCaseTest
 {
     public function target() : CreateOrganizationImpl
     {
@@ -49,30 +48,31 @@ class CreateOrganizationImplTest extends TestCase
 
     public function testExecuteOnRegularWithCreator()
     {
-        $request = aCreateOrganizationRequest()
+        $request = aRequest()
             ->ownedByCreator()
             ->build();
 
         $organizationBuilder = anOrganization()
             ->ownedBy(anOrganization()->withCreatorData());
+
         $notPersisted = $organizationBuilder->build();
         $persisted =  $organizationBuilder->withId()->build();
 
-        $expectedResponse = aCreateOrganizationResponse()->build();
+        $expectedResponse = aResponse()->build();
 
-        $this->mock($notPersisted, $persisted, $expectedResponse);
+        $this->mock($notPersisted, $persisted);
 
         /**
          * @var CreateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnRegularWithAddress()
     {
-        $request = aCreateOrganizationRequest()
+        $request = aRequest()
             ->ownedByCreator()
             ->withAddress()
             ->build();
@@ -86,17 +86,17 @@ class CreateOrganizationImplTest extends TestCase
         $notPersisted = $organizationBuilder->build();
         $persisted =  $organizationBuilder->withId()->build();
 
-        $expectedResponse = aCreateOrganizationResponse()
+        $expectedResponse = aResponse()
             ->withRegularAddress()
             ->build();
 
-        $this->mock($notPersisted, $persisted, $expectedResponse);
+        $this->mock($notPersisted, $persisted);
         $this->mockGeoLocation($geoPoint->build());
 
         /**
          * @var CreateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
@@ -112,29 +112,29 @@ class CreateOrganizationImplTest extends TestCase
 
         $file = $this->mockFile($notPersisted);
 
-        $request = aCreateOrganizationRequest()
+        $request = aRequest()
             ->ownedByCreator()
             ->withLogo($file)
             ->build();
 
-        $expectedResponse = aCreateOrganizationResponse()
+        $expectedResponse = aResponse()
             ->withLogo()
             ->build();
 
-        $this->mock($notPersisted, $persisted, $expectedResponse);
+        $this->mock($notPersisted, $persisted);
         $this->mockStorage($file, $notPersisted);
 
         /**
          * @var CreateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnHold()
     {
-        $request = aCreateOrganizationRequest()
+        $request = aRequest()
             ->ownedByCreator()
             ->hold()
             ->build();
@@ -146,24 +146,24 @@ class CreateOrganizationImplTest extends TestCase
         $notPersisted = $organizationBuilder->build();
         $persisted =  $organizationBuilder->withId()->build();
 
-        $expectedResponse = aCreateOrganizationResponse()
+        $expectedResponse = aResponse()
             ->hold()
             ->build();
 
         $this->mockGetHolding($request);
-        $this->mock($notPersisted, $persisted, $expectedResponse);
+        $this->mock($notPersisted, $persisted);
 
         /**
          * @var CreateOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testThrowAnUseCaseNotFoundExceptionIfHoldingNotFoundInGatewayDuringExecuteOnHold()
     {
-        $request = aCreateOrganizationRequest()
+        $request = aRequest()
             ->ownedByCreator()
             ->hold()
             ->build();
@@ -174,12 +174,12 @@ class CreateOrganizationImplTest extends TestCase
         $this->prophesy(OrganizationGateway::class)->get($request->getHoldBy())->shouldBeCalled()->willThrow($gatewayException);
         $this->expectExceptionObject(new UseCase\NotFoundException(sprintf('Holding with #ID %d not found', $request->getHoldBy()), 404, $gatewayException));
 
-        $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
+        $this->target()->execute($request, $this->getMockedPresenter());
     }
 
     public function testThrowAnUseCaseUniqueConstraintViolationExceptionIfGatewayThrowOne()
     {
-        $request = aCreateOrganizationRequest()
+        $request = aRequest()
             ->ownedByCreator()
             ->build();
 
@@ -193,12 +193,12 @@ class CreateOrganizationImplTest extends TestCase
         $this->prophesy(OrganizationGateway::class)->create($notPersisted)->shouldBeCalled()->willThrow($gatewayException);
         $this->expectExceptionObject(new UseCase\UniqueConstraintViolationException('Email already used', 412, $gatewayException));
 
-        $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
+        $this->target()->execute($request, $this->getMockedPresenter());
     }
 
     public function testThrowUseCaseExceptionIfMissingCorporateNameAndEmail()
     {
-        $request = aCreateOrganizationRequest()
+        $request = aRequest()
             ->ownedByCreator()
             ->missingMandatoryData()
             ->build();
@@ -206,25 +206,24 @@ class CreateOrganizationImplTest extends TestCase
         $this->mockGetCreator();
         $this->expectExceptionObject(new UseCase\UseCaseException('At least one is mandatory : corporate name or email', 412));
 
-        $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
+        $this->target()->execute($request, $this->getMockedPresenter());
     }
 
     public function testThrowUseCaseExceptionIfMissingOwner()
     {
-        $request = aCreateOrganizationRequest()
+        $request = aRequest()
             ->build();
 
         $this->expectExceptionObject(new UseCase\UseCaseException('Owner is missing', 412));
 
-        $this->target()->execute($request, $this->prophesy(CreateOrganizationPresenter::class)->reveal());
+        $this->target()->execute($request, $this->getMockedPresenter());
     }
 
-    private function mock(Organization $notPersisted, Organization $persisted, CreateOrganizationResponse $expectedResponse): void
+    private function mock(Organization $notPersisted, Organization $persisted): void
     {
         $this->mockGetCreator();
         $this->prophesy(OrganizationGateway::class)->create($notPersisted)->shouldBeCalled()->willReturn($persisted);
         $this->prophesy(UserNotifier::class)->addSuccess('Organization created !')->shouldBeCalled();
-        $this->prophesy(CreateOrganizationPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
     }
 
     private function mockGetCreator(): void
@@ -256,11 +255,11 @@ class CreateOrganizationImplTest extends TestCase
     }
 }
 
-function aCreateOrganizationRequest()
+function aRequest()
 {
     return new CreateOrganizationRequestBuilder();
 }
-function aCreateOrganizationResponse()
+function aResponse()
 {
     return new CreateOrganizationResponseBuilder();
 }

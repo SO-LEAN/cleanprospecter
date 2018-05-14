@@ -4,16 +4,15 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\RefreshUser;
 
-use Tests\Unit\Solean\Base\TestCase;
+use Tests\Unit\Solean\Base\UseCaseTest;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Solean\CleanProspecter\UseCase\RefreshUser\RefreshUserImpl;
 use Solean\CleanProspecter\UseCase\RefreshUser\RefreshUserResponse;
-use Solean\CleanProspecter\UseCase\RefreshUser\RefreshUserPresenter;
 
 use function Tests\Unit\Solean\Base\aUser;
 use function Tests\Unit\Solean\Base\anOrganization;
 
-class RefreshUserImplTest extends TestCase
+class RefreshUserImplTest extends UseCaseTest
 {
     public function target() : RefreshUserImpl
     {
@@ -34,20 +33,20 @@ class RefreshUserImplTest extends TestCase
 
     public function testResponseIsReturnedWhenUserFound()
     {
-        $request = aRefreshUserRequest()
+        $request = aRequest()
             ->build();
         $entity = aUser()
             ->with('organization', anOrganization()->withCreatorData())
             ->build();
 
-        $expectedResponse = aRefreshUserResponse()->build();
+        $expectedResponse = aResponse()->build();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn($entity);
-        $this->prophesy(RefreshUserPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
+
         /**
          * @var RefreshUserResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(RefreshUserPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse->getId(), $response->getId());
         $this->assertEquals($expectedResponse->getUserName(), $response->getUserName());
@@ -58,19 +57,19 @@ class RefreshUserImplTest extends TestCase
 
     public function testReturnNullWhenUserNotFound()
     {
-        $request = aRefreshUserRequest()->build();
+        $request = aRequest()->build();
 
         $this->prophesy(UserGateway::class)->findOneBy(['userName' => $request->getLogin()])->shouldBeCalled()->willReturn(null);
 
-        $this->assertNull($this->target()->execute($request, $this->prophesy(RefreshUserPresenter::class)->reveal()));
+        $this->assertNull($this->target()->execute($request, $this->getMockedPresenter()));
     }
 }
 
-function aRefreshUserRequest()
+function aRequest()
 {
     return new RefreshUserRequestBuilder();
 }
-function aRefreshUserResponse()
+function aResponse()
 {
     return new RefreshUserResponseBuilder();
 }

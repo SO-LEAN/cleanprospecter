@@ -28,9 +28,9 @@ final class FindOrganizationImpl extends AbstractUseCase implements FindOrganiza
 
     public function execute(FindOrganizationRequest $request, FindOrganizationPresenter $presenter)
     {
-        $page = $this->organizationGateway->findPageByQuery($request->getPage(), $request->getQuery());
+        $page = $this->organizationGateway->findPageByQuery($request->getPage(), $request->getQuery(), $request->getMaxByPage());
 
-        $response = new FindOrganizationResponse($page->getNumber(), $page->getTotal(), $this->organizationToDto($page->getContent()));
+        $response = new FindOrganizationResponse($page->getNumber(), $page->getTotal(), $page->getTotalPages(), $this->organizationToDto($page->getContent()));
 
         return $presenter->present($response);
     }

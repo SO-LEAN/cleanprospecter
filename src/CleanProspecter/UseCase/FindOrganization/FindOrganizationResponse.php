@@ -17,33 +17,28 @@ final class FindOrganizationResponse
     private $total;
 
     /**
+     * @var int
+     */
+    private $totalPages;
+
+    /**
      * @var Organization[]
      */
     private $organizations;
 
-    /**
-     * @param int $currentPage
-     * @param int $total
-     * @param Organization[] $organizations
-     */
-    public function __construct(int $currentPage, int $total, array $organizations)
+    public function __construct(int $currentPage, int $total, int $totalPages, array $organizations)
     {
         $this->currentPage = $currentPage;
         $this->total = $total;
+        $this->totalPages = $totalPages;
         $this->organizations = $organizations;
     }
 
-    /**
-     * @return int
-     */
     public function getCurrentPage(): int
     {
         return $this->currentPage;
     }
 
-    /**
-     * @return int
-     */
     public function getTotal(): int
     {
         return $this->total;

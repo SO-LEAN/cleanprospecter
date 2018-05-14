@@ -4,21 +4,20 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\GetOrganization;
 
-use Tests\Unit\Solean\Base\TestCase;
+use Tests\Unit\Solean\Base\UseCaseTest;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Exception\UseCase;
 use Solean\CleanProspecter\Entity\Organization;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\UseCase\GetOrganization\GetOrganizationImpl;
 use Solean\CleanProspecter\UseCase\GetOrganization\GetOrganizationResponse;
-use Solean\CleanProspecter\UseCase\GetOrganization\GetOrganizationPresenter;
 
 use function Tests\Unit\Solean\Base\anOrganization;
 use function Tests\Unit\Solean\Base\anAddress;
 use function Tests\Unit\Solean\Base\aGeoPoint;
 use function Tests\Unit\Solean\Base\aFile;
 
-class GetOrganizationImplTest extends TestCase
+class GetOrganizationImplTest extends UseCaseTest
 {
     public function target() : GetOrganizationImpl
     {
@@ -39,110 +38,110 @@ class GetOrganizationImplTest extends TestCase
 
     public function testExecuteOnRegular()
     {
-        $request = aGetOrganizationRequest()->build();
+        $request = aRequest()->build();
         $persisted = anOrganization()
             ->withId()
             ->build();
-        $expectedResponse = aGetOrganizationResponse()->build();
+        $expectedResponse = aResponse()->build();
 
-        $this->mock($persisted, $expectedResponse);
+        $this->mock($persisted);
 
         /**
          * @var GetOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnRegularWithOwner()
     {
-        $request = aGetOrganizationRequest()->build();
+        $request = aRequest()->build();
         $persisted = anOrganization()
             ->withId()
             ->ownedBy(anOrganization()->withCreatorData())
             ->build();
-        $expectedResponse = aGetOrganizationResponse()
+        $expectedResponse = aResponse()
             ->ownedByCreator()
             ->build() ;
 
-        $this->mock($persisted, $expectedResponse);
+        $this->mock($persisted);
 
         /**
          * @var GetOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnRegularWithAddress()
     {
-        $request = aGetOrganizationRequest()->build();
+        $request = aRequest()->build();
         $persisted = anOrganization()
             ->withId()
             ->with('address', anAddress())
             ->with('geoPoint', aGeoPoint())
             ->build();
-        $expectedResponse =  aGetOrganizationResponse()
+        $expectedResponse =  aResponse()
             ->withRegularAddress()
             ->build();
 
-        $this->mock($persisted, $expectedResponse);
+        $this->mock($persisted);
 
         /**
          * @var GetOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnRegularWithLogo()
     {
-        $request = aGetOrganizationRequest()->build();
+        $request = aRequest()->build();
         $persisted = anOrganization()
             ->withId()
             ->with('logo', aFile()->withImageData())
             ->build();
-        $expectedResponse = aGetOrganizationResponse()
+        $expectedResponse = aResponse()
             ->withLogo()
             ->build();
 
-        $this->mock($persisted, $expectedResponse);
+        $this->mock($persisted);
 
         /**
          * @var GetOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnHold()
     {
-        $request = aGetOrganizationRequest()->build();
+        $request = aRequest()->build();
         $persisted = anOrganization()
             ->withId()
             ->with('holdBy', anOrganization()->withHoldingData())
             ->build();
-        $expectedResponse = aGetOrganizationResponse()
+        $expectedResponse = aResponse()
             ->hold()
             ->build();
 
-        $this->mock($persisted, $expectedResponse);
+        $this->mock($persisted);
 
         /**
          * @var GetOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testExecuteOnFullFilled()
     {
-        $request = aGetOrganizationRequest()->build();
+        $request = aRequest()->build();
         $persisted = anOrganization()
             ->withId()
             ->with('address', anAddress())
@@ -151,46 +150,45 @@ class GetOrganizationImplTest extends TestCase
             ->with('logo', aFile()->withImageData())
             ->with('holdBy', anOrganization()->withHoldingData())
             ->build();
-        $expectedResponse = aGetOrganizationResponse()
+        $expectedResponse = aResponse()
             ->withRegularAddress()
             ->ownedByCreator()
             ->hold()
             ->withLogo()
             ->build();
 
-        $this->mock($persisted, $expectedResponse);
+        $this->mock($persisted);
 
         /**
          * @var GetOrganizationResponse $response
          */
-        $response = $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
+        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
     }
 
     public function testThrowAnUseCaseNotFoundExceptionIfOrganizationNotFoundInGateway()
     {
-        $request = aGetOrganizationRequest()->build();
+        $request = aRequest()->build();
         $gatewayException = new Gateway\NotFoundException();
 
         $this->prophesy(OrganizationGateway::class)->get($request->getId())->shouldBeCalled()->willThrow($gatewayException);
         $this->expectExceptionObject(new UseCase\NotFoundException(sprintf('Organization with #ID %d not found', $request->getId()), 404, $gatewayException));
 
-        $this->target()->execute($request, $this->prophesy(GetOrganizationPresenter::class)->reveal());
+        $this->target()->execute($request, $this->getMockedPresenter());
     }
 
-    private function mock(Organization $persisted, GetOrganizationResponse $expectedResponse): void
+    private function mock(Organization $persisted): void
     {
         $this->prophesy(OrganizationGateway::class)->get(777)->shouldBeCalled()->willReturn($persisted);
-        $this->prophesy(GetOrganizationPresenter::class)->present($expectedResponse)->shouldBeCalled()->willReturnArgument(0);
     }
 }
 
-function aGetOrganizationRequest()
+function aRequest()
 {
     return new GetOrganizationRequestBuilder();
 }
-function aGetOrganizationResponse()
+function aResponse()
 {
     return new GetOrganizationResponseBuilder();
 }
