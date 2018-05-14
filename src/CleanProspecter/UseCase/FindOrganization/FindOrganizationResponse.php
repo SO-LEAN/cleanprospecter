@@ -44,6 +44,11 @@ final class FindOrganizationResponse
         return $this->total;
     }
 
+    public function getTotalPages(): int
+    {
+        return $this->totalPages;
+    }
+
     /**
      * @return Organization[]
      */
