@@ -20,7 +20,7 @@ use Solean\CleanProspecter\Exception\UseCase\UnauthorizedException;
 class UseCasesFacade
 {
     /**
-     * @var array
+     * @var AbstractUseCase[]
      */
     private $useCases;
 
@@ -32,6 +32,14 @@ class UseCasesFacade
     public function addUseCase(AbstractUseCase $useCase): void
     {
         $this->useCases[lcfirst($this->getShortClassName($useCase))] = $useCase;
+    }
+
+    /**
+     * @return AbstractUseCase[]
+     */
+    public function getUseCases(): array
+    {
+        return $this->useCases;
     }
 
     public function hasUseCase(string $name): bool

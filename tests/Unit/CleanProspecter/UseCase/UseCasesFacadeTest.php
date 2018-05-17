@@ -6,6 +6,7 @@ namespace Tests\Unit\Solean\CleanProspecter\UseCase;
 
 use BadFunctionCallException;
 use Solean\CleanProspecter\Exception\UseCase\UnauthorizedException;
+use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\UseCase\UseCaseConsumer;
 use Tests\Unit\Solean\Base\TestCase;
 use Solean\CleanProspecter\UseCase\Presenter;
@@ -30,6 +31,17 @@ class UseCasesFacadeTest extends TestCase
     public function testUseCaseCanBeAdded() : void
     {
         $this->assertTrue($this->target()->hasUseCase('stubPublicUseCase'));
+    }
+
+    public function testGetUseCases() : void
+    {
+        $useCases = $this->target()->getUseCases();
+
+        $this->assertCount(2, $useCases);
+
+        while ($useCase = array_pop($useCases)) {
+            $this->assertInstanceOf(AbstractUseCase::class, $useCase);
+        }
     }
 
     public function testMethodFromUseCaseIsCorrectlyCalled() : void
