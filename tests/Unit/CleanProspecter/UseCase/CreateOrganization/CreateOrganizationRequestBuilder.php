@@ -24,6 +24,7 @@ class CreateOrganizationRequestBuilder extends Builder
             ->with('language', 'EN')
             ->with('corporateName', 'Organization')
             ->with('form', 'Limited Company')
+            ->with('type', 'Consulting')
             ->with('observations', 'observ.');
     }
 

@@ -13,10 +13,6 @@ final class UpdateOrganizationRequest
     */
     private $id;
     /**
-     * @var mixed
-     */
-    private $ownedBy;
-    /**
      * @var string
      */
     private $phoneNumber;
@@ -36,6 +32,10 @@ final class UpdateOrganizationRequest
      * @var string
      */
     private $form;
+    /**
+     * @var string
+     */
+    private $type;
     /**
      * @var string
      */
@@ -72,6 +72,7 @@ final class UpdateOrganizationRequest
         ?string $language,
         ?string $corporateName,
         ?string $form,
+        ?string $type,
         ?string $street,
         ?string $postalCode,
         ?string $city,
@@ -86,6 +87,7 @@ final class UpdateOrganizationRequest
         $this->language = $language;
         $this->corporateName = $corporateName;
         $this->form = $form;
+        $this->type = $type;
         $this->street = $street;
         $this->postalCode = $postalCode;
         $this->city = $city;
@@ -126,6 +128,11 @@ final class UpdateOrganizationRequest
     public function getForm(): ?string
     {
         return $this->form;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
     }
 
     public function getStreet(): ?string

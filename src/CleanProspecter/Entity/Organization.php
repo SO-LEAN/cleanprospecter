@@ -17,6 +17,10 @@ class Organization extends Person implements GeoLocatable
      */
     private $form;
     /**
+     * @var string
+     */
+    private $type;
+    /**
      * @var Address
      */
     private $address;
@@ -101,6 +105,16 @@ class Organization extends Person implements GeoLocatable
     public function getForm(): ?string
     {
         return $this->form;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): void
+    {
+        $this->type = $type;
     }
 
     public function setForm(?string $form): void
@@ -246,6 +260,11 @@ class Organization extends Person implements GeoLocatable
     {
         $this->ownedProspects[] = $ownedCustomer;
         $ownedCustomer->setOwnedBy($this);
+    }
+
+    public function setStats(array $stats): void
+    {
+        $this->stats = $stats;
     }
 
     public function getStats(): array

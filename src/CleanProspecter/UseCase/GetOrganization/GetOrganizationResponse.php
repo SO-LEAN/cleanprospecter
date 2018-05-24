@@ -35,6 +35,10 @@ final class GetOrganizationResponse
     /**
      * @var string
      */
+    private $type;
+    /**
+     * @var string
+     */
     private $street;
     /**
      * @var string
@@ -89,6 +93,7 @@ final class GetOrganizationResponse
         ?string $language,
         ?string $corporateName,
         ?string $form,
+        ?string $type,
         ?string $street,
         ?string $postalCode,
         ?string $city,
@@ -109,6 +114,7 @@ final class GetOrganizationResponse
         $this->language = $language;
         $this->corporateName = $corporateName;
         $this->form = $form;
+        $this->type = $type;
         $this->street = $street;
         $this->postalCode = $postalCode;
         $this->city = $city;
@@ -162,6 +168,11 @@ final class GetOrganizationResponse
     public function getForm(): ?string
     {
         return $this->form;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
     }
 
     public function getStreet(): ?string

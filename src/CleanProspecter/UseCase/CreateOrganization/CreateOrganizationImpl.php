@@ -76,24 +76,15 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
     private function buildOrganization(CreateOrganizationRequest $request): Organization
     {
         $organization = new Organization();
-        if ($request->getLanguage()) {
-            $organization->setLanguage($request->getLanguage());
-        }
-        if ($request->getPhoneNumber()) {
-            $organization->setPhoneNumber($request->getPhoneNumber());
-        }
-        if ($request->getObservations()) {
-            $organization->setObservations($request->getObservations());
-        }
-        if ($request->getEmail()) {
-            $organization->setEmail($request->getEmail());
-        }
-        if ($request->getCorporateName()) {
-            $organization->setCorporateName($request->getCorporateName());
-        }
-        if ($request->getForm()) {
-            $organization->setForm($request->getForm());
-        }
+
+        $organization->setLanguage($request->getLanguage());
+        $organization->setPhoneNumber($request->getPhoneNumber());
+        $organization->setObservations($request->getObservations());
+        $organization->setEmail($request->getEmail());
+        $organization->setCorporateName($request->getCorporateName());
+        $organization->setForm($request->getForm());
+        $organization->setType($request->getType());
+
         if ($request->hasAddress()) {
             $organization->setAddress(Address::fromValues($request->getStreet(), $request->getPostalCode(), $request->getCity(), $request->getCountry()));
         }
@@ -152,6 +143,7 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
             $persisted->getLanguage(),
             $persisted->getCorporateName(),
             $persisted->getForm(),
+            $persisted->getType(),
             $persisted->getAddress() ? $persisted->getAddress()->getStreet() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getPostalCode() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCity() : null,

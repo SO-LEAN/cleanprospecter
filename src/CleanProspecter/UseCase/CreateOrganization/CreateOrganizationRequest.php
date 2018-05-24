@@ -35,6 +35,10 @@ final class CreateOrganizationRequest
     /**
      * @var string
      */
+    private $type;
+    /**
+     * @var string
+     */
     private $street;
     /**
      * @var string
@@ -67,6 +71,7 @@ final class CreateOrganizationRequest
         ?string $email,
         ?string $language,
         ?string $corporateName,
+        ?string $type,
         ?string $form,
         ?string $street,
         ?string $postalCode,
@@ -82,6 +87,7 @@ final class CreateOrganizationRequest
         $this->language = $language;
         $this->corporateName = $corporateName;
         $this->form = $form;
+        $this->type = $type;
         $this->street = $street;
         $this->postalCode = $postalCode;
         $this->city = $city;
@@ -122,6 +128,11 @@ final class CreateOrganizationRequest
     public function getForm(): ?string
     {
         return $this->form;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
     }
 
     public function getStreet(): ?string

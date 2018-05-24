@@ -34,6 +34,7 @@ class UpdateOrganizationRequestBuilder extends Builder
             ->with('language', 'EN')
             ->with('corporateName', 'Organization')
             ->with('form', 'Limited Company')
+            ->with('type', 'Consulting')
             ->with('observations', 'observ.');
     }
 
@@ -46,6 +47,7 @@ class UpdateOrganizationRequestBuilder extends Builder
             ->with('email', 'org@new-organization.com')
             ->with('corporateName', 'New Organization')
             ->with('form', 'SARL')
+            ->with('type', 'Direct')
             ->with('observations', 'new observ.');
     }
 

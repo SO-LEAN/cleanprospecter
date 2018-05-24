@@ -82,6 +82,7 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
         $organization->setEmail($request->getEmail());
         $organization->setCorporateName($request->getCorporateName());
         $organization->setForm($request->getForm());
+        $organization->setType($request->getType());
 
         if ($request->hasAddress()) {
             $organization->setAddress(Address::fromValues($request->getStreet(), $request->getPostalCode(), $request->getCity(), $request->getCountry()));
@@ -129,6 +130,7 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
             $persisted->getLanguage(),
             $persisted->getCorporateName(),
             $persisted->getForm(),
+            $persisted->getType(),
             $persisted->getAddress() ? $persisted->getAddress()->getStreet() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getPostalCode() : null,
             $persisted->getAddress() ? $persisted->getAddress()->getCity() : null,
