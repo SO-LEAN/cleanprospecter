@@ -24,7 +24,8 @@ class GetOrganizationResponseBuilder extends Builder
             ->with('language', 'EN')
             ->with('corporateName', 'Organization')
             ->with('form', 'Limited Company')
-            ->with('observations', 'observ.');
+            ->with('observations', 'observ.')
+            ->with('stats', ['activeOrganizations' => 0]);
     }
 
     public function withRegularAddress(): self

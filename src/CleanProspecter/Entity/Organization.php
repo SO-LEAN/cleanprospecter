@@ -68,6 +68,10 @@ class Organization extends Person implements GeoLocatable
      * @var Customer[]
      */
     private $ownedCustomers;
+    /**
+     * @var array
+     */
+    private $stats;
 
     public function __construct()
     {
@@ -79,6 +83,9 @@ class Organization extends Person implements GeoLocatable
         $this->ownedProspectedOrganizations = [];
         $this->ownedProspects = [];
         $this->ownedCustomers = [];
+        $this->stats = [
+            'activeOrganizations' => 0,
+        ];
     }
 
     public function getCorporateName(): ?string
@@ -141,6 +148,7 @@ class Organization extends Person implements GeoLocatable
     public function setOwnedBy(Organization $ownedBy): void
     {
         $this->ownedBy = $ownedBy;
+        $ownedBy->incrementStat('activeOrganizations');
     }
 
     public function getLogo(): ?File
@@ -238,6 +246,21 @@ class Organization extends Person implements GeoLocatable
     {
         $this->ownedProspects[] = $ownedCustomer;
         $ownedCustomer->setOwnedBy($this);
+    }
+
+    public function getStats(): array
+    {
+        return $this->stats;
+    }
+
+    public function getStat($name)
+    {
+        return $this->stats[$name] ?? 0;
+    }
+
+    public function incrementStat($name): void
+    {
+        $this->stats[$name]++;
     }
 
     public function validate()

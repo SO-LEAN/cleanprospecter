@@ -76,6 +76,10 @@ final class GetOrganizationResponse
      * @var mixed
      */
     private $holdBy;
+    /**
+     * @var array
+     */
+    private $stats;
 
     public function __construct(
         $id,
@@ -95,7 +99,8 @@ final class GetOrganizationResponse
         ?string $logoUrl,
         ?string $logoExtension,
         ?int $logoSize,
-        $holdBy
+        $holdBy,
+        array $stats
     ) {
         $this->id = $id;
         $this->ownedBy = $ownedBy;
@@ -115,6 +120,7 @@ final class GetOrganizationResponse
         $this->logoExtension = $logoExtension;
         $this->logoSize = $logoSize;
         $this->holdBy = $holdBy;
+        $this->stats = $stats;
     }
 
     /**

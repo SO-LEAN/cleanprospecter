@@ -63,7 +63,8 @@ final class GetOrganizationImpl extends AbstractUseCase implements GetOrganizati
             $persisted->getLogo() ? $persisted->getLogo()->getUrl() : null,
             $persisted->getLogo() ? $persisted->getLogo()->getExtension() : null,
             $persisted->getLogo() ? $persisted->getLogo()->getSize() : null,
-            $persisted->getHoldBy() ? $persisted->getHoldBy()->getId() : null
+            $persisted->getHoldBy() ? $persisted->getHoldBy()->getId() : null,
+            $persisted->getStats()
         );
     }
 }

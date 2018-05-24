@@ -68,6 +68,7 @@ class CreateOrganizationImplTest extends UseCaseTest
         $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
 
         $this->assertEquals($expectedResponse, $response);
+        $this->assertEquals(1, $persisted->getOwnedBy()->getStat('activeOrganizations'));
     }
 
     public function testExecuteOnRegularWithAddress()
