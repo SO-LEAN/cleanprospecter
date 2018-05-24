@@ -35,8 +35,16 @@ class Organization
      * @var string
      */
     private $logo;
+    /**
+     * @var string
+     */
+    private $longitude;
+    /**
+     * @var string
+     */
+    private $latitude;
 
-    public function __construct($id, string $fullName, ?string $city, ?string $country, ?string $postalCode, ?string $logo)
+    public function __construct($id, string $fullName, ?string $city, ?string $country, ?string $postalCode, ?string $logo, ?string $longitude, ?string $latitude)
     {
         $this->id = $id;
         $this->fullName = $fullName;
@@ -44,6 +52,8 @@ class Organization
         $this->country = $country;
         $this->postalCode = $postalCode;
         $this->logo = $logo;
+        $this->longitude = $longitude;
+        $this->latitude = $latitude;
     }
 
     /**
@@ -77,5 +87,15 @@ class Organization
     public function getLogo(): ?string
     {
         return $this->logo;
+    }
+
+    public function getLongitude(): string
+    {
+        return $this->longitude;
+    }
+
+    public function getLatitude(): string
+    {
+        return $this->latitude;
     }
 }

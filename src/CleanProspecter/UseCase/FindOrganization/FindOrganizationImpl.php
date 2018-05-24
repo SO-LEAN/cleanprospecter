@@ -51,7 +51,9 @@ final class FindOrganizationImpl extends AbstractUseCase implements FindOrganiza
                 $organization->getAddress() ? $organization->getAddress()->getCity() : null,
                 $organization->getAddress() ? $organization->getAddress()->getCountry() : null,
                 $organization->getAddress() ? $organization->getAddress()->getPostalCode() : null,
-                $organization->getLogo() ? $organization->getLogo()->getUrl() : null
+                $organization->getLogo() ? $organization->getLogo()->getUrl() : null,
+                $organization->getGeoPoint() ? $organization->getGeoPoint()->getLongitude() : null,
+                $organization->getGeoPoint() ? $organization->getGeoPoint()->getLatitude() : null
             );
         }
 
