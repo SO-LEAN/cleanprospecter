@@ -214,6 +214,11 @@ final class GetOrganizationResponse
         return $this->logoSize;
     }
 
+    public function getStats(): array
+    {
+        return $this->stats;
+    }
+
     /**
      * @return mixed
      */
