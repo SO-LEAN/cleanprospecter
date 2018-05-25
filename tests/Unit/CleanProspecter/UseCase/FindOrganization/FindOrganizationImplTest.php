@@ -6,14 +6,15 @@ namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindOrganization;
 
 use Solean\CleanProspecter\Gateway\Entity\Page;
 use Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationResponse;
-use function Tests\Unit\Solean\Base\aFile;
-use function Tests\Unit\Solean\Base\anAddress;
 use Tests\Unit\Solean\Base\UseCaseTest;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationImpl;
 use Tests\Unit\Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationResponse\OrganizationBuilder;
 
 use function Tests\Unit\Solean\Base\aPage;
+use function Tests\Unit\Solean\Base\aFile;
+use function Tests\Unit\Solean\Base\aGeoPoint;
+use function Tests\Unit\Solean\Base\anAddress;
 use function Tests\Unit\Solean\Base\anOrganization;
 
 class FindOrganizationImplTest extends UseCaseTest
@@ -104,6 +105,22 @@ class FindOrganizationImplTest extends UseCaseTest
                 anOrganization()
                     ->withId()
                     ->with('logo', aFile()->withImageData())
+                    ->build()
+            ])
+                ->build()
+        ]);
+        (yield 'with geoPoint' => [
+            $resp
+                ->with('organizations', [
+                    aDtoOrganization()
+                        ->withGeoPoint()
+                        ->build()
+                ])
+                ->build(),
+            $page->with('content', [
+                anOrganization()
+                    ->withId()
+                    ->with('geoPoint', aGeoPoint())
                     ->build()
             ])
                 ->build()

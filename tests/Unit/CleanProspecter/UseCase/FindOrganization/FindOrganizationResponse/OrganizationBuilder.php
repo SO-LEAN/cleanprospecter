@@ -31,6 +31,14 @@ class OrganizationBuilder extends Builder
             ;
     }
 
+    public function withGeoPoint(): self
+    {
+        return $this
+            ->with('longitude', 7.7663456)
+            ->with('latitude', 48.5554971)
+            ;
+    }
+
     public function withLogo(): self
     {
         return $this
