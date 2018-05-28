@@ -31,6 +31,14 @@ class User extends Person
      */
     private $lastName;
     /**
+     * @var File
+     */
+    private $picture;
+    /**
+     * @var bool
+     */
+    private $hasPicture;
+    /**
      * @var Organization
      */
     private $organization;
@@ -38,6 +46,7 @@ class User extends Person
     public function __construct()
     {
         $this->roles = [];
+        $this->hasPicture = false;
     }
 
     public function getRoles() : array
@@ -105,6 +114,17 @@ class User extends Person
         $this->lastName = $lastName;
     }
 
+    public function getPicture(): ?File
+    {
+        return $this->hasPicture ? $this->picture : null;
+    }
+
+    public function setPicture(File $picture): void
+    {
+        $this->picture = $picture;
+        $this->hasPicture = $picture ? true : false;
+    }
+
     public function getOrganization(): Organization
     {
         return $this->organization;
@@ -118,5 +138,12 @@ class User extends Person
     public function getFullName(): string
     {
         return sprintf('%s %s', $this->firstName, $this->lastName);
+    }
+
+    public function encodePassword(): string
+    {
+        $this->password = md5(sprintf('%s%s', $this->password, $this->salt));
+
+        return $this->password;
     }
 }

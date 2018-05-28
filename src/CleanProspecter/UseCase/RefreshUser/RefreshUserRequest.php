@@ -4,9 +4,7 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\UseCase\RefreshUser;
 
-use Solean\CleanProspecter\UseCase\UseCaseRequest;
-
-final class RefreshUserRequest implements UseCaseRequest
+final class RefreshUserRequest
 {
     /**
      * @var string

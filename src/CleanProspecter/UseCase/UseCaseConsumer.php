@@ -8,4 +8,5 @@ interface UseCaseConsumer
 {
     public function getRoles(): array;
     public function getUserId();
+    public function getOrganizationId();
 }

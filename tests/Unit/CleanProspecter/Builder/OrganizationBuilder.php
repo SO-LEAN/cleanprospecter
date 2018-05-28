@@ -74,6 +74,14 @@ class OrganizationBuilder extends Builder
             ->with('observations', 'new observ.');
     }
 
+    public function withNewDataFromAccountUpdate(): self
+    {
+        return $this
+            ->with('language', 'LU')
+            ->with('corporateName', 'New Organization')
+            ->with('form', 'SARL');
+    }
+
     public function ownedBy($value): self
     {
         return $this->with('ownedBy', $value);
@@ -82,6 +90,13 @@ class OrganizationBuilder extends Builder
     public function holdBy($value): self
     {
         return $this->with('holdBy', $value);
+    }
+
+    public function missingMandatoryData(): self
+    {
+        return $this
+            ->with('email', null)
+            ->with('corporateName', null);
     }
 
     protected function getTargetClass(): string

@@ -35,13 +35,12 @@ final class LoginImpl extends AbstractUseCase implements Login
         throw new BadCredentialException();
     }
 
-    private function encodePassword(string $password, string $salt): string
-    {
-        return md5(sprintf('%s%s', $password, $salt));
-    }
-
     private function isCorrectLogin(LoginRequest $request, User $user): bool
     {
-        return $this->encodePassword($request->getPassword(), $user->getSalt()) === $user->getPassword();
+        $userTest = new User();
+        $userTest->setPassword($request->getPassword());
+        $userTest->setSalt($user->getSalt());
+
+        return $userTest->encodePassword() === $user->getPassword();
     }
 }

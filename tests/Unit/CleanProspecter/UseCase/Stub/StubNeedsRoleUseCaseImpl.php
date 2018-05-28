@@ -4,7 +4,6 @@ declare( strict_types = 1 );
 
 namespace Tests\Unit\Solean\CleanProspecter\UseCase\Stub;
 
-use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 
 class StubNeedsRoleUseCaseImpl extends AbstractUseCase

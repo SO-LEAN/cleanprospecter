@@ -4,9 +4,7 @@ declare( strict_types = 1 );
 
 namespace Solean\CleanProspecter\UseCase\Login;
 
-use Solean\CleanProspecter\UseCase\UseCaseRequest;
-
-final class LoginRequest implements UseCaseRequest
+final class LoginRequest
 {
     /**
      * @var string

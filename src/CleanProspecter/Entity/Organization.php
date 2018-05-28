@@ -285,7 +285,7 @@ class Organization extends Person implements GeoLocatable
     public function validate()
     {
         if (!$this->getOwnedBy()) {
-            throw new ValidationException('Owner is missing', 412, null, 'ownedBy');
+            return;
         }
 
         if (!$this->getCorporateName() && !$this->getEmail()) {

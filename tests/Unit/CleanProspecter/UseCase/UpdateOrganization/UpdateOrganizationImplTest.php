@@ -144,7 +144,6 @@ class UpdateOrganizationImplTest extends UseCaseTest
 
     public function testExecuteEmptyToFull()
     {
-
         $request = aRequest()
             ->withNewData()
             ->withNewAddress()
