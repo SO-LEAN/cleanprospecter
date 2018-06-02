@@ -63,7 +63,7 @@ final class RefreshUserResponse
 
     public function getPictureUrl(): ?string
     {
-        return $this->userName;
+        return $this->pictureUrl;
     }
 
     public function getOrganizationId()
