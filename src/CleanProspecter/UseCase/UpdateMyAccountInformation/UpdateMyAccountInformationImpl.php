@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Solean\CleanProspecter\UseCase\UpdateAccountInformation;
+namespace Solean\CleanProspecter\UseCase\UpdateMyAccountInformation;
 
 use Exception;
 use Solean\CleanProspecter\Entity\File;
@@ -20,7 +20,7 @@ use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
 
-final class UpdateAccountInformationImpl extends AbstractUseCase implements UpdateAccountInformation
+final class UpdateMyAccountInformationImpl extends AbstractUseCase implements UpdateMyAccountInformation
 {
     /**
      * @var OrganizationGateway
@@ -62,7 +62,7 @@ final class UpdateAccountInformationImpl extends AbstractUseCase implements Upda
         return ['ROLE_USER'];
     }
 
-    public function execute(UpdateAccountInformationRequest $request, UpdateAccountInformationPresenter $presenter, UseCaseConsumer $consumer): ?object
+    public function execute(UpdateMyAccountInformationRequest $request, UpdateMyAccountInformationPresenter $presenter, UseCaseConsumer $consumer): ?object
     {
 
         $this->transaction->begin();
@@ -73,14 +73,14 @@ final class UpdateAccountInformationImpl extends AbstractUseCase implements Upda
         $this->alterUser($request, $user);
         $this->alterOrganization($request, $organization);
         $this->handleTransaction($request, $user, $organization);
-        $this->notifySuccess('User account information update !');
+        $this->notifySuccess('User account information updated !');
 
         $response = $this->buildResponse($organization, $user);
 
         return $presenter->present($response);
     }
 
-    private function alterUser(UpdateAccountInformationRequest $request, User $user): User
+    private function alterUser(UpdateMyAccountInformationRequest $request, User $user): User
     {
         $user->setPhoneNumber($request->getPhoneNumber());
         $user->setEmail($request->getEmail());
@@ -102,7 +102,7 @@ final class UpdateAccountInformationImpl extends AbstractUseCase implements Upda
         return $user;
     }
 
-    private function alterOrganization(UpdateAccountInformationRequest $request, Organization $organization): Organization
+    private function alterOrganization(UpdateMyAccountInformationRequest $request, Organization $organization): Organization
     {
         $organization->setLanguage($request->getLanguage());
         $organization->setCorporateName($request->getOrganizationCorporateName());
@@ -115,7 +115,7 @@ final class UpdateAccountInformationImpl extends AbstractUseCase implements Upda
         return $organization;
     }
 
-    private function handleTransaction(UpdateAccountInformationRequest $request, User $user, Organization $organization): void
+    private function handleTransaction(UpdateMyAccountInformationRequest $request, User $user, Organization $organization): void
     {
         try {
             $this->updateUser($user);
@@ -142,9 +142,9 @@ final class UpdateAccountInformationImpl extends AbstractUseCase implements Upda
         return $this->organizationGateway->update($organization->getId(), $organization);
     }
 
-    private function buildResponse(Organization $organization, User $user): UpdateAccountInformationResponse
+    private function buildResponse(Organization $organization, User $user): UpdateMyAccountInformationResponse
     {
-        return new UpdateAccountInformationResponse(
+        return new UpdateMyAccountInformationResponse(
             $user->getUserName(),
             $user->getFirstName(),
             $user->getLastName(),

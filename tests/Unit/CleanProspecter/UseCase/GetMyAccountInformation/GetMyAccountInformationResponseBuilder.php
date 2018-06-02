@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Solean\CleanProspecter\UseCase\UpdateAccountInformation;
+namespace Tests\Unit\Solean\CleanProspecter\UseCase\GetMyAccountInformation;
 
-use SplFileInfo;
 use Tests\Unit\Solean\Base\Builder;
-use Solean\CleanProspecter\UseCase\UpdateAccountInformation\UpdateAccountInformationRequest;
+use Solean\CleanProspecter\UseCase\GetMyAccountInformation\GetMyAccountInformationResponse;
 
-class UpdateAccountInformationRequestBuilder extends Builder
+class GetMyAccountInformationResponseBuilder extends Builder
 {
     public function __construct()
     {
@@ -18,10 +17,11 @@ class UpdateAccountInformationRequestBuilder extends Builder
 
     public function withData(): self
     {
+        $salt = 'salt';
         return $this
             ->with('userName', 'login')
-            ->with('password', 'password')
-            ->with('salt', 'salt')
+            ->with('password', md5(sprintf('%s%s', 'password', $salt)))
+            ->with('salt', $salt)
             ->with('roles', ['ROLE'])
             ->with('language', 'FR')
             ->with('firstName', 'Mike')
@@ -35,10 +35,11 @@ class UpdateAccountInformationRequestBuilder extends Builder
 
     public function withNewData(): self
     {
+        $salt = 'salt';
         return $this
             ->with('userName', 'new login')
-            ->with('password', 'new password')
-            ->with('salt', 'salt')
+            ->with('password', md5(sprintf('%s%s', 'new password', $salt)))
+            ->with('salt', $salt)
             ->with('language', 'LU')
             ->with('firstName', 'New Mike')
             ->with('lastName', 'New Myers')
@@ -48,21 +49,25 @@ class UpdateAccountInformationRequestBuilder extends Builder
             ->with('organizationForm', 'SARL');
     }
 
-    public function withOrganizationLogo(SplFileInfo $logo): self
+    public function withOrganizationLogo(): self
     {
         return $this
-            ->with('organizationLogo', $logo);
+            ->with('organizationLogoUrl', 'http://url.net/image.png')
+            ->with('organizationLogoExtension', 'png')
+            ->with('organizationLogoSize', 2500);
     }
 
-    public function withPicture(SplFileInfo $picture): self
+    public function withPicture(): self
     {
         return $this
-            ->with('picture', $picture);
+            ->with('pictureUrl', 'http://url.net/image.png')
+            ->with('pictureExtension', 'png')
+            ->with('pictureSize', 2500);
     }
 
     protected function getTargetClass(): string
     {
-        return UpdateAccountInformationRequest::class;
+        return GetMyAccountInformationResponse::class;
     }
 
     protected function getTargetType(): string

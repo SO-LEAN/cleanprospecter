@@ -2,11 +2,9 @@
 
 declare( strict_types = 1 );
 
-namespace Solean\CleanProspecter\UseCase\UpdateAccountInformation;
+namespace Solean\CleanProspecter\UseCase\UpdateMyAccountInformation;
 
-use SplFileInfo;
-
-final class UpdateAccountInformationRequest
+final class UpdateMyAccountInformationResponse
 {
     /**
      * @var string
@@ -27,19 +25,23 @@ final class UpdateAccountInformationRequest
     /**
      * @var string
      */
-    private $password;
-    /**
-     * @var string
-     */
     private $firstName;
     /**
      * @var string
      */
     private $lastName;
     /**
-     * @var SplFileInfo
+     * @var string
      */
-    private $picture;
+    private $pictureUrl;
+    /**
+     * @var string
+     */
+    private $pictureExtension;
+    /**
+     * @var int
+     */
+    private $pictureSize;
     /**
      * @var string
      */
@@ -49,34 +51,48 @@ final class UpdateAccountInformationRequest
      */
     private $organizationForm;
     /**
-     * @var SplFileInfo
+     * @var string
      */
-    private $organizationLogo;
+    private $organizationLogoUrl;
+    /**
+     * @var string
+     */
+    private $organizationLogoExtension;
+    /**
+     * @var int
+     */
+    private $organizationLogoSize;
 
     public function __construct(
         string $userName,
-        ?string $password,
         ?string $firstName,
         ?string $lastName,
-        ?SplFileInfo $picture,
+        ?string $pictureUrl,
+        ?string $pictureExtension,
+        ?int $pictureSize,
         ?string $phoneNumber,
         ?string $email,
         ?string $language,
         ?string $organizationCorporateName,
         ?string $organizationForm,
-        ?SplFileInfo $organizationLogo
+        ?string $organizationLogoUrl,
+        ?string $organizationLogoExtension,
+        ?int $organizationLogoSize
     ) {
         $this->userName = $userName;
-        $this->password = $password;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->picture = $picture;
         $this->phoneNumber = $phoneNumber;
+        $this->pictureUrl = $pictureUrl;
+        $this->pictureExtension = $pictureExtension;
+        $this->pictureSize = $pictureSize;
         $this->email = $email;
         $this->language = $language;
         $this->organizationCorporateName = $organizationCorporateName;
         $this->organizationForm = $organizationForm;
-        $this->organizationLogo = $organizationLogo;
+        $this->organizationLogoUrl = $organizationLogoUrl;
+        $this->organizationLogoExtension = $organizationLogoExtension;
+        $this->organizationLogoSize = $organizationLogoSize;
     }
 
     public function getPhoneNumber(): ?string
@@ -99,11 +115,6 @@ final class UpdateAccountInformationRequest
         return $this->userName;
     }
 
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
     public function getFirstName(): ?string
     {
         return $this->firstName;
@@ -114,9 +125,19 @@ final class UpdateAccountInformationRequest
         return $this->lastName;
     }
 
-    public function getPicture(): ?SplFileInfo
+    public function getPictureUrl(): ?string
     {
-        return $this->picture;
+        return $this->pictureUrl;
+    }
+
+    public function getPictureExtension(): ?string
+    {
+        return $this->pictureExtension;
+    }
+
+    public function getPictureSize(): ?int
+    {
+        return $this->pictureSize;
     }
 
     public function getOrganizationCorporateName(): string
@@ -129,8 +150,18 @@ final class UpdateAccountInformationRequest
         return $this->organizationForm;
     }
 
-    public function getOrganizationLogo(): ?SplFileInfo
+    public function getOrganizationLogoUrl(): ?string
     {
-        return $this->organizationLogo;
+        return $this->organizationLogoUrl;
+    }
+
+    public function getOrganizationLogoExtension(): ?string
+    {
+        return $this->organizationLogoExtension;
+    }
+
+    public function getOrganizationLogoSize(): ?int
+    {
+        return $this->organizationLogoSize;
     }
 }

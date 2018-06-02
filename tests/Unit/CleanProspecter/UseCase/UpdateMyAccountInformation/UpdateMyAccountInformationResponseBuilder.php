@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Solean\CleanProspecter\UseCase\UpdateAccountInformation;
+namespace Tests\Unit\Solean\CleanProspecter\UseCase\UpdateMyAccountInformation;
 
 use Tests\Unit\Solean\Base\Builder;
-use Solean\CleanProspecter\UseCase\UpdateAccountInformation\UpdateAccountInformationResponse;
+use Solean\CleanProspecter\UseCase\UpdateMyAccountInformation\UpdateMyAccountInformationResponse;
 
-class UpdateAccountInformationResponseBuilder extends Builder
+class UpdateMyAccountInformationResponseBuilder extends Builder
 {
     public function __construct()
     {
@@ -62,12 +62,12 @@ class UpdateAccountInformationResponseBuilder extends Builder
         return $this
             ->with('pictureUrl', 'http://url.net/image.png')
             ->with('pictureExtension', 'png')
-            ->with('pictureLogoSize', 2500);
+            ->with('pictureSize', 2500);
     }
 
     protected function getTargetClass(): string
     {
-        return UpdateAccountInformationResponse::class;
+        return UpdateMyAccountInformationResponse::class;
     }
 
     protected function getTargetType(): string

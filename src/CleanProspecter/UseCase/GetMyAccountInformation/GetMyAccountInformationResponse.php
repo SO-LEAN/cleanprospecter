@@ -1,12 +1,8 @@
 <?php
 
-declare( strict_types = 1 );
+namespace Solean\CleanProspecter\UseCase\GetMyAccountInformation;
 
-namespace Solean\CleanProspecter\UseCase\UpdateAccountInformation;
-
-use SplFileInfo;
-
-final class UpdateAccountInformationResponse
+final class GetMyAccountInformationResponse
 {
     /**
      * @var string
@@ -84,6 +80,9 @@ final class UpdateAccountInformationResponse
         $this->userName = $userName;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
+        $this->pictureUrl = $pictureUrl;
+        $this->pictureExtension = $pictureExtension;
+        $this->pictureSize = $pictureSize;
         $this->phoneNumber = $phoneNumber;
         $this->email = $email;
         $this->language = $language;

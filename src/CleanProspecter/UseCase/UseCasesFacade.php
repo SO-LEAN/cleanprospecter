@@ -16,6 +16,9 @@ use Solean\CleanProspecter\Exception\UseCase\UnauthorizedException;
  * @method getOrganization(UseCase\GetOrganization\GetOrganizationRequest $request, UseCase\GetOrganization\GetOrganizationPresenter $presenter, ?UseCaseConsumer $consumer)
  * @method findOrganization(UseCase\FindOrganization\FindOrganizationRequest $request, UseCase\FindOrganization\FindOrganizationPresenter $presenter, ?UseCaseConsumer $consumer)
  * @method updateOrganization(UseCase\UpdateOrganization\UpdateOrganizationRequest $request, UseCase\UpdateOrganization\UpdateOrganizationPresenter $presenter, ?UseCaseConsumer $consumer)
+ *
+ * @method updateAccountInformation(UseCase\UpdateMyAccountInformation\UpdateMyAccountInformationRequest $request, UseCase\UpdateMyAccountInformation\UpdateMyAccountInformationPresenter $presenter, ?UseCaseConsumer $consumer)
+ * @method getAccountInformation(UseCase\GetMyAccountInformation\GetMyAccountInformationRequest $request, UseCase\GetMyAccountInformation\GetMyAccountInformationPresenter $presenter, ?UseCaseConsumer $consumer)
  */
 class UseCasesFacade
 {

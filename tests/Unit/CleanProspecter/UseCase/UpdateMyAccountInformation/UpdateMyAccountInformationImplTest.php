@@ -2,38 +2,30 @@
 
 declare( strict_types = 1 );
 
-namespace Tests\Unit\Solean\CleanProspecter\UseCase\UpdateAccountInformation;
+namespace Tests\Unit\Solean\CleanProspecter\UseCase\UpdateMyAccountInformation;
 
-use Solean\CleanProspecter\Entity\User;
-use Solean\CleanProspecter\Gateway\Entity\Transaction;
-use Solean\CleanProspecter\Gateway\Entity\UserGateway;
-use Solean\CleanProspecter\UseCase\UpdateAccountInformation\UpdateAccountInformationImpl;
-use Solean\CleanProspecter\UseCase\UpdateAccountInformation\UpdateAccountInformationResponse;
-use Solean\CleanProspecter\UseCase\UseCaseConsumer;
 use SplFileInfo;
-use Prophecy\Argument;
-use function Tests\Unit\Solean\Base\aUser;
+use Solean\CleanProspecter\Entity\User;
 use Tests\Unit\Solean\Base\UseCaseTest;
-use Solean\CleanProspecter\Entity\GeoPoint;
-use Solean\CleanProspecter\Gateway\GeoLocation;
-use Solean\CleanProspecter\UseCase\UpdateOrganization\UpdateOrganizationRequest;
 use Solean\CleanProspecter\Gateway\Storage;
 use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Exception\UseCase;
 use Solean\CleanProspecter\Entity\Organization;
 use Solean\CleanProspecter\Gateway\UserNotifier;
+use Solean\CleanProspecter\UseCase\UseCaseConsumer;
+use Solean\CleanProspecter\Gateway\Entity\UserGateway;
+use Solean\CleanProspecter\Gateway\Entity\Transaction;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
-use Solean\CleanProspecter\UseCase\UpdateOrganization\UpdateOrganizationImpl;
-use Solean\CleanProspecter\UseCase\UpdateOrganization\UpdateOrganizationResponse;
+use Solean\CleanProspecter\UseCase\UpdateMyAccountInformation\UpdateMyAccountInformationImpl;
+use Solean\CleanProspecter\UseCase\UpdateMyAccountInformation\UpdateMyAccountInformationResponse;
 
-use function Tests\Unit\Solean\Base\anOrganization;
-use function Tests\Unit\Solean\Base\anAddress;
-use function Tests\Unit\Solean\Base\aGeoPoint;
+use function Tests\Unit\Solean\Base\aUser;
 use function Tests\Unit\Solean\Base\aFile;
+use function Tests\Unit\Solean\Base\anOrganization;
 
-class UpdateAccountInformationImplTest extends UseCaseTest
+class UpdateMyAccountInformationImplTest extends UseCaseTest
 {
-    public function target() : UpdateAccountInformationImpl
+    public function target() : UpdateMyAccountInformationImpl
     {
         return parent::target();
     }
@@ -68,7 +60,7 @@ class UpdateAccountInformationImplTest extends UseCaseTest
         $this->mockTransaction();
         $this->mock($persistedOrganization, $persistedUser);
         /**
-         * @var UpdateAccountInformationResponse $response
+         * @var UpdateMyAccountInformationResponse $response
          */
         $response = $this->target()->execute($request, $this->getMockedPresenter($expected), $this->prophesy(UseCaseConsumer::class)->reveal());
 
@@ -103,7 +95,7 @@ class UpdateAccountInformationImplTest extends UseCaseTest
         $this->mockTransaction();
         $this->mock($persistedOrganization, $persistedUser, $alteredOrganization, $alteredUser);
         /**
-         * @var UpdateAccountInformationResponse $response
+         * @var UpdateMyAccountInformationResponse $response
          */
         $response = $this->target()->execute($request, $this->getMockedPresenter($expected), $this->prophesy(UseCaseConsumer::class)->reveal());
 
@@ -144,7 +136,7 @@ class UpdateAccountInformationImplTest extends UseCaseTest
         $this->mockTransaction();
         $this->mock($persistedOrganization, $persistedUser, $alteredOrganization, $alteredUser);
         /**
-         * @var UpdateAccountInformationResponse $response
+         * @var UpdateMyAccountInformationResponse $response
          */
         $response = $this->target()->execute($request, $this->getMockedPresenter($expected), $this->prophesy(UseCaseConsumer::class)->reveal());
 
@@ -185,7 +177,7 @@ class UpdateAccountInformationImplTest extends UseCaseTest
         $this->mockTransaction();
         $this->mock($persistedOrganization, $persistedUser, $alteredOrganization, $alteredUser);
         /**
-         * @var UpdateAccountInformationResponse $response
+         * @var UpdateMyAccountInformationResponse $response
          */
         $response = $this->target()->execute($request, $this->getMockedPresenter($expected), $this->prophesy(UseCaseConsumer::class)->reveal());
 
@@ -265,7 +257,7 @@ class UpdateAccountInformationImplTest extends UseCaseTest
             ->shouldBeCalled()
             ->willReturn($alteredUser ?? $persistedUser);
         $this->prophesy(UserNotifier::class)
-            ->addSuccess('User account information update !')
+            ->addSuccess('User account information updated !')
             ->shouldBeCalled();
     }
 
@@ -288,9 +280,9 @@ class UpdateAccountInformationImplTest extends UseCaseTest
 
 function aRequest()
 {
-    return new UpdateAccountInformationRequestBuilder();
+    return new UpdateMyAccountInformationRequestBuilder();
 }
 function aResponse()
 {
-    return new UpdateAccountInformationResponseBuilder();
+    return new UpdateMyAccountInformationResponseBuilder();
 }
