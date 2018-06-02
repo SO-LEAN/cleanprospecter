@@ -28,7 +28,13 @@ final class RefreshUserImpl extends AbstractUseCase implements RefreshUser
 
         if ($user) {
             return $presenter->present(
-                new RefreshUserResponse($user->getId(), $user->getRoles(), $user->getUserName(), $user->getPassword(), $user->getOrganization()->getId())
+                new RefreshUserResponse(
+                    $user->getId(),
+                    $user->getRoles(),
+                    $user->getUserName(),
+                    $user->getPassword(),
+                    $user->getPicture()? $user->getPicture()->getUrl() : null,
+                    $user->getOrganization()->getId())
             );
         }
 

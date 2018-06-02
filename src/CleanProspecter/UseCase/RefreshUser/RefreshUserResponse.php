@@ -23,16 +23,21 @@ final class RefreshUserResponse
      */
     private $password;
     /**
+     * @var string
+     */
+    private $pictureUrl;
+    /**
      * @var mixed
      */
     private $organizationId;
 
-    public function __construct($id, array $roles, string $userName, string $password, $organizationId)
+    public function __construct($id, array $roles, string $userName, string $password, ?string $pictureUrl, $organizationId)
     {
         $this->id = $id;
         $this->roles = $roles;
         $this->password = $password;
         $this->userName = $userName;
+        $this->pictureUrl = $pictureUrl;
         $this->organizationId = $organizationId;
     }
 
@@ -52,6 +57,11 @@ final class RefreshUserResponse
     }
 
     public function getUserName(): string
+    {
+        return $this->userName;
+    }
+
+    public function getPictureUrl(): ?string
     {
         return $this->userName;
     }
