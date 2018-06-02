@@ -86,7 +86,6 @@ final class UpdateMyAccountInformationImpl extends AbstractUseCase implements Up
         $user->setEmail($request->getEmail());
         $user->setLanguage($request->getLanguage());
         $user->setUserName($request->getUserName());
-        $user->setPassword($request->getPassword());
         $user->setFirstName($request->getFirstName());
         $user->setLastName($request->getLastName());
 
