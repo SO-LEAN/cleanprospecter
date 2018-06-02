@@ -69,7 +69,7 @@ class User extends Person
         return $this->password;
     }
 
-    public function setPassword($password): void
+    public function setPassword(string $password): void
     {
         $this->password = $password;
     }
@@ -79,7 +79,7 @@ class User extends Person
         return $this->userName;
     }
 
-    public function setUserName($userName): void
+    public function setUserName(string $userName): void
     {
         $this->userName = $userName;
     }
@@ -99,7 +99,7 @@ class User extends Person
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): void
+    public function setFirstName(?string $firstName): void
     {
         $this->firstName = $firstName;
     }
@@ -109,7 +109,7 @@ class User extends Person
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): void
+    public function setLastName(?string $lastName): void
     {
         $this->lastName = $lastName;
     }
