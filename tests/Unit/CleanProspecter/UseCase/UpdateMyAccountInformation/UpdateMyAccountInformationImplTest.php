@@ -41,7 +41,7 @@ class UpdateMyAccountInformationImplTest extends UseCaseTest
         ];
     }
 
-    public function testProspectorCanUpdateOrganization()
+    public function testUserCanUpdateOrganization()
     {
         $this->assertArraySubset(['ROLE_USER'], $this->target()->canBeExecutedBy());
     }

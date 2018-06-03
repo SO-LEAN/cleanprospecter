@@ -1,10 +1,10 @@
 <?php
 
-namespace Solean\CleanProspecter\UseCase\FindOrganization;
+namespace Solean\CleanProspecter\UseCase\FindMyOwnOrganizations;
 
-use Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationResponse\Organization;
+use Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsResponse\Organization;
 
-final class FindOrganizationResponse
+final class FindMyOwnOrganizationsResponse
 {
     /**
      * @var int

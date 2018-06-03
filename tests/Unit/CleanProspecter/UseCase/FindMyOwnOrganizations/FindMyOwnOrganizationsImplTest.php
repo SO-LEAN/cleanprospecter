@@ -2,14 +2,16 @@
 
 declare( strict_types = 1 );
 
-namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindOrganization;
+namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindMyOwnOrganizations;
 
 use Solean\CleanProspecter\Gateway\Entity\Page;
-use Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationResponse;
+use Solean\CleanProspecter\Gateway\Entity\PageRequest;
+use Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsResponse;
+use Solean\CleanProspecter\UseCase\UseCaseConsumer;
 use Tests\Unit\Solean\Base\UseCaseTest;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
-use Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationImpl;
-use Tests\Unit\Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationResponse\OrganizationBuilder;
+use Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsImpl;
+use Tests\Unit\Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsResponse\OrganizationBuilder;
 
 use function Tests\Unit\Solean\Base\aPage;
 use function Tests\Unit\Solean\Base\aFile;
@@ -17,9 +19,9 @@ use function Tests\Unit\Solean\Base\aGeoPoint;
 use function Tests\Unit\Solean\Base\anAddress;
 use function Tests\Unit\Solean\Base\anOrganization;
 
-class FindOrganizationImplTest extends UseCaseTest
+class FindMyOwnOrganizationsImplTest extends UseCaseTest
 {
-    public function target() : FindOrganizationImpl
+    public function target() : FindMyOwnOrganizationsImpl
     {
         return parent::target();
     }
@@ -37,22 +39,28 @@ class FindOrganizationImplTest extends UseCaseTest
     }
 
     /**
-     * @param FindOrganizationResponse $expectedResponse
+     * @param FindMyOwnOrganizationsResponse $expectedResponse
      * @param Page $expectedPage
      *
      * @dataProvider provideExecute
      */
-    public function testExecute(FindOrganizationResponse $expectedResponse, Page $expectedPage)
+    public function testExecute(FindMyOwnOrganizationsResponse $expectedResponse, Page $expectedPage)
     {
         $request = aRequest()
             ->build();
 
+        $this->prophesy(UseCaseConsumer::class)
+            ->getOrganizationId()
+            ->shouldBeCalled()
+            ->willReturn(222);
+
         $this->prophesy(OrganizationGateway::class)
-            ->findPageByQuery($request->getPage(), $request->getQuery(), $request->getMaxByPage())
+            ->findPageByQuery(new PageRequest($request->getPage(), $request->getQuery(), $request->getMaxByPage(), ['ownedBy' => 222]))
             ->shouldBeCalled()
             ->willReturn($expectedPage);
 
-        $result = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
+
+        $result = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse), $this->prophesy(UseCaseConsumer::class)->reveal());
 
         $this->assertEquals($expectedResponse, $result);
     }
@@ -130,11 +138,11 @@ class FindOrganizationImplTest extends UseCaseTest
 
 function aRequest()
 {
-    return new FindOrganizationRequestBuilder();
+    return new FindMyOwnOrganizationsRequestBuilder();
 }
 function aResponse()
 {
-    return new FindOrganizationResponseBuilder();
+    return new FindMyOwnOrganizationsResponseBuilder();
 }
 
 function aDtoOrganization()

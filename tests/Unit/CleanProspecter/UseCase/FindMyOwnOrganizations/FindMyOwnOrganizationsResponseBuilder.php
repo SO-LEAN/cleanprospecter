@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindOrganization;
+namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindMyOwnOrganizations;
 
 use Tests\Unit\Solean\Base\Builder;
-use Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationResponse;
+use Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsResponse;
 
-class FindOrganizationResponseBuilder extends Builder
+class FindMyOwnOrganizationsResponseBuilder extends Builder
 {
     public function __construct()
     {
@@ -26,7 +26,7 @@ class FindOrganizationResponseBuilder extends Builder
 
     protected function getTargetClass(): string
     {
-        return FindOrganizationResponse::class;
+        return FindMyOwnOrganizationsResponse::class;
     }
 
     protected function getTargetType(): string

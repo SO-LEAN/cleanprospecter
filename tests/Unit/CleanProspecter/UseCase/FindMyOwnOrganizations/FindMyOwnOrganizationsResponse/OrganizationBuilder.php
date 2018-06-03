@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationResponse;
+namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsResponse;
 
-use Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationResponse\Organization;
+use Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsResponse\Organization;
 use Tests\Unit\Solean\Base\Builder;
 
 class OrganizationBuilder extends Builder

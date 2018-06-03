@@ -35,7 +35,7 @@ class GetMyAccountInformationImplTest extends UseCaseTest
         ];
     }
 
-    public function testProspectorCanGetMyAccountInformation()
+    public function testUserCanGetMyAccountInformation()
     {
         $this->assertArraySubset(['ROLE_USER'], $this->target()->canBeExecutedBy());
     }

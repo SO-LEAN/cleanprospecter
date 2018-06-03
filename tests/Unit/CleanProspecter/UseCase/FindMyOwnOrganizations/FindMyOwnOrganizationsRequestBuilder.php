@@ -2,12 +2,12 @@
 
 declare(strict_types = 1);
 
-namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindOrganization;
+namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindMyOwnOrganizations;
 
 use Tests\Unit\Solean\Base\Builder;
-use Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationRequest;
+use Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsRequest;
 
-class FindOrganizationRequestBuilder extends Builder
+class FindMyOwnOrganizationsRequestBuilder extends Builder
 {
     public function __construct()
     {
@@ -22,13 +22,13 @@ class FindOrganizationRequestBuilder extends Builder
             ->with('maxByPage', 10)
             ->with('query', 'my query')
         ;
-        
+
         return $this;
     }
 
     protected function getTargetClass(): string
     {
-        return FindOrganizationRequest::class;
+        return FindMyOwnOrganizationsRequest::class;
     }
 
     protected function getTargetType(): string

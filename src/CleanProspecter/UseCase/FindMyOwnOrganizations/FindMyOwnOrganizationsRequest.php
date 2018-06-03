@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Solean\CleanProspecter\UseCase\FindOrganization;
+namespace Solean\CleanProspecter\UseCase\FindMyOwnOrganizations;
 
-final class FindOrganizationRequest
+final class FindMyOwnOrganizationsRequest
 {
     /**
      * @var int

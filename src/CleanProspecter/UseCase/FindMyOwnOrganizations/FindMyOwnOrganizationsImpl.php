@@ -2,14 +2,16 @@
 
 declare( strict_types = 1 );
 
-namespace Solean\CleanProspecter\UseCase\FindOrganization;
+namespace Solean\CleanProspecter\UseCase\FindMyOwnOrganizations;
 
 use Solean\CleanProspecter\Entity\Organization;
+use Solean\CleanProspecter\Gateway\Entity\PageRequest;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
-use Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationResponse as Dto;
+use Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsResponse as Dto;
+use Solean\CleanProspecter\UseCase\UseCaseConsumer;
 
-final class FindOrganizationImpl extends AbstractUseCase implements FindOrganization
+final class FindMyOwnOrganizationsImpl extends AbstractUseCase implements FindMyOwnOrganizations
 {
     /**
      * @var OrganizationGateway
@@ -26,11 +28,11 @@ final class FindOrganizationImpl extends AbstractUseCase implements FindOrganiza
         return ['ROLE_PROSPECTOR'];
     }
 
-    public function execute(FindOrganizationRequest $request, FindOrganizationPresenter $presenter)
+    public function execute(FindMyOwnOrganizationsRequest $request, FindMyOwnOrganizationsPresenter $presenter, UseCaseConsumer $consumer)
     {
-        $page = $this->organizationGateway->findPageByQuery($request->getPage(), $request->getQuery(), $request->getMaxByPage());
+        $page = $this->organizationGateway->findPageByQuery(new PageRequest($request->getPage(), $request->getQuery(), $request->getMaxByPage(), ['ownedBy' => $consumer->getOrganizationId()]));
 
-        $response = new FindOrganizationResponse($page->getNumber(), $page->getTotal(), $page->getTotalPages(), $this->organizationToDto($page->getContent()));
+        $response = new FindMyOwnOrganizationsResponse($page->getNumber(), $page->getTotal(), $page->getTotalPages(), $this->organizationToDto($page->getContent()));
 
         return $presenter->present($response);
     }

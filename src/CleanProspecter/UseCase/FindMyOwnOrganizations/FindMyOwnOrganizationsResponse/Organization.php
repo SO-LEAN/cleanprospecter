@@ -2,7 +2,7 @@
 
 declare( strict_types = 1 );
 
-namespace Solean\CleanProspecter\UseCase\FindOrganization\FindOrganizationResponse;
+namespace Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsResponse;
 
 class Organization
 {

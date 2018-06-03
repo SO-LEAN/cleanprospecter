@@ -13,5 +13,5 @@ interface OrganizationGateway
     public function update($id, Organization $organization): Organization;
     public function findOneBy(array $criteria): ?Organization;
     public function findBy(array $criteria): array;
-    public function findPageByQuery(int $page, string $query, $max = 20): Page;
+    public function findPageByQuery(PageRequest $pageRequest): Page;
 }
