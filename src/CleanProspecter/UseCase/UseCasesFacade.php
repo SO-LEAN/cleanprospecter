@@ -14,7 +14,7 @@ use Solean\CleanProspecter\Exception\UseCase\UnauthorizedException;
  *
  * @method createOrganization(UseCase\CreateOrganization\CreateOrganizationRequest $request, UseCase\CreateOrganization\CreateOrganization $presenter, ?UseCaseConsumer $consumer)
  * @method getOrganization(UseCase\GetOrganization\GetOrganizationRequest $request, UseCase\GetOrganization\GetOrganizationPresenter $presenter, ?UseCaseConsumer $consumer)
- * @method findMyOwnOrganization(UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsRequest $request, UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsPresenter $presenter, UseCaseConsumer $consumer)
+ * @method findMyOwnOrganizations(UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsRequest $request, UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsPresenter $presenter, UseCaseConsumer $consumer)
  * @method updateOrganization(UseCase\UpdateOrganization\UpdateOrganizationRequest $request, UseCase\UpdateOrganization\UpdateOrganizationPresenter $presenter, ?UseCaseConsumer $consumer)
  *
  * @method updateMyAccountInformation(UseCase\UpdateMyAccountInformation\UpdateMyAccountInformationRequest $request, UseCase\UpdateMyAccountInformation\UpdateMyAccountInformationPresenter $presenter, ?UseCaseConsumer $consumer)
