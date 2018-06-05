@@ -66,6 +66,5 @@ class Customer extends Person
     public function setOwnedBy(Organization $ownedBy): void
     {
         $this->ownedBy = $ownedBy;
-        $ownedBy->addOwnedCustomers($this);
     }
 }

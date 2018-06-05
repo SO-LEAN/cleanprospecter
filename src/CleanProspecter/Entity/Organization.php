@@ -170,10 +170,15 @@ class Organization extends Person implements GeoLocatable
         return $this->hasLogo ? $this->logo : null;
     }
 
-    public function setLogo(File $logo): void
+    public function setLogo(?File $logo): void
     {
         $this->logo = $logo;
         $this->hasLogo = $logo ? true : false;
+    }
+
+    public function removeLogo(): void
+    {
+        $this->setLogo(null);
     }
 
     public function getFullName(): string
@@ -202,7 +207,7 @@ class Organization extends Person implements GeoLocatable
         return $this->applicationUsers;
     }
 
-    public function setApplicationUsers(User $applicationUsers): void
+    public function setApplicationUsers(array $applicationUsers): void
     {
         $this->applicationUsers = $applicationUsers;
     }

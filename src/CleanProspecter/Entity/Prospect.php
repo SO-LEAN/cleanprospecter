@@ -66,6 +66,5 @@ class Prospect extends Person
     public function setOwnedBy(Organization $ownedBy): void
     {
         $this->ownedBy = $ownedBy;
-        $ownedBy->addOwnedProspects($this);
     }
 }

@@ -12,6 +12,7 @@ use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Entity\Organization;
 use Solean\CleanProspecter\Gateway\GeoLocation;
 use Solean\CleanProspecter\Gateway\UserNotifier;
+use Solean\CleanProspecter\Traits\UseCase\UserNotifierTrait;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Traits\UseCase\GeoLocalizeTrait;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
@@ -22,6 +23,7 @@ use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
 final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrganization
 {
     use GeoLocalizeTrait;
+    use UserNotifierTrait;
     /**
      * @var OrganizationGateway
      */
@@ -158,10 +160,5 @@ final class CreateOrganizationImpl extends AbstractUseCase implements CreateOrga
         );
 
         return $response;
-    }
-
-    private function notifySuccess(string $msg)
-    {
-        $this->userNotifier->addSuccess($msg);
     }
 }

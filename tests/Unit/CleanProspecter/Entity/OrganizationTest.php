@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\Unit\Solean\CleanProspecter\Entity;
 
 use InvalidArgumentException;
-use Tests\Unit\Solean\Base\TestCase;
+use Tests\Unit\Solean\Base\EntityTest;
 use Solean\CleanProspecter\Entity\Organization;
 
-class OrganizationTest extends TestCase
+class OrganizationTest extends EntityTest
 {
     public function target() : Organization
     {
@@ -20,5 +20,10 @@ class OrganizationTest extends TestCase
         $this->expectExceptionObject(new InvalidArgumentException('Email "bademail#gmail.com" is not valid'));
 
         $this->target()->setEmail('bademail#gmail.com');
+    }
+
+    protected function ignoreSetters()
+    {
+        return ['setAddress', 'setLogo', 'setGeoPoint', 'setEmail'];
     }
 }

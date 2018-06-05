@@ -7,21 +7,21 @@ namespace Solean\CleanProspecter\UseCase\UpdateMyAccountInformation;
 use Exception;
 use Solean\CleanProspecter\Entity\File;
 use Solean\CleanProspecter\Entity\User;
-use Solean\CleanProspecter\Exception\Gateway;
-use Solean\CleanProspecter\Exception\Entity\ValidationException;
-use Solean\CleanProspecter\Exception\UseCase\UseCaseException;
 use Solean\CleanProspecter\Gateway\Storage;
+use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Entity\Organization;
 use Solean\CleanProspecter\Gateway\UserNotifier;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\UseCase\UseCaseConsumer;
 use Solean\CleanProspecter\Gateway\Entity\Transaction;
 use Solean\CleanProspecter\Gateway\Entity\UserGateway;
+use Solean\CleanProspecter\Traits\UseCase\UserNotifierTrait;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
 
 final class UpdateMyAccountInformationImpl extends AbstractUseCase implements UpdateMyAccountInformation
 {
+    use UserNotifierTrait;
     /**
      * @var OrganizationGateway
      */
@@ -159,10 +159,5 @@ final class UpdateMyAccountInformationImpl extends AbstractUseCase implements Up
             $organization->getLogo() ? $organization->getLogo()->getExtension() : null,
             $organization->getLogo() ? $organization->getLogo()->getSize() : null
         );
-    }
-
-    private function notifySuccess(string $msg)
-    {
-        $this->userNotifier->addSuccess($msg);
     }
 }

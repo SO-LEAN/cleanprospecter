@@ -11,6 +11,7 @@ use Solean\CleanProspecter\Exception\Gateway;
 use Solean\CleanProspecter\Entity\Organization;
 use Solean\CleanProspecter\Gateway\GeoLocation;
 use Solean\CleanProspecter\Gateway\UserNotifier;
+use Solean\CleanProspecter\Traits\UseCase\UserNotifierTrait;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\Traits\UseCase\GeoLocalizeTrait;
 use Solean\CleanProspecter\Exception\UseCase\UseCaseException;
@@ -22,6 +23,7 @@ use Solean\CleanProspecter\Exception\UseCase\UniqueConstraintViolationException;
 final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrganization
 {
     use GeoLocalizeTrait;
+    use UserNotifierTrait;
     /**
      * @var OrganizationGateway
      */
@@ -30,10 +32,6 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
      * @var Storage
      */
     private $storage;
-    /**
-     * @var UserNotifier
-     */
-    private $userNotifier;
 
     public function __construct(OrganizationGateway $organizationGateway, Storage $storage, UserNotifier $userNotifier, GeoLocation $geoLocation)
     {
@@ -145,10 +143,5 @@ final class UpdateOrganizationImpl extends AbstractUseCase implements UpdateOrga
         );
 
         return $response;
-    }
-
-    private function notifySuccess(string $msg)
-    {
-        $this->userNotifier->addSuccess($msg);
     }
 }

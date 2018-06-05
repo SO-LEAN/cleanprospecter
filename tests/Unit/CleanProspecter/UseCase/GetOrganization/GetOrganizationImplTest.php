@@ -46,12 +46,7 @@ class GetOrganizationImplTest extends UseCaseTest
 
         $this->mock($persisted);
 
-        /**
-         * @var GetOrganizationResponse $response
-         */
-        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
-
-        $this->assertEquals($expectedResponse, $response);
+        $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
     }
 
     public function testExecuteOnRegularWithOwner()
@@ -67,12 +62,7 @@ class GetOrganizationImplTest extends UseCaseTest
 
         $this->mock($persisted);
 
-        /**
-         * @var GetOrganizationResponse $response
-         */
-        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
-
-        $this->assertEquals($expectedResponse, $response);
+        $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
     }
 
     public function testExecuteOnRegularWithAddress()
@@ -89,12 +79,7 @@ class GetOrganizationImplTest extends UseCaseTest
 
         $this->mock($persisted);
 
-        /**
-         * @var GetOrganizationResponse $response
-         */
-        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
-
-        $this->assertEquals($expectedResponse, $response);
+        $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
     }
 
     public function testExecuteOnRegularWithLogo()
@@ -110,12 +95,8 @@ class GetOrganizationImplTest extends UseCaseTest
 
         $this->mock($persisted);
 
-        /**
-         * @var GetOrganizationResponse $response
-         */
-        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
-
-        $this->assertEquals($expectedResponse, $response);
+        $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
+        ;
     }
 
     public function testExecuteOnHold()
@@ -131,12 +112,7 @@ class GetOrganizationImplTest extends UseCaseTest
 
         $this->mock($persisted);
 
-        /**
-         * @var GetOrganizationResponse $response
-         */
-        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
-
-        $this->assertEquals($expectedResponse, $response);
+        $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
     }
 
     public function testExecuteOnFullFilled()
@@ -159,12 +135,7 @@ class GetOrganizationImplTest extends UseCaseTest
 
         $this->mock($persisted);
 
-        /**
-         * @var GetOrganizationResponse $response
-         */
-        $response = $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
-
-        $this->assertEquals($expectedResponse, $response);
+        $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
     }
 
     public function testThrowAnUseCaseNotFoundExceptionIfOrganizationNotFoundInGateway()
