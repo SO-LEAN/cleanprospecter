@@ -1,4 +1,4 @@
-all: build-env
+all: build-env composer
 
 build-env:
 	@echo "Generate environment..."
@@ -18,4 +18,4 @@ cs:
 cs-fix:
 	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app prospecter-run ./bin/phpcbf --standard=PSR2 --exclude=Generic.Files.LineLength ./src ./tests
 
-.PHONY: all build-env test test-coverage cs
+.PHONY: all build-env composer composer-update test testdox test-coverage cs cs-fix
