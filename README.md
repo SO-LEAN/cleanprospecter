@@ -1,6 +1,6 @@
 # Cleanprospecter
 
-**Cleanprospecter** is a php 7.2 business prospect application designed according to Robert C. Martin (Uncle Bob) [recommendations for clean architecture](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html).
+**Cleanprospecter** is a php 7.2 business prospect application designed according to Robert C. Martin [recommendations for clean architecture](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html).
 
 Add cleanprospecter in your project with [composer](https://getcomposer.org).
 
@@ -43,6 +43,9 @@ Consider that scope as the **minimal viable product**.
 </p>
 
 A good explanation is available in this Uncle Bob [talk here](https://www.youtube.com/watch?v=Nsjsiz2A9mg)
+
+> A GOOD ARCHITECTURE MAXIMIZES THE NUMBER OF DECISIONS NOT MADE
+> - UNCLE BOB
 
 ## Terminological differences
 
