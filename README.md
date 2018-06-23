@@ -1,6 +1,6 @@
 # Cleanprospecter
 
-**Cleanprospecter** is a php 7.2 business prospect application designed according to Robert C. Martin (Uncle Bob) recommendations for clean architecture.
+**Cleanprospecter** is a php 7.2 business prospect application designed according to Robert C. Martin (Uncle Bob) [recommendations for clean architecture](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html).
 
 Add cleanprospecter in your project with [composer](https://getcomposer.org).
 
@@ -11,7 +11,7 @@ Add cleanprospecter in your project with [composer](https://getcomposer.org).
 A **symfony 4.1** implementation can be found on github [here](https://github.com/SO-LEAN/prospecterapp)
 ## Progress
 
-Consider that scope as the minimal viable product.
+Consider that scope as the **minimal viable product**.
  
 - [x] As anonymous, I want to login
 - [x] As main app, I want to refresh user
@@ -23,29 +23,24 @@ Consider that scope as the minimal viable product.
 - [x] As user, I want to get my account information
 - [x] As user, I want to update my account information
 - [x] As user, I want to remove my organization logo
-- [] As prospector, I want to create prospect
-- [] As prospector, I want to find my own prospects
-- [] As prospector, I want to create phone call event
-- [] As prospector, I want to create appointment event
-- [] As prospector, I want to create email event
-- [] As prospector, I want to create sms event
-- [] As prospector, I want to find my own prospects
+- [ ] As prospector, I want to create prospect
+- [ ] As prospector, I want to find my own prospects
+- [ ] As prospector, I want to create phone call event
+- [ ] As prospector, I want to create appointment event
+- [ ] As prospector, I want to create email event
+- [ ] As prospector, I want to create sms event
+- [ ] As prospector, I want to find my own prospects
 
 ## In the future
 * tags
 * auto import events from email box, short message service etc...
 * email marketing campaign
  
-## Clean architecture _Business rules as a simple composer package._
+## Clean architecture -_Business rules as a simple composer package._-
 
 <p align="center">
   <img src="https://8thlight.com/blog/assets/posts/2012-08-13-the-clean-architecture/CleanArchitecture-8d1fe066e8f7fa9c7d8e84c1a6b0e2b74b2c670ff8052828f4a7e73fcbbc698c.jpg" alt="The Clean Architecture">
 </p>
-
-
-_Clean Architecture_ works.
-
-https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html
 
 A good explanation is available in this Uncle Bob [talk here](https://www.youtube.com/watch?v=Nsjsiz2A9mg)
 
@@ -55,7 +50,7 @@ In order to clarify some uncle bob concepts
 
 * Interactors becomes use cases and are locatated in src/UseCase/**UseCaseName** and take its name from it : _ex_ FindMyOwnOrganizations
 * Request an response are data transfer object and are located at the same place : _ex_ FindMyOwnOrganizations**Request**, FindMyOwnOrganizations**Response**
-* Presenter interface (Dependency inversion) too : _ex_ FindMyOwnOrganizations
+* Presenter interface (Dependency inversion) too : _ex_ FindMyOwnOrganizations**Presenter**
 * Gateways is not only database abstraction, entity gateway are located in src/Gateway/Entity
 
 
@@ -65,7 +60,7 @@ Clean architecture use dependency injection to build uses cases.
 
 1 You need to implement all Gateways in your main application
 * Build use cases in the IOC
-* register it in the facade.
+* Register it in the facade.
 
 ```php
     // in IOC
