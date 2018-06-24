@@ -1,9 +1,10 @@
 <?php
-namespace Solean\CleanProspecter\Exception;
 
-use RuntimeException;
+declare( strict_types = 1 );
 
-class UnauthorizedException extends RuntimeException
+namespace Solean\CleanProspecter\Exception\UseCase;
+
+class UnauthorizedException extends UseCaseException
 {
 
 }

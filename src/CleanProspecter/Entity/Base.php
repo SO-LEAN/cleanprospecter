@@ -1,14 +1,20 @@
 <?php
+
+declare( strict_types = 1 );
+
 namespace Solean\CleanProspecter\Entity;
 
 abstract class Base
 {
+    /**
+     * @var mixed
+     */
     private $id;
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getId(): string
+    public function getId()
     {
         return $this->id;
     }
