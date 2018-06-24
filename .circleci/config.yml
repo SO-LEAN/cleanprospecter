@@ -13,7 +13,7 @@ jobs:
           - v1-dependencies-
 
       - run: composer install -n --prefer-dist
-
+      - run: make ci-setup-code-climate
       - save_cache:
           paths:
             - ./vendor

@@ -4,3 +4,4 @@
 /phpunit.xml
 /reports/
 composer.lock
+.cc-test-reporter
