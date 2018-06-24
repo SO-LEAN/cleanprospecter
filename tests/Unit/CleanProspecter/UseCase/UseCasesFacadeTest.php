@@ -9,7 +9,6 @@ use Solean\CleanProspecter\Exception\UseCase\UnauthorizedException;
 use Solean\CleanProspecter\UseCase\AbstractUseCase;
 use Solean\CleanProspecter\UseCase\UseCaseConsumer;
 use Tests\Unit\Solean\Base\TestCase;
-use Solean\CleanProspecter\UseCase\Presenter;
 use Solean\CleanProspecter\UseCase\UseCasesFacade;
 use Tests\Unit\Solean\CleanProspecter\UseCase\Stub\StubNeedsRoleUseCaseImpl;
 use Tests\Unit\Solean\CleanProspecter\UseCase\Stub\StubPublicUseCaseImpl;
