@@ -1,3 +1,4 @@
+![build](https://circleci.com/gh/SO-LEAN/cleanprospecter/tree/develop.svg?style=shield)
 # Cleanprospecter
 
 **Cleanprospecter** is a php 7.2 business prospect application designed according to Robert C. Martin [recommendations for clean architecture](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html).
