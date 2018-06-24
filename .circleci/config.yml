@@ -12,10 +12,10 @@ jobs:
           - v1-dependencies-{{ checksum "composer.json" }}
           - v1-dependencies-
 
-      - run: composer install -n --prefer-dist
+      - run: ci-install
       - run: make ci-setup-code-climate
       - save_cache:
           paths:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.json" }}
-      - run: make ci
+      - run: make ci-test

@@ -30,4 +30,4 @@ ci-test:
 	@bin/phpcs --standard=PSR2 --exclude=Generic.Files.LineLength ./src ./tests
 	@cc-test-reporter after-build --coverage-input-type clover --exit-code $$?
 
-.PHONY: all build-env composer composer-update test testdox test-coverage cs cs-fix
+.PHONY: all build-env composer composer-update test testdox test-coverage cs cs-fix ci-install ci-setup-code-climate ci-test
