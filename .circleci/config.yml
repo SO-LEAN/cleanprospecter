@@ -12,7 +12,7 @@ jobs:
           - v1-dependencies-{{ checksum "composer.json" }}
           - v1-dependencies-
 
-      - run: ci-install
+      - run: make ci-install
       - run: make ci-setup-code-climate
       - save_cache:
           paths:
