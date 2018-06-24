@@ -17,5 +17,8 @@ cs:
 	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app prospecter-run ./bin/phpcs --standard=PSR2 --exclude=Generic.Files.LineLength ./src ./tests
 cs-fix:
 	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app prospecter-run ./bin/phpcbf --standard=PSR2 --exclude=Generic.Files.LineLength ./src ./tests
+ci:
+    @bin/phpunit
+    @bin/phpcs --standard=PSR2 --exclude=Generic.Files.LineLength ./src ./tests
 
 .PHONY: all build-env composer composer-update test testdox test-coverage cs cs-fix
