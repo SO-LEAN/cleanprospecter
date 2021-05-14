@@ -33,8 +33,8 @@ final class RefreshUserImpl extends AbstractUseCase implements RefreshUser
                     $user->getRoles(),
                     $user->getUserName(),
                     $user->getPassword(),
-                    $user->getPicture()? $user->getPicture()->getUrl() : null,
-                    $user->getOrganization()->getId()
+                    $user->getOrganization()->getId(),
+                    $user->getPicture()? $user->getPicture()->getUrl() : null
                 )
             );
         }
