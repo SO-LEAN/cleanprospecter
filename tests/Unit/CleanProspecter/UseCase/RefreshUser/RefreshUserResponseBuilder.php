@@ -18,13 +18,13 @@ class RefreshUserResponseBuilder extends Builder
     public function withRegularData()
     {
         $salt = 'salt';
-
         return $this
             ->with('id', 123)
             ->with('roles', ['ROLE'])
             ->with('userName', 'login')
             ->with('password', md5(sprintf('%s%s', 'password', $salt)))
             ->with('organizationId', 777)
+            ->with('pictureUrl', null)
             ;
     }
 
