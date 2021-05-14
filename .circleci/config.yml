@@ -1,29 +1,49 @@
-version: 2
-jobs:
-  build:
+version: 2.1
+
+commands:
+  restore_cache_cmd:
+    steps:
+      - restore_cache:
+          keys:
+            - dep-{{ checksum "composer.json" }}
+  save_cache_cmd:
+    steps:
+      - save_cache:
+          paths:
+            - ./bin
+            - ./vendor
+          key: dep-{{ checksum "composer.json" }}
+executors:
+  docker-executor:
     docker:
       - image: circleci/php:7.2-fpm-node-browsers
         auth:
           username: $DOCKERHUB_LOGIN
           password: $DOCKERHUB_PASSWORD
-    working_directory: ~/repo
 
+jobs:
+  build:
+    executor: docker-executor
+    working_directory: ~/repo
     steps:
       - checkout
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "composer.json" }}
-          - v1-dependencies-
-
+      - restore_cache_cmd
       - run: make ci-install
+      - save_cache_cmd
+  test:
+    executor: docker-executor
+    working_directory: ~/repo
+    steps:
+      - checkout
       - run: make ci-setup-code-climate
-      - save_cache:
-          paths:
-            - ./vendor
-          key: v1-dependencies-{{ checksum "composer.json" }}
+      - restore_cache_cmd
       - run: make ci-test
+
 workflows:
   version: 2
   on_push:
     jobs:
       - build
+      - test:
+          requires:
+            - build
