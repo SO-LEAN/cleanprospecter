@@ -31,14 +31,14 @@ final class RefreshUserResponse
      */
     private $organizationId;
 
-    public function __construct($id, array $roles, string $userName, string $password, ?string $pictureUrl, $organizationId)
+    public function __construct($id, array $roles, string $userName, string $password, $organizationId, ?string $pictureUrl)
     {
         $this->id = $id;
         $this->roles = $roles;
         $this->password = $password;
         $this->userName = $userName;
-        $this->pictureUrl = $pictureUrl;
         $this->organizationId = $organizationId;
+        $this->pictureUrl = $pictureUrl;
     }
 
     public function getId()
