@@ -43,7 +43,13 @@ workflows:
   version: 2
   on_push:
     jobs:
-      - build
+      - build:
+        filters:
+          branches:
+            only:
+              - develop
+              - master
+              - ^(?>features|fixes)\/{1}[[:alnum:]]+$
       - test:
           requires:
             - build
