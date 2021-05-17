@@ -25,7 +25,7 @@ ci-setup-code-climate:
 	@chmod +x ./cc-test-reporter
 ci-test:
 	@./cc-test-reporter before-build
-	@php -d xdebug.mode=coverage bin/phpunit --coverage-clover clover.xml
+	@php -d xdebug.mode=coverage bin/phpunit --coverage-clover clover.xml  --log-junit ./junit/junit.xml --coverage-html ./reports
 	@bin/phpcs --standard=PSR2 --exclude=Generic.Files.LineLength ./src ./tests
 	@./cc-test-reporter after-build --coverage-input-type clover --exit-code $$?
 

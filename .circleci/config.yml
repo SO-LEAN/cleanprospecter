@@ -38,6 +38,12 @@ jobs:
       - run: make ci-setup-code-climate
       - restore_cache_cmd
       - run: make ci-test
+      - store_artifacts:
+          path: ./reports
+          destination: web-coverage
+      - store_test_results:
+          path: junit
+
 
 workflows:
   version: 2
