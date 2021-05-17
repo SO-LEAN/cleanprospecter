@@ -125,6 +125,15 @@ class User extends Person
         $this->hasPicture = $picture ? true : false;
     }
 
+    public function getPictureUrl(): ?string
+    {
+        if ($this->hasPicture) {
+            return $this->picture->getUrl();
+        }
+
+        return null;
+    }
+
     public function getOrganization(): Organization
     {
         return $this->organization;
