@@ -18,7 +18,6 @@ cs:
 cs-fix:
 	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app prospecter-run ./bin/phpcbf --standard=PSR2 --exclude=Generic.Files.LineLength ./src ./tests
 ci-install:
-	@sudo composer self-update
 	@composer install -n --prefer-dist
 ci-setup-code-climate:
 	@curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -28,5 +27,8 @@ ci-test:
 	@php -d xdebug.mode=coverage bin/phpunit --coverage-clover clover.xml  --log-junit ./junit/junit.xml --coverage-html ./reports
 	@bin/phpcs --standard=PSR2 --exclude=Generic.Files.LineLength ./src ./tests
 	@./cc-test-reporter after-build --coverage-input-type clover --exit-code $$?
-
+ci-install-prod:
+	@composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+ci-package:
+	@tar --exclude-from='package-excludes.lst' -czvf build.tar.gz ./
 .PHONY: all build-env composer composer-update test testdox test-coverage cs cs-fix ci-install ci-setup-code-climate ci-test

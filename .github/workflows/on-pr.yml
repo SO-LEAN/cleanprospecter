@@ -1,0 +1,40 @@
+name: PR CI
+
+on:
+  pull_request:
+    branches: develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      BUILD_IMG: docker://michelmaier/docker-build-php:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache vendors
+        uses: actions/cache@v2
+        env:
+          CACHE_NAME: cache-vendors
+        with:
+          path: vendor
+          key: build-${{ env.CACHE_NAME }}-${{ hashFiles('composer.json') }}
+      - name: Install vendors
+        uses: docker://michelmaier/docker-build-php:latest
+        with:
+          args: make ci-install
+      - name: Setup code climate
+        uses: docker://michelmaier/docker-build-php:latest
+        with:
+          args: make ci-setup-code-climate
+      - name: Tests and publish report
+        uses: docker://michelmaier/docker-build-php:latest
+        with:
+          args: make ci-test
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage-report
+          path: reports/
+          retention-days: 5
