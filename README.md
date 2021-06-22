@@ -1,4 +1,4 @@
-![build](https://circleci.com/gh/SO-LEAN/cleanprospecter/tree/develop.svg?style=shield) 
+[![PR CI](https://github.com/SO-LEAN/cleanprospecter/actions/workflows/on-pr.yml/badge.svg)](https://github.com/SO-LEAN/cleanprospecter/actions/workflows/on-pr.yml)
 ![maintanibility](https://api.codeclimate.com/v1/badges/b61cae7437cba2d564fb/maintainability)
 ![coverage](https://api.codeclimate.com/v1/badges/b61cae7437cba2d564fb/test_coverage)
 # Cleanprospecter

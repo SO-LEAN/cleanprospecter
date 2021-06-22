@@ -1,0 +1,11 @@
+phpunit.xml.dist
+package-excludes.lst
+Makefile
+LICENCE
+composer.lock
+composer.json
+.gitignore
+build.tar.gz
+tests/*
+bin/*
+.github/*
