@@ -1,22 +1,19 @@
 all: build-env composer
-
-build-env:
-	@echo "Generate environment..."
-	@docker build -f docker/Dockerfile -t prospecter-run .
+install: composer
 composer:
-	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app prospecter-run composer install
+	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app michelmaier/docker-build-php:latest composer install
 composer-update:
-	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app prospecter-run composer update
+	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app michelmaier/docker-build-php:latest composer update
 test:
-	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app prospecter-run bin/phpunit
+	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app michelmaier/docker-build-php:latest bin/phpunit
 testdox:
-	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app prospecter-run bin/phpunit --testdox
+	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app michelmaier/docker-build-php:latest bin/phpunit --testdox
 test-coverage:
-	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app prospecter-run bin/phpunit --coverage-html ./reports
+	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app michelmaier/docker-build-php:latest bin/phpunit --coverage-html ./reports
 cs:
-	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app prospecter-run ./bin/phpcs --standard=PSR2 --exclude=Generic.Files.LineLength ./src ./tests
+	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app michelmaier/docker-build-php:latest ./bin/phpcs --standard=PSR2 --exclude=Generic.Files.LineLength ./src ./tests
 cs-fix:
-	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app prospecter-run ./bin/phpcbf --standard=PSR2 --exclude=Generic.Files.LineLength ./src ./tests
+	@docker run --rm --user="$(shell id -u):$(shell id -g)" -v ${PWD}:/app michelmaier/docker-build-php:latest ./bin/phpcbf --standard=PSR2 --exclude=Generic.Files.LineLength ./src ./tests
 ci-install:
 	@composer install -n --prefer-dist
 ci-setup-code-climate:
@@ -30,5 +27,7 @@ ci-test:
 ci-install-prod:
 	@composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 ci-package:
-	@tar --exclude-from='package-excludes.lst' -czvf build.tar.gz ./
+	@mkdir -p build
+	@tar --exclude-from='package-excludes.lst' -czvf build/build.tar.gz ./
+
 .PHONY: all build-env composer composer-update test testdox test-coverage cs cs-fix ci-install ci-setup-code-climate ci-test

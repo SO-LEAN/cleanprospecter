@@ -1,7 +1,8 @@
 /.idea/*
-/bin/
-/vendor/
+/bin/*
+/vendor/*
+/build/*
+/reports/*
 /phpunit.xml
-/reports/
 composer.lock
 .cc-test-reporter
