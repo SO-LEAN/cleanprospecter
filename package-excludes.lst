@@ -5,7 +5,7 @@ LICENCE
 composer.lock
 composer.json
 .gitignore
-build.tar.gz
+build/*
 tests/*
 bin/*
 .github/*
