@@ -65,9 +65,6 @@ src/
         RemoveOrganizationLogo/
           RemoveOrganizationLogoCommand.php
           RemoveOrganizationLogoHandler.php
-        Authenticate/
-          AuthenticateCommand.php
-          AuthenticateHandler.php
       Query/
         ShowOrganization/
           ShowOrganizationQuery.php
@@ -320,11 +317,15 @@ Access control is handled at the **controller/infrastructure layer**, NOT inside
 
 If a use case needs to know "who" (e.g., `ListMyOrganizations`), the organization ID is passed as a command/query parameter - not as an injected user context.
 
-### 12. GeoLocation is Infrastructure
+### 12. Authentication is Infrastructure
+
+Authentication (`Login`, `RefreshUser`) is NOT a domain use case. It is handled entirely at the **infrastructure/framework layer** (e.g., Symfony Security, JWT, OAuth). The domain does not contain any authentication logic. The old `Login` and `RefreshUser` use cases are removed from the hexagon.
+
+### 13. GeoLocation is Infrastructure
 
 The `GeoLocation` service and `GeoPoint` response are **infrastructure concerns**. They live in `Infrastructure/GeoLocation/`. The domain may define a port interface in `Application/Port/GeoLocationService.php` if the domain needs to trigger geolocation.
 
-### 13. Minimal Inheritance
+### 14. Minimal Inheritance
 
 Prefer **composition** and **duplication** over inheritance:
 - No `Person` abstract class. `Organization` and `Prospect` each have their own properties.
@@ -411,8 +412,6 @@ From CRUD-oriented names to DDD/business-intent names:
 | `RemoveOrganizationLogo`       | `RemoveOrganizationLogo`       | Command |
 | `GetOrganization`              | `ShowOrganization`             | Query   |
 | `FindMyOwnOrganizations`       | `ListMyOrganizations`          | Query   |
-| `Login`                        | `Authenticate`                 | Command |
-| `RefreshUser`                  | `RefreshUserSession`           | Query   |
 | `GetMyAccountInformation`      | `ShowMyAccount`                | Query   |
 | `UpdateMyAccountInformation`   | `UpdateMyAccount`              | Command |
 

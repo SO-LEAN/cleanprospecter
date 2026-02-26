@@ -44,7 +44,7 @@ src/
         Shared/             # Value objects (Address, Email, PhoneNumber)
       Event/                # DomainEvent interface, dispatcher
     Application/
-      Command/              # Write operations (RegisterOrganization, Authenticate, ...)
+      Command/              # Write operations (RegisterOrganization, ...)
       Query/                # Read operations (ShowOrganization, ListMyOrganizations, ...)
       Port/                 # Infrastructure port interfaces
     Infrastructure/
@@ -57,8 +57,6 @@ src/
 
 ### Implemented
 
-- [x] As anonymous, I want to authenticate
-- [x] As main app, I want to refresh user session
 - [x] As prospector, I want to register an organization
 - [x] As prospector, I want to list my organizations
 - [x] As prospector, I want to show organization details
