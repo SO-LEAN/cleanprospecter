@@ -1,134 +1,162 @@
 [![PR CI](https://github.com/SO-LEAN/cleanprospecter/actions/workflows/on-pr.yml/badge.svg)](https://github.com/SO-LEAN/cleanprospecter/actions/workflows/on-pr.yml)
 ![maintanibility](https://api.codeclimate.com/v1/badges/b61cae7437cba2d564fb/maintainability)
 ![coverage](https://api.codeclimate.com/v1/badges/b61cae7437cba2d564fb/test_coverage)
-# Cleanprospecter
 
-**Cleanprospecter** is a php 7.2 business prospect application designed according to Robert C. Martin [recommendations for clean architecture](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html).
+# CleanProspecter
 
-Add cleanprospecter in your project with [composer](https://getcomposer.org).
-
-```console
- $ composer require so-lean/cleanprospecter
-```
-
-A **symfony 4.1** implementation can be found on github [here](https://github.com/SO-LEAN/prospecterapp)
-## Progress
-
-Consider that scope as the **minimal viable product**.
- 
-- [x] As anonymous, I want to login
-- [x] As main app, I want to refresh user
-- [x] As prospector, I want to create organization
-- [x] As prospector, I want to find my own organizations
-- [x] As prospector, I want to get organization
-- [x] As prospector, I want to update organization
-- [x] As prospector, I want to create organization
-- [x] As user, I want to get my account information
-- [x] As user, I want to update my account information
-- [x] As user, I want to remove my organization logo
-- [ ] As prospector, I want to create prospect
-- [ ] As prospector, I want to find my own prospects
-- [ ] As prospector, I want to create phone call event
-- [ ] As prospector, I want to create appointment event
-- [ ] As prospector, I want to create email event
-- [ ] As prospector, I want to create sms event
-- [ ] As prospector, I want to find my own prospects
-
-## In the future
-* tags
-* auto import events from email box, short message service etc...
-* email marketing campaign
- 
-## Clean architecture -_Business rules as a simple composer package._-
-
-<p align="center">
-  <img src="https://8thlight.com/blog/assets/posts/2012-08-13-the-clean-architecture/CleanArchitecture-8d1fe066e8f7fa9c7d8e84c1a6b0e2b74b2c670ff8052828f4a7e73fcbbc698c.jpg" alt="The Clean Architecture">
-</p>
-
-A good explanation is available in this Uncle Bob [talk here](https://www.youtube.com/watch?v=Nsjsiz2A9mg)
+**CleanProspecter** is a PHP 8.5 CRM application for business prospecting, designed following **Domain-Driven Design (DDD)** and **Hexagonal Architecture** principles.
 
 > A GOOD ARCHITECTURE MAXIMIZES THE NUMBER OF DECISIONS NOT MADE
 > - UNCLE BOB
 
-## Terminological differences
+## Architecture
 
-In order to clarify some uncle bob concepts
+This project treats **Hexagonal Architecture** and **Clean Architecture** as synonymous concepts. The code is organized around the hexagon:
 
-* Interactors becomes use cases and are locatated in src/UseCase/**UseCaseName** and take its name from it : _ex_ FindMyOwnOrganizations
-* Request an response are data transfer object and are located at the same place : _ex_ FindMyOwnOrganizations**Request**, FindMyOwnOrganizations**Response**
-* Presenter interface (Dependency inversion) too : _ex_ FindMyOwnOrganizations**Presenter**
-* Gateways is not only database abstraction, entity gateway are located in src/Gateway/Entity
+- **Domain** (inside the hexagon): Aggregates, value objects, domain events, repository interfaces
+- **Application** (ports): Command/Query handlers (CQRS), presenters, read models
+- **Infrastructure** (outside): Persistence adapters, external service adapters
 
+### Key Principles
 
-## How to implement cleanprospecter
+| Principle | Description |
+|-----------|-------------|
+| **CQRS** | Commands modify state (no return value). Queries use presenters and read models. |
+| **DDD Aggregates** | Entities expose verb methods (`register`, `relocate`), not setters. |
+| **Value Objects** | Typed IDs (`OrganizationId`, `UserId`), `Address`, `Email`, `PhoneNumber`. |
+| **Domain Events** | Aggregates raise events (`OrganizationRegistered`, `OrganizationRelocated`). |
+| **No Inheritance** | Composition over inheritance. Interfaces + traits instead of abstract base classes. |
+| **Repository Pattern** | Domain defines repository interfaces; infrastructure implements them. |
+| **Test Doubles** | InMemory repositories, Fakes, Stubs, Spies instead of PHPUnit mocks. |
 
-Clean architecture use dependency injection to build uses cases.
+For detailed architecture guidelines, see [CLAUDE.md](CLAUDE.md).
 
-1 You need to implement all Gateways in your main application
-* Build use cases in the IOC
-* Register it in the facade.
+## Project Structure
+
+```
+src/
+  Prospecting/
+    Domain/
+      Model/
+        Organization/       # Aggregate, ID, events, repository interface
+        Prospect/           # Aggregate, ID, repository interface
+        User/               # Aggregate, ID, repository interface
+        Shared/             # Value objects (Address, Email, PhoneNumber)
+      Event/                # DomainEvent interface, dispatcher
+    Application/
+      Command/              # Write operations (RegisterOrganization, Authenticate, ...)
+      Query/                # Read operations (ShowOrganization, ListMyOrganizations, ...)
+      Port/                 # Infrastructure port interfaces
+    Infrastructure/
+      Persistence/          # InMemory repository implementations
+      GeoLocation/          # Geolocation adapter
+      Storage/              # File storage adapter
+```
+
+## User Stories
+
+### Implemented
+
+- [x] As anonymous, I want to authenticate
+- [x] As main app, I want to refresh user session
+- [x] As prospector, I want to register an organization
+- [x] As prospector, I want to list my organizations
+- [x] As prospector, I want to show organization details
+- [x] As prospector, I want to update an organization profile
+- [x] As prospector, I want to remove an organization logo
+- [x] As user, I want to show my account
+- [x] As user, I want to update my account
+
+### Planned
+
+- [ ] As prospector, I want to register a prospect
+- [ ] As prospector, I want to list my prospects
+- [ ] As prospector, I want to log a phone call
+- [ ] As prospector, I want to log an appointment
+- [ ] As prospector, I want to log an email exchange
+- [ ] As prospector, I want to log an SMS exchange
+
+### Future
+
+- Tags and categorization
+- Auto-import events from email box, SMS, etc.
+- Email marketing campaigns
+
+## How It Works
+
+### Command (Write)
+
+Commands modify state and do not return values. Side effects are captured through domain events.
 
 ```php
-    // in IOC
-    
-    //OrganizationGatewayImpl implements OrganizationGateway interface
-    $organizationGateway = new OrganizationGatewayImpl();
- 
-    $useCase = new GetOrganizationImpl($organizationGateway);
-    
-    //Create facade and register use case
-    $facade = new UseCasesFacade();
-    $facade->addUseCase($useCase);
+$command = new RegisterOrganizationCommand(
+    organizationId: OrganizationId::generate()->value,
+    corporateName: 'Acme Corp',
+    ownedBy: $currentOrganizationId,
+    // ...
+);
+
+$handler = $container->get(RegisterOrganizationHandler::class);
+$handler($command);
 ```
+
+### Query (Read)
+
+Queries return data through a presenter interface, using read models (readonly DTOs).
 
 ```php
-    // in controller (or somewhere else)
-    $request = new GetOrganizationRequest(7);
-    
-    //presenter implements GetOrganizationPresenter
-    $presenter = new GetOrganizationPresenterImpl();
-    
-    //all use case is accessible by their name 
-    $facade->getOrganization($request, $presenter);
+$query = new ShowOrganizationQuery(organizationId: $id);
+$presenter = new MyPresenterImplementation();
+
+$handler = $container->get(ShowOrganizationHandler::class);
+$handler($query, $presenter);
+
+// The presenter received an OrganizationReadModel (readonly DTO)
 ```
 
-A use case can say what it does
+### Transaction Management
 
 ```php
-   //...
-   
-   $useCase = new GetOrganizationImpl($organizationGateway);
-   
-   echo $useCase;
-   
-   //Display : "As prospector, I want to get organization"
+interface TransactionManager
+{
+    public function transactional(callable $operation): mixed;
+}
+
+// Usage in a handler
+$this->transactionManager->transactional(function () use ($command) {
+    $this->userRepository->save($user);
+    $this->organizationRepository->save($organization);
+});
 ```
 
-## Developer tools
+## Developer Tools
 
-### prerequisites
+### Prerequisites
 
-* docker
-* docker-compose
-
-All common command lines are accessible by the Makefile. 
-Make create a docker image based on official php alpine docker image (php 7.2.3) with xdebug and composer installed globally.
-
-```console
-    $ make
-```
+- Docker & Docker Compose
+- PHP 8.5 (for local development without Docker)
 
 ### Commands
 
-make **command**
+All commands are available through the Makefile:
 
-| Command         | comments                                                   | 
-| ----------------|------------------------------------------------------------|
-| build-env       | Build the docker env file tagged _prospecter-run_          |
-| composer        | install vendors                                            |
-| composer-update | update vendors                                             |
-| test            | execute tests suite                                        |
-| testdox         | execute tests and write agile documentation in text format |                     
-| test-coverage   | execute tests and generate report in html format           |
-| cs              | code sniffer                                               |
-| cs-fix          | fix automatically code sniffer errors                      |
+```console
+$ make
+```
+
+| Command             | Description                                    |
+|---------------------|------------------------------------------------|
+| `make composer`     | Install dependencies                           |
+| `make test`         | Run test suite                                 |
+| `make testdox`      | Run tests with agile documentation output      |
+| `make test-coverage`| Run tests and generate HTML coverage report    |
+| `make cs`           | Code sniffer (PSR-2)                           |
+| `make cs-fix`       | Auto-fix code style                            |
+
+## License
+
+MIT - See [composer.json](composer.json) for details.
+
+## Author
+
+Michel MAIER - [opensource@solean-it.com](mailto:opensource@solean-it.com)
