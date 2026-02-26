@@ -10,12 +10,17 @@ final readonly class Email
 {
     public string $value;
 
-    public function __construct(string $value)
+    private function __construct(string $value)
     {
         if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException(sprintf('Email "%s" is not valid', $value));
         }
         $this->value = $value;
+    }
+
+    public static function fromString(string $value): self
+    {
+        return new self($value);
     }
 
     public function equals(self $other): bool

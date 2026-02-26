@@ -41,22 +41,22 @@ final class ShowMyAccountHandlerTest extends TestCase
 
         // Seed organization
         $org = Organization::register(
-            id: new OrganizationId('100'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('100'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'Owner Corp',
             form: 'SA',
-            logo: new Logo('http://storage.test/org-logo.png', 'png', 5000),
+            logo: Logo::create('http://storage.test/org-logo.png', 'png', 5000),
         );
         $this->organizationRepository->save($org);
 
         // Seed user
         $user = User::create(
-            id: new UserId('1'),
+            id: UserId::fromString('1'),
             userName: 'john.doe',
-            organizationId: new OrganizationId('100'),
-            name: new PersonName('John', 'Doe'),
-            email: new Email('john@example.com'),
-            phoneNumber: new PhoneNumber('0123456789'),
+            organizationId: OrganizationId::fromString('100'),
+            name: PersonName::fromParts('John', 'Doe'),
+            email: Email::fromString('john@example.com'),
+            phoneNumber: PhoneNumber::fromString('0123456789'),
             language: 'EN',
         );
         $this->userRepository->save($user);
@@ -83,8 +83,8 @@ final class ShowMyAccountHandlerTest extends TestCase
 
     public function testShowAccountWithPicture(): void
     {
-        $user = $this->userRepository->ofId(new UserId('1'));
-        $user->attachPicture(new Logo('http://storage.test/picture.jpg', 'jpg', 1200));
+        $user = $this->userRepository->ofId(UserId::fromString('1'));
+        $user->attachPicture(Logo::create('http://storage.test/picture.jpg', 'jpg', 1200));
         $this->userRepository->save($user);
 
         ($this->handler)(new ShowMyAccountQuery('1', '100'), $this->presenter);

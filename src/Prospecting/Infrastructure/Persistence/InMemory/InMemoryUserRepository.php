@@ -17,7 +17,7 @@ final class InMemoryUserRepository implements UserRepository
 
     public function nextId(): UserId
     {
-        return new UserId((string) ++$this->sequence);
+        return UserId::fromString((string) ++$this->sequence);
     }
 
     public function save(User $user): void

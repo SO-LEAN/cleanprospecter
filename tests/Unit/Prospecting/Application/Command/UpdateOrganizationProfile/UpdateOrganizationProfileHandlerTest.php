@@ -40,15 +40,15 @@ final class UpdateOrganizationProfileHandlerTest extends TestCase
 
         // Seed organizations
         $owner = Organization::register(
-            id: new OrganizationId('100'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('100'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'Owner Corp',
         );
         $this->organizationRepository->save($owner);
 
         $org = Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'ACME',
             language: 'EN',
         );
@@ -68,7 +68,7 @@ final class UpdateOrganizationProfileHandlerTest extends TestCase
 
         ($this->handler)($command);
 
-        $updated = $this->organizationRepository->ofId(new OrganizationId('1'));
+        $updated = $this->organizationRepository->ofId(OrganizationId::fromString('1'));
         $this->assertEquals('New ACME', $updated->corporateName());
         $this->assertEquals('new@acme.com', $updated->email()->value);
         $this->assertCount(1, $this->notifier->successes);
@@ -76,7 +76,7 @@ final class UpdateOrganizationProfileHandlerTest extends TestCase
 
     public function testUpdateWithAddress(): void
     {
-        $this->geoLocation->willReturn(new GeoPoint(7.7663456, 48.5554971));
+        $this->geoLocation->willReturn(GeoPoint::fromCoordinates(7.7663456, 48.5554971));
 
         $command = new UpdateOrganizationProfileCommand(
             organizationId: '1',
@@ -89,7 +89,7 @@ final class UpdateOrganizationProfileHandlerTest extends TestCase
 
         ($this->handler)($command);
 
-        $updated = $this->organizationRepository->ofId(new OrganizationId('1'));
+        $updated = $this->organizationRepository->ofId(OrganizationId::fromString('1'));
         $this->assertNotNull($updated->address());
         $this->assertNotNull($updated->geoPoint());
         $this->assertEquals(7.7663456, $updated->geoPoint()->longitude);
@@ -98,8 +98,8 @@ final class UpdateOrganizationProfileHandlerTest extends TestCase
     public function testUpdateWithHolding(): void
     {
         $holding = Organization::register(
-            id: new OrganizationId('200'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('200'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'Holding Corp',
         );
         $this->organizationRepository->save($holding);
@@ -112,7 +112,7 @@ final class UpdateOrganizationProfileHandlerTest extends TestCase
 
         ($this->handler)($command);
 
-        $updated = $this->organizationRepository->ofId(new OrganizationId('1'));
+        $updated = $this->organizationRepository->ofId(OrganizationId::fromString('1'));
         $this->assertNotNull($updated->holdingId());
         $this->assertEquals('200', $updated->holdingId()->value);
     }

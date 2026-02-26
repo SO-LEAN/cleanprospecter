@@ -41,8 +41,8 @@ final class RegisterOrganizationHandlerTest extends TestCase
 
         // Seed owner organization
         $owner = Organization::register(
-            id: new OrganizationId('100'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('100'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'Owner Corp',
         );
         $this->organizationRepository->save($owner);
@@ -64,7 +64,7 @@ final class RegisterOrganizationHandlerTest extends TestCase
 
     public function testRegisterOrganizationWithAddress(): void
     {
-        $this->geoLocation->willReturn(new GeoPoint(7.7663456, 48.5554971));
+        $this->geoLocation->willReturn(GeoPoint::fromCoordinates(7.7663456, 48.5554971));
 
         $command = new RegisterOrganizationCommand(
             ownerId: '100',
@@ -83,8 +83,8 @@ final class RegisterOrganizationHandlerTest extends TestCase
     public function testRegisterOrganizationWithHolding(): void
     {
         $holding = Organization::register(
-            id: new OrganizationId('200'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('200'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'Holding Corp',
         );
         $this->organizationRepository->save($holding);

@@ -18,8 +18,8 @@ final class ShowMyAccountHandler
 
     public function __invoke(ShowMyAccountQuery $query, ShowMyAccountPresenter $presenter): void
     {
-        $user = $this->userRepository->ofId(new UserId($query->userId));
-        $organization = $this->organizationRepository->ofId(new OrganizationId($query->organizationId));
+        $user = $this->userRepository->ofId(UserId::fromString($query->userId));
+        $organization = $this->organizationRepository->ofId(OrganizationId::fromString($query->organizationId));
 
         $readModel = new AccountReadModel(
             userName: $user->userName(),

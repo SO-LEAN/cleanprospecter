@@ -47,19 +47,19 @@ final class UpdateMyAccountHandlerTest extends TestCase
 
         // Seed data
         $owner = Organization::register(
-            id: new OrganizationId('100'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('100'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'Owner Corp',
         );
         $this->organizationRepository->save($owner);
 
         $user = User::create(
-            id: new UserId('1'),
+            id: UserId::fromString('1'),
             userName: 'john.doe',
-            organizationId: new OrganizationId('100'),
-            name: new PersonName('John', 'Doe'),
-            email: new Email('john@example.com'),
-            phoneNumber: new PhoneNumber('0123456789'),
+            organizationId: OrganizationId::fromString('100'),
+            name: PersonName::fromParts('John', 'Doe'),
+            email: Email::fromString('john@example.com'),
+            phoneNumber: PhoneNumber::fromString('0123456789'),
             language: 'EN',
         );
         $this->userRepository->save($user);
@@ -82,14 +82,14 @@ final class UpdateMyAccountHandlerTest extends TestCase
 
         ($this->handler)($command);
 
-        $updatedUser = $this->userRepository->ofId(new UserId('1'));
+        $updatedUser = $this->userRepository->ofId(UserId::fromString('1'));
         $this->assertEquals('jane.doe', $updatedUser->userName());
         $this->assertEquals('Jane', $updatedUser->name()->firstName);
         $this->assertTrue($this->transactionManager->committed);
         $this->assertCount(1, $this->notifier->successes);
         $this->assertEquals('User account information updated !', $this->notifier->successes[0]);
 
-        $updatedOrg = $this->organizationRepository->ofId(new OrganizationId('100'));
+        $updatedOrg = $this->organizationRepository->ofId(OrganizationId::fromString('100'));
         $this->assertEquals('New Corp', $updatedOrg->corporateName());
         $this->assertEquals('SARL', $updatedOrg->form());
     }

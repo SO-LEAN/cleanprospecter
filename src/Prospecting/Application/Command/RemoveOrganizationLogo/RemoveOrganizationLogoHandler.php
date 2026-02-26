@@ -19,7 +19,7 @@ final class RemoveOrganizationLogoHandler
 
     public function __invoke(RemoveOrganizationLogoCommand $command): void
     {
-        $organization = $this->organizationRepository->ofId(new OrganizationId($command->organizationId));
+        $organization = $this->organizationRepository->ofId(OrganizationId::fromString($command->organizationId));
 
         $logo = $organization->logo();
         if ($logo !== null) {

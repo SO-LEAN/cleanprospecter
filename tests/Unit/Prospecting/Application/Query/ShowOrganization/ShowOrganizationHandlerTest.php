@@ -35,8 +35,8 @@ final class ShowOrganizationHandlerTest extends TestCase
 
         // Seed owner
         $owner = Organization::register(
-            id: new OrganizationId('100'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('100'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'Owner Corp',
         );
         $this->organizationRepository->save($owner);
@@ -45,8 +45,8 @@ final class ShowOrganizationHandlerTest extends TestCase
     public function testShowMinimalOrganization(): void
     {
         $org = Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'ACME',
         );
         $this->organizationRepository->save($org);
@@ -67,20 +67,20 @@ final class ShowOrganizationHandlerTest extends TestCase
     public function testShowFullOrganization(): void
     {
         $org = Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'ACME Corp',
-            email: new Email('info@acme.com'),
-            phoneNumber: new PhoneNumber('0123456789'),
+            email: Email::fromString('info@acme.com'),
+            phoneNumber: PhoneNumber::fromString('0123456789'),
             language: 'FR',
             form: 'SARL',
             type: 'Direct',
             observations: 'Some notes',
-            address: new Address('20 avenue du Neuhof', '67100', 'Strasbourg', 'FR'),
-            logo: new Logo('http://storage.test/logo.png', 'png', 2500),
-            holdingId: new OrganizationId('100'),
+            address: Address::create('20 avenue du Neuhof', '67100', 'Strasbourg', 'FR'),
+            logo: Logo::create('http://storage.test/logo.png', 'png', 2500),
+            holdingId: OrganizationId::fromString('100'),
         );
-        $org->pinpoint(new GeoPoint(7.7663456, 48.5554971));
+        $org->pinpoint(GeoPoint::fromCoordinates(7.7663456, 48.5554971));
         $this->organizationRepository->save($org);
 
         ($this->handler)(new ShowOrganizationQuery('1'), $this->presenter);

@@ -20,10 +20,10 @@ final class OrganizationTest extends TestCase
     public function testRegisterCreatesOrganizationAndRaisesEvent(): void
     {
         $org = Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'ACME',
-            email: new Email('contact@acme.com'),
+            email: Email::fromString('contact@acme.com'),
         );
 
         $this->assertEquals('1', $org->id()->value);
@@ -42,28 +42,28 @@ final class OrganizationTest extends TestCase
         $this->expectException(ValidationException::class);
 
         Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
         );
     }
 
     public function testUpdateProfile(): void
     {
         $org = Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'ACME',
         );
 
         $org->updateProfile(
             corporateName: 'New ACME',
-            email: new Email('new@acme.com'),
-            phoneNumber: new PhoneNumber('0123456789'),
+            email: Email::fromString('new@acme.com'),
+            phoneNumber: PhoneNumber::fromString('0123456789'),
             language: 'FR',
             form: 'SARL',
             type: 'Direct',
             observations: 'Updated',
-            address: new Address('10 rue Test', '75001', 'Paris', 'FR'),
+            address: Address::create('10 rue Test', '75001', 'Paris', 'FR'),
             holdingId: null,
         );
 
@@ -75,12 +75,12 @@ final class OrganizationTest extends TestCase
     public function testAttachAndRemoveLogo(): void
     {
         $org = Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'ACME',
         );
 
-        $logo = new Logo('http://example.com/logo.png', 'png', 1024);
+        $logo = Logo::create('http://example.com/logo.png', 'png', 1024);
         $org->attachLogo($logo);
         $this->assertNotNull($org->logo());
         $this->assertEquals('http://example.com/logo.png', $org->logo()->url);
@@ -92,12 +92,12 @@ final class OrganizationTest extends TestCase
     public function testPinpoint(): void
     {
         $org = Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'ACME',
         );
 
-        $org->pinpoint(new GeoPoint(2.3522, 48.8566));
+        $org->pinpoint(GeoPoint::fromCoordinates(2.3522, 48.8566));
         $this->assertNotNull($org->geoPoint());
         $this->assertEquals(2.3522, $org->geoPoint()->longitude);
     }
@@ -105,8 +105,8 @@ final class OrganizationTest extends TestCase
     public function testFullName(): void
     {
         $org = Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'ACME',
             form: 'Ltd',
         );

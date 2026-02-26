@@ -15,7 +15,7 @@ final class ShowOrganizationHandler
 
     public function __invoke(ShowOrganizationQuery $query, ShowOrganizationPresenter $presenter): void
     {
-        $organization = $this->organizationRepository->ofId(new OrganizationId($query->organizationId));
+        $organization = $this->organizationRepository->ofId(OrganizationId::fromString($query->organizationId));
 
         $readModel = new OrganizationReadModel(
             id: $organization->id()->value,

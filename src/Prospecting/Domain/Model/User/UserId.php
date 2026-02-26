@@ -6,9 +6,14 @@ namespace Solean\Prospecting\Domain\Model\User;
 
 final readonly class UserId
 {
-    public function __construct(
+    private function __construct(
         public string $value,
     ) {}
+
+    public static function fromString(string $value): self
+    {
+        return new self($value);
+    }
 
     public function equals(self $other): bool
     {

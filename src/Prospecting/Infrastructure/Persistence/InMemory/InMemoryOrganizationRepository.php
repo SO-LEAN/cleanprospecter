@@ -17,7 +17,7 @@ final class InMemoryOrganizationRepository implements OrganizationRepository
 
     public function nextId(): OrganizationId
     {
-        return new OrganizationId((string) ++$this->sequence);
+        return OrganizationId::fromString((string) ++$this->sequence);
     }
 
     public function save(Organization $organization): void

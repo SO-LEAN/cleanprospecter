@@ -35,17 +35,17 @@ final class RemoveOrganizationLogoHandlerTest extends TestCase
 
         // Seed organization with logo
         $owner = Organization::register(
-            id: new OrganizationId('100'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('100'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'Owner Corp',
         );
         $this->organizationRepository->save($owner);
 
         $org = Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'ACME',
-            logo: new Logo('http://storage.test/logo.png', 'png', 2500),
+            logo: Logo::create('http://storage.test/logo.png', 'png', 2500),
         );
         $this->organizationRepository->save($org);
     }
@@ -56,7 +56,7 @@ final class RemoveOrganizationLogoHandlerTest extends TestCase
 
         ($this->handler)($command);
 
-        $org = $this->organizationRepository->ofId(new OrganizationId('1'));
+        $org = $this->organizationRepository->ofId(OrganizationId::fromString('1'));
         $this->assertNull($org->logo());
         $this->assertCount(1, $this->fileStorage->removedUrls);
         $this->assertEquals('http://storage.test/logo.png', $this->fileStorage->removedUrls[0]);

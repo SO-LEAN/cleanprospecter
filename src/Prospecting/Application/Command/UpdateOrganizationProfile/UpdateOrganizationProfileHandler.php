@@ -26,13 +26,13 @@ final class UpdateOrganizationProfileHandler
 
     public function __invoke(UpdateOrganizationProfileCommand $command): void
     {
-        $organizationId = new OrganizationId($command->organizationId);
+        $organizationId = OrganizationId::fromString($command->organizationId);
         $organization = $this->organizationRepository->ofId($organizationId);
 
         // Verify holding exists if specified
         if ($command->holdingId !== null) {
             try {
-                $this->organizationRepository->ofId(new OrganizationId($command->holdingId));
+                $this->organizationRepository->ofId(OrganizationId::fromString($command->holdingId));
             } catch (OrganizationNotFoundException) {
                 throw new OrganizationNotFoundException(sprintf('Holding with #ID %s not found', $command->holdingId));
             }
@@ -42,19 +42,19 @@ final class UpdateOrganizationProfileHandler
 
         $organization->updateProfile(
             corporateName: $command->corporateName,
-            email: $command->email ? new Email($command->email) : null,
-            phoneNumber: $command->phoneNumber ? new PhoneNumber($command->phoneNumber) : null,
+            email: $command->email ? Email::fromString($command->email) : null,
+            phoneNumber: $command->phoneNumber ? PhoneNumber::fromString($command->phoneNumber) : null,
             language: $command->language,
             form: $command->form,
             type: $command->type,
             observations: $command->observations,
             address: $address,
-            holdingId: $command->holdingId ? new OrganizationId($command->holdingId) : null,
+            holdingId: $command->holdingId ? OrganizationId::fromString($command->holdingId) : null,
         );
 
         if ($command->logo !== null) {
             $url = $this->fileStorage->store($command->logo);
-            $organization->attachLogo(new Logo($url, $command->logo->getExtension(), $command->logo->getSize()));
+            $organization->attachLogo(Logo::create($url, $command->logo->getExtension(), $command->logo->getSize()));
         }
 
         if ($address !== null) {
@@ -72,6 +72,6 @@ final class UpdateOrganizationProfileHandler
             return null;
         }
 
-        return new Address($command->street, $command->postalCode, $command->city, $command->country);
+        return Address::create($command->street, $command->postalCode, $command->city, $command->country);
     }
 }

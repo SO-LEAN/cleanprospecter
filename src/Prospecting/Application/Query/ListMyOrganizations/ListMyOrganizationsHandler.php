@@ -16,7 +16,7 @@ final class ListMyOrganizationsHandler
     public function __invoke(ListMyOrganizationsQuery $query, ListMyOrganizationsPresenter $presenter): void
     {
         $result = $this->organizationRepository->findPageByOwner(
-            ownerId: new OrganizationId($query->ownerOrganizationId),
+            ownerId: OrganizationId::fromString($query->ownerOrganizationId),
             page: $query->page,
             maxPerPage: $query->maxPerPage,
             query: $query->query,

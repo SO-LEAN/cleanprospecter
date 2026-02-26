@@ -29,21 +29,21 @@ final class UpdateMyAccountHandler
     public function __invoke(UpdateMyAccountCommand $command): void
     {
         $this->transactionManager->transactional(function () use ($command): void {
-            $user = $this->userRepository->ofId(new UserId($command->userId));
-            $organization = $this->organizationRepository->ofId(new OrganizationId($command->organizationId));
+            $user = $this->userRepository->ofId(UserId::fromString($command->userId));
+            $organization = $this->organizationRepository->ofId(OrganizationId::fromString($command->organizationId));
 
             $user->updateAccount(
                 userName: $command->userName,
-                name: new PersonName($command->firstName, $command->lastName),
-                email: $command->email ? new Email($command->email) : null,
-                phoneNumber: $command->phoneNumber ? new PhoneNumber($command->phoneNumber) : null,
+                name: PersonName::fromParts($command->firstName, $command->lastName),
+                email: $command->email ? Email::fromString($command->email) : null,
+                phoneNumber: $command->phoneNumber ? PhoneNumber::fromString($command->phoneNumber) : null,
                 language: $command->language,
                 password: $command->password,
             );
 
             if ($command->picture !== null) {
                 $url = $this->fileStorage->store($command->picture);
-                $user->attachPicture(new Logo($url, $command->picture->getExtension(), $command->picture->getSize()));
+                $user->attachPicture(Logo::create($url, $command->picture->getExtension(), $command->picture->getSize()));
             }
 
             $organization->updateCorporateInfo(
@@ -54,7 +54,7 @@ final class UpdateMyAccountHandler
 
             if ($command->organizationLogo !== null) {
                 $url = $this->fileStorage->store($command->organizationLogo);
-                $organization->attachLogo(new Logo($url, $command->organizationLogo->getExtension(), $command->organizationLogo->getSize()));
+                $organization->attachLogo(Logo::create($url, $command->organizationLogo->getExtension(), $command->organizationLogo->getSize()));
             }
 
             $this->userRepository->save($user);

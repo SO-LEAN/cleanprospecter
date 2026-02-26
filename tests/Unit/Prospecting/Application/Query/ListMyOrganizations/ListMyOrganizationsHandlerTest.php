@@ -32,8 +32,8 @@ final class ListMyOrganizationsHandlerTest extends TestCase
 
         // Seed owner organization
         $owner = Organization::register(
-            id: new OrganizationId('100'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('100'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'Owner Corp',
         );
         $this->organizationRepository->save($owner);
@@ -52,19 +52,19 @@ final class ListMyOrganizationsHandlerTest extends TestCase
     public function testListOrganizations(): void
     {
         $org1 = Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'ACME',
             form: 'SARL',
-            address: new Address('10 rue Test', '75001', 'Paris', 'FR'),
-            logo: new Logo('http://storage.test/logo1.png', 'png', 1000),
+            address: Address::create('10 rue Test', '75001', 'Paris', 'FR'),
+            logo: Logo::create('http://storage.test/logo1.png', 'png', 1000),
         );
-        $org1->pinpoint(new GeoPoint(2.3522, 48.8566));
+        $org1->pinpoint(GeoPoint::fromCoordinates(2.3522, 48.8566));
         $this->organizationRepository->save($org1);
 
         $org2 = Organization::register(
-            id: new OrganizationId('2'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('2'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'Beta Corp',
         );
         $this->organizationRepository->save($org2);
@@ -96,15 +96,15 @@ final class ListMyOrganizationsHandlerTest extends TestCase
     public function testListWithSearchQuery(): void
     {
         $org1 = Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'ACME',
         );
         $this->organizationRepository->save($org1);
 
         $org2 = Organization::register(
-            id: new OrganizationId('2'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('2'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'Beta Corp',
         );
         $this->organizationRepository->save($org2);
@@ -120,8 +120,8 @@ final class ListMyOrganizationsHandlerTest extends TestCase
     {
         for ($i = 1; $i <= 5; $i++) {
             $org = Organization::register(
-                id: new OrganizationId((string) (200 + $i)),
-                ownerId: new OrganizationId('100'),
+                id: OrganizationId::fromString((string) (200 + $i)),
+                ownerId: OrganizationId::fromString('100'),
                 corporateName: "Org $i",
             );
             $this->organizationRepository->save($org);
@@ -146,23 +146,23 @@ final class ListMyOrganizationsHandlerTest extends TestCase
     {
         // Org owned by different owner
         $otherOwner = Organization::register(
-            id: new OrganizationId('200'),
-            ownerId: new OrganizationId('200'),
+            id: OrganizationId::fromString('200'),
+            ownerId: OrganizationId::fromString('200'),
             corporateName: 'Other Owner',
         );
         $this->organizationRepository->save($otherOwner);
 
         $otherOrg = Organization::register(
-            id: new OrganizationId('3'),
-            ownerId: new OrganizationId('200'),
+            id: OrganizationId::fromString('3'),
+            ownerId: OrganizationId::fromString('200'),
             corporateName: 'Other Org',
         );
         $this->organizationRepository->save($otherOrg);
 
         // Org owned by our owner
         $myOrg = Organization::register(
-            id: new OrganizationId('1'),
-            ownerId: new OrganizationId('100'),
+            id: OrganizationId::fromString('1'),
+            ownerId: OrganizationId::fromString('100'),
             corporateName: 'My Org',
         );
         $this->organizationRepository->save($myOrg);
