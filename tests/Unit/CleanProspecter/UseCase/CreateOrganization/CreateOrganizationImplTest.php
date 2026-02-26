@@ -48,9 +48,7 @@ class CreateOrganizationImplTest extends UseCaseTest
 
     public function testExecuteOnRegularWithCreator()
     {
-        $request = aRequest()
-            ->ownedByCreator()
-            ->build();
+        $request = new CreateOrganizationRequest(777, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Consulting', 'Limited Company', null, null, null, null, 'observ.', null, null);
 
         $organizationBuilder = anOrganization()
             ->ownedBy(anOrganization()->withCreatorData());
@@ -58,7 +56,7 @@ class CreateOrganizationImplTest extends UseCaseTest
         $notPersisted = $organizationBuilder->build();
         $persisted =  $organizationBuilder->withId()->build();
 
-        $expectedResponse = aResponse()->build();
+        $expectedResponse = new CreateOrganizationResponse(123, 777, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, null, null, 'observ.', null, null, null, null);
 
         $this->mock($notPersisted, $persisted);
 
@@ -73,10 +71,7 @@ class CreateOrganizationImplTest extends UseCaseTest
 
     public function testExecuteOnRegularWithAddress()
     {
-        $request = aRequest()
-            ->ownedByCreator()
-            ->withAddress()
-            ->build();
+        $request = new CreateOrganizationRequest(777, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Consulting', 'Limited Company', '10 Downing Street', 'SW1A 2AA', 'London', 'EN', 'observ.', null, null);
 
         $organizationBuilder = anOrganization()
             ->ownedBy(anOrganization()->withCreatorData())
@@ -87,9 +82,7 @@ class CreateOrganizationImplTest extends UseCaseTest
         $notPersisted = $organizationBuilder->build();
         $persisted =  $organizationBuilder->withId()->build();
 
-        $expectedResponse = aResponse()
-            ->withRegularAddress()
-            ->build();
+        $expectedResponse = new CreateOrganizationResponse(123, 777, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', '10 Downing Street', 'SW1A 2AA', 'London', 'EN', 7.7663456, 48.5554971, 'observ.', null, null, null, null);
 
         $this->mock($notPersisted, $persisted);
         $this->mockGeoLocation($geoPoint->build());
@@ -113,14 +106,9 @@ class CreateOrganizationImplTest extends UseCaseTest
 
         $file = $this->mockFile($notPersisted);
 
-        $request = aRequest()
-            ->ownedByCreator()
-            ->withLogo($file)
-            ->build();
+        $request = new CreateOrganizationRequest(777, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Consulting', 'Limited Company', null, null, null, null, 'observ.', $file, null);
 
-        $expectedResponse = aResponse()
-            ->withLogo()
-            ->build();
+        $expectedResponse = new CreateOrganizationResponse(123, 777, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, null, null, 'observ.', 'http://url.net/image.png', 'png', 2500, null);
 
         $this->mock($notPersisted, $persisted);
         $this->mockStorage($file, $notPersisted);
@@ -135,10 +123,7 @@ class CreateOrganizationImplTest extends UseCaseTest
 
     public function testExecuteOnHold()
     {
-        $request = aRequest()
-            ->ownedByCreator()
-            ->hold()
-            ->build();
+        $request = new CreateOrganizationRequest(777, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Consulting', 'Limited Company', null, null, null, null, 'observ.', null, 456);
 
         $organizationBuilder = anOrganization()
             ->ownedBy(anOrganization()->withCreatorData())
@@ -147,9 +132,7 @@ class CreateOrganizationImplTest extends UseCaseTest
         $notPersisted = $organizationBuilder->build();
         $persisted =  $organizationBuilder->withId()->build();
 
-        $expectedResponse = aResponse()
-            ->hold()
-            ->build();
+        $expectedResponse = new CreateOrganizationResponse(123, 777, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, null, null, 'observ.', null, null, null, 456);
 
         $this->mockGetHolding($request);
         $this->mock($notPersisted, $persisted);
@@ -164,10 +147,7 @@ class CreateOrganizationImplTest extends UseCaseTest
 
     public function testThrowAnUseCaseNotFoundExceptionIfHoldingNotFoundInGatewayDuringExecuteOnHold()
     {
-        $request = aRequest()
-            ->ownedByCreator()
-            ->hold()
-            ->build();
+        $request = new CreateOrganizationRequest(777, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Consulting', 'Limited Company', null, null, null, null, 'observ.', null, 456);
 
         $gatewayException = new Gateway\NotFoundException();
 
@@ -180,9 +160,7 @@ class CreateOrganizationImplTest extends UseCaseTest
 
     public function testThrowAnUseCaseUniqueConstraintViolationExceptionIfGatewayThrowOne()
     {
-        $request = aRequest()
-            ->ownedByCreator()
-            ->build();
+        $request = new CreateOrganizationRequest(777, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Consulting', 'Limited Company', null, null, null, null, 'observ.', null, null);
 
         $notPersisted = anOrganization()
             ->ownedBy(anOrganization()->withCreatorData())
@@ -199,10 +177,7 @@ class CreateOrganizationImplTest extends UseCaseTest
 
     public function testThrowUseCaseExceptionIfMissingCorporateNameAndEmail()
     {
-        $request = aRequest()
-            ->ownedByCreator()
-            ->missingMandatoryData()
-            ->build();
+        $request = new CreateOrganizationRequest(777, '03777666888', null, 'EN', null, 'Consulting', 'Limited Company', null, null, null, null, 'observ.', null, null);
 
         $this->mockGetCreator();
         $this->expectExceptionObject(new UseCase\UseCaseException('At least one is mandatory : corporate name or email', 412));
@@ -212,8 +187,7 @@ class CreateOrganizationImplTest extends UseCaseTest
 
     public function testThrowUseCaseExceptionIfMissingOwner()
     {
-        $request = aRequest()
-            ->build();
+        $request = new CreateOrganizationRequest(null, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Consulting', 'Limited Company', null, null, null, null, 'observ.', null, null);
 
         $this->expectExceptionObject(new UseCase\UseCaseException('Owner is missing', 412));
 
@@ -254,13 +228,4 @@ class CreateOrganizationImplTest extends UseCaseTest
     {
         $this->prophesy(GeoLocation::class)->find(Argument::type('string'))->shouldBeCalled()->willReturn(new GeoLocation\GeoPointResponse('address', $expectedPoint->getLongitude(), $expectedPoint->getLatitude(), true));
     }
-}
-
-function aRequest()
-{
-    return new CreateOrganizationRequestBuilder();
-}
-function aResponse()
-{
-    return new CreateOrganizationResponseBuilder();
 }

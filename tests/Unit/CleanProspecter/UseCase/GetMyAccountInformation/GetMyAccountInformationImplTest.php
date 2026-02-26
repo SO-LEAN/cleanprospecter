@@ -49,7 +49,7 @@ class GetMyAccountInformationImplTest extends UseCaseTest
         $organization = anOrganization()
             ->withId()
             ->build();
-        $expectedResponse = aResponse()->build();
+        $expectedResponse = new GetMyAccountInformationResponse('login', 'Mike', 'Myers', null, null, null, '0101010101', 'user@user.com', 'FR', 'Organization', 'Limited Company', null, null, null);
 
         $this->mockUseCaseConsumer();
         $this->mockOrganization($organization);
@@ -74,9 +74,7 @@ class GetMyAccountInformationImplTest extends UseCaseTest
             ->with('logo', aFile()->withImageData())
             ->build();
 
-        $expectedResponse = aResponse()
-            ->withOrganizationLogo()
-            ->build();
+        $expectedResponse = new GetMyAccountInformationResponse('login', 'Mike', 'Myers', null, null, null, '0101010101', 'user@user.com', 'FR', 'Organization', 'Limited Company', 'http://url.net/image.png', 'png', 2500);
 
         $this->mockUseCaseConsumer();
         $this->mockOrganization($organization);
@@ -101,9 +99,7 @@ class GetMyAccountInformationImplTest extends UseCaseTest
             ->withId()
             ->build();
 
-        $expectedResponse = aResponse()
-            ->withPicture()
-            ->build();
+        $expectedResponse = new GetMyAccountInformationResponse('login', 'Mike', 'Myers', 'http://url.net/image.png', 'png', 2500, '0101010101', 'user@user.com', 'FR', 'Organization', 'Limited Company', null, null, null);
 
         $this->mockUseCaseConsumer();
         $this->mockOrganization($organization);
@@ -157,9 +153,4 @@ class GetMyAccountInformationImplTest extends UseCaseTest
     {
         $this->prophesy(UserGateway::class)->get(1)->shouldBeCalled()->willReturn($user);
     }
-}
-
-function aResponse()
-{
-    return new GetMyAccountInformationResponseBuilder();
 }

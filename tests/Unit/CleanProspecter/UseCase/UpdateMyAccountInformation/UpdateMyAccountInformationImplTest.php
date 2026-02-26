@@ -17,6 +17,7 @@ use Solean\CleanProspecter\Gateway\Entity\UserGateway;
 use Solean\CleanProspecter\Gateway\Entity\Transaction;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\UseCase\UpdateMyAccountInformation\UpdateMyAccountInformationImpl;
+use Solean\CleanProspecter\UseCase\UpdateMyAccountInformation\UpdateMyAccountInformationRequest;
 use Solean\CleanProspecter\UseCase\UpdateMyAccountInformation\UpdateMyAccountInformationResponse;
 
 use function Tests\Unit\Solean\Base\aUser;
@@ -48,14 +49,14 @@ class UpdateMyAccountInformationImplTest extends UseCaseTest
 
     public function testExecute()
     {
-        $request = aRequest()->build();
+        $request = new UpdateMyAccountInformationRequest('login', 'password', 'Mike', 'Myers', null, '0101010101', 'user@user.com', 'FR', 'Organization', 'Limited Company', null);
         $persistedOrganization = anOrganization()
             ->withId()
             ->build();
         $persistedUser = aUser()
             ->withId()
             ->build();
-        $expected = aResponse()->build();
+        $expected = new UpdateMyAccountInformationResponse('login', 'Mike', 'Myers', null, null, null, '0101010101', 'user@user.com', 'FR', 'Organization', 'Limited Company', null, null, null);
 
         $this->mockTransaction();
         $this->mock($persistedOrganization, $persistedUser);
@@ -69,9 +70,7 @@ class UpdateMyAccountInformationImplTest extends UseCaseTest
 
     public function testExecuteEmptyToFull()
     {
-        $request = aRequest()
-            ->withNewData()
-            ->build();
+        $request = new UpdateMyAccountInformationRequest('new login', 'new password', 'New Mike', 'New Myers', null, '0199999999', 'user@new-new-user.com', 'LU', 'New Organization', 'SARL', null);
         $persistedOrganization = anOrganization()
             ->withId()
             ->build();
@@ -88,9 +87,7 @@ class UpdateMyAccountInformationImplTest extends UseCaseTest
             ->withNewData()
             ->build();
 
-        $expected = aResponse()
-            ->withNewData()
-            ->build();
+        $expected = new UpdateMyAccountInformationResponse('new login', 'New Mike', 'New Myers', null, null, null, '0199999999', 'user@new-new-user.com', 'LU', 'New Organization', 'SARL', null, null, null);
 
         $this->mockTransaction();
         $this->mock($persistedOrganization, $persistedUser, $alteredOrganization, $alteredUser);
@@ -122,16 +119,12 @@ class UpdateMyAccountInformationImplTest extends UseCaseTest
             ->with('picture', aFile()->withImageData()->build())
             ->build();
 
-        $expected = aResponse()
-            ->withPicture()
-            ->build();
+        $expected = new UpdateMyAccountInformationResponse('login', 'Mike', 'Myers', 'http://url.net/image.png', 'png', 2500, '0101010101', 'user@user.com', 'FR', 'Organization', 'Limited Company', null, null, null);
 
         $file = $this->mockFile($alteredUser, 'picture');
         $this->mockStorage($file, $alteredUser, 'picture');
 
-        $request = aRequest()
-            ->withPicture($file)
-            ->build();
+        $request = new UpdateMyAccountInformationRequest('login', 'password', 'Mike', 'Myers', $file, '0101010101', 'user@user.com', 'FR', 'Organization', 'Limited Company', null);
 
         $this->mockTransaction();
         $this->mock($persistedOrganization, $persistedUser, $alteredOrganization, $alteredUser);
@@ -163,16 +156,12 @@ class UpdateMyAccountInformationImplTest extends UseCaseTest
             ->withId()
             ->build();
 
-        $expected = aResponse()
-            ->withOrganizationLogo()
-            ->build();
+        $expected = new UpdateMyAccountInformationResponse('login', 'Mike', 'Myers', null, null, null, '0101010101', 'user@user.com', 'FR', 'Organization', 'Limited Company', 'http://url.net/image.png', 'png', 2500);
 
         $file = $this->mockFile($alteredOrganization, 'logo');
         $this->mockStorage($file, $alteredOrganization, 'logo');
 
-        $request = aRequest()
-            ->withOrganizationLogo($file)
-            ->build();
+        $request = new UpdateMyAccountInformationRequest('login', 'password', 'Mike', 'Myers', null, '0101010101', 'user@user.com', 'FR', 'Organization', 'Limited Company', $file);
 
         $this->mockTransaction();
         $this->mock($persistedOrganization, $persistedUser, $alteredOrganization, $alteredUser);
@@ -186,8 +175,7 @@ class UpdateMyAccountInformationImplTest extends UseCaseTest
 
     public function testExecuteRollbackAndThrowExceptionOnUniqueConstraintViolationException()
     {
-        $request = aRequest()
-            ->build();
+        $request = new UpdateMyAccountInformationRequest('login', 'password', 'Mike', 'Myers', null, '0101010101', 'user@user.com', 'FR', 'Organization', 'Limited Company', null);
         $persistedOrganization = anOrganization()
             ->withId()
             ->missingMandatoryData()
@@ -276,13 +264,4 @@ class UpdateMyAccountInformationImplTest extends UseCaseTest
         $getter = sprintf('get%s', ucfirst($property));
         $this->prophesy(Storage::class)->add($file)->shouldBeCalled()->willReturn($entity->$getter()->getUrl());
     }
-}
-
-function aRequest()
-{
-    return new UpdateMyAccountInformationRequestBuilder();
-}
-function aResponse()
-{
-    return new UpdateMyAccountInformationResponseBuilder();
 }

@@ -63,19 +63,17 @@ class UpdateOrganizationImplTest extends UseCaseTest
 
     public function provideExecute()
     {
-        $req  = aRequest();
         $org  = anOrganization();
-        $resp = aResponse();
 
         (yield 'no change' => [
-            $resp->ownedByCreator()->build(),
-            $req->build(),
+            new UpdateOrganizationResponse(123, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, null, null, 'observ.', null, null, null, null),
+            new UpdateOrganizationRequest(123, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, 'observ.', null, null),
             $org->withId()->ownedBy(anOrganization()->withCreatorData())->build(),
             $org->build(),
         ]);
         (yield 'full (with address) to empty (almost)' => [
-            $resp->reset()->withId()->ownedByCreator()->named()->build(),
-            $req->reset()->withId()->named()->build(),
+            new UpdateOrganizationResponse(123, null, null, null, 'Organization', null, null, null, null, null, null, null, null, null, null, null, null, null),
+            new UpdateOrganizationRequest(123, null, null, null, 'Organization', null, null, null, null, null, null, null, null, null),
             $org->reset()->withId()->withData()->ownedBy(anOrganization()->withCreatorData())->with('address', anAddress())->build(),
             $org->reset()->withId()->ownedBy(anOrganization()->withCreatorData())->named()->build(),
         ]);
@@ -83,7 +81,7 @@ class UpdateOrganizationImplTest extends UseCaseTest
 
     public function testExecuteWithNewAddress()
     {
-        $request = aRequest()->withNewAddress()->build();
+        $request = new UpdateOrganizationRequest(123, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', '20 avenue du Neuhof', '67100', 'Strasbourg', 'FR', 'observ.', null, null);
 
         $orgBuilder  = anOrganization()
             ->ownedBy(anOrganization()->withCreatorData());
@@ -96,7 +94,7 @@ class UpdateOrganizationImplTest extends UseCaseTest
             ->with('address', anAddress()->withNewData())
             ->with('geoPoint', $geoPointBuilder = aGeoPoint())
             ->build();
-        $expectedResponse = aResponse()->withNewAddress()->build();
+        $expectedResponse = new UpdateOrganizationResponse(123, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', '20 avenue du Neuhof', '67100', 'Strasbourg', 'FR', 7.7663456, 48.5554971, 'observ.', null, null, null, null);
 
         $this->mock($initial, $updated);
         $this->mockGeoLocation($geoPointBuilder->build());
@@ -111,9 +109,7 @@ class UpdateOrganizationImplTest extends UseCaseTest
 
     public function testExecuteWithNewAddressButNotFoundByGeoLocation()
     {
-        $request = aRequest()
-            ->withUnLocatableAddress()
-            ->build();
+        $request = new UpdateOrganizationRequest(123, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', '20 avenue du Not found', '67100', 'Not found', 'FR', 'observ.', null, null);
 
         $orgBuilder  = anOrganization()
             ->ownedBy(anOrganization()->withCreatorData());
@@ -129,7 +125,7 @@ class UpdateOrganizationImplTest extends UseCaseTest
             ->with('geoPoint', null)
             ->build();
 
-        $expectedResponse = aResponse()->withUnLocatableAddress()->build();
+        $expectedResponse = new UpdateOrganizationResponse(123, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', '20 avenue du Not found', '67100', 'Not found', 'FR', null, null, 'observ.', null, null, null, null);
 
         $this->mock($initial, $updated);
         $this->mockGeoLocation(aGeoPoint()->notFound()->build(), false);
@@ -144,10 +140,7 @@ class UpdateOrganizationImplTest extends UseCaseTest
 
     public function testExecuteEmptyToFull()
     {
-        $request = aRequest()
-            ->withNewData()
-            ->withNewAddress()
-            ->build();
+        $request = new UpdateOrganizationRequest(123, '111111111', 'org@new-organization.com', 'BE', 'New Organization', 'SARL', 'Direct', '20 avenue du Neuhof', '67100', 'Strasbourg', 'FR', 'new observ.', null, null);
 
         $orgBuilder  = anOrganization()
             ->ownedBy(anOrganization()->withCreatorData());
@@ -165,7 +158,7 @@ class UpdateOrganizationImplTest extends UseCaseTest
             ->with('geoPoint', $geoPointBuilder = aGeoPoint())
             ->build();
 
-        $expectedResponse = aResponse()->withNewData()->withNewAddress()->build();
+        $expectedResponse = new UpdateOrganizationResponse(123, '111111111', 'org@new-organization.com', 'BE', 'New Organization', 'SARL', 'Direct', '20 avenue du Neuhof', '67100', 'Strasbourg', 'FR', 7.7663456, 48.5554971, 'new observ.', null, null, null, null);
 
         $this->mock($initial, $updated);
         $this->mockGeoLocation($geoPointBuilder->build());
@@ -189,14 +182,9 @@ class UpdateOrganizationImplTest extends UseCaseTest
 
         $file = $this->mockFile($updated);
 
-        $request = aRequest()
-            ->withLogo($file)
-            ->build();
+        $request = new UpdateOrganizationRequest(123, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, 'observ.', $file, null);
 
-        $expectedResponse = aResponse()
-            ->ownedByCreator()
-            ->withLogo()
-            ->build();
+        $expectedResponse = new UpdateOrganizationResponse(123, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, null, null, 'observ.', 'http://url.net/image.png', 'png', 2500, null);
 
         $this->mock($get, $updated);
         $this->mockStorage($file, $updated);
@@ -211,19 +199,14 @@ class UpdateOrganizationImplTest extends UseCaseTest
 
     public function testExecuteOnHold()
     {
-        $request = aRequest()
-            ->hold()
-            ->build();
+        $request = new UpdateOrganizationRequest(123, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, 'observ.', null, 456);
 
         $organizationBuilder = anOrganization()->withId()->ownedBy(anOrganization()->withCreatorData());
 
         $get = $organizationBuilder->build();
         $updated =  $organizationBuilder->holdBy(anOrganization()->withHoldingData())->build();
 
-        $expectedResponse = aResponse()
-            ->ownedByCreator()
-            ->hold()
-            ->build();
+        $expectedResponse = new UpdateOrganizationResponse(123, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, null, null, 'observ.', null, null, null, 456);
 
         $this->mockOrganizationGateway($request);
         $this->mock($get, $updated);
@@ -238,9 +221,7 @@ class UpdateOrganizationImplTest extends UseCaseTest
 
     public function testThrowAnUseCaseNotFoundExceptionIfHoldingNotFoundInGatewayDuringExecuteOnHold()
     {
-        $request = aRequest()
-            ->hold()
-            ->build();
+        $request = new UpdateOrganizationRequest(123, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, 'observ.', null, 456);
 
         $gatewayException = new Gateway\NotFoundException();
         $this->prophesy(OrganizationGateway::class)->get($request->getId())->shouldBeCalled()->willReturn(anOrganization()->build());
@@ -252,9 +233,7 @@ class UpdateOrganizationImplTest extends UseCaseTest
 
     public function testThrowAnUseCaseUniqueConstraintViolationExceptionIfGatewayThrowOne()
     {
-        $request = aRequest()
-            ->withId()
-            ->build();
+        $request = new UpdateOrganizationRequest(123, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, 'observ.', null, null);
 
         $updated = anOrganization()
             ->withId()
@@ -271,9 +250,7 @@ class UpdateOrganizationImplTest extends UseCaseTest
 
     public function testThrowUseCaseExceptionIfMissingCorporateNameAndEmail()
     {
-        $request = aRequest()
-            ->missingMandatoryData()
-            ->build();
+        $request = new UpdateOrganizationRequest(123, '03777666888', null, 'EN', null, 'Limited Company', 'Consulting', null, null, null, null, 'observ.', null, null);
 
         $get = anOrganization()
             ->withId()
@@ -315,13 +292,4 @@ class UpdateOrganizationImplTest extends UseCaseTest
     {
         $this->prophesy(GeoLocation::class)->find(Argument::type('string'))->shouldBeCalled()->willReturn(new GeoLocation\GeoPointResponse('address', $expectedPoint->getLongitude(), $expectedPoint->getLatitude(), $found));
     }
-}
-
-function aRequest()
-{
-    return new UpdateOrganizationRequestBuilder();
-}
-function aResponse()
-{
-    return new UpdateOrganizationResponseBuilder();
 }

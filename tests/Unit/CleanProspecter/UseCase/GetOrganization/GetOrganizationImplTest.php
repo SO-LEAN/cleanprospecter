@@ -10,6 +10,7 @@ use Solean\CleanProspecter\Exception\UseCase;
 use Solean\CleanProspecter\Entity\Organization;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\UseCase\GetOrganization\GetOrganizationImpl;
+use Solean\CleanProspecter\UseCase\GetOrganization\GetOrganizationRequest;
 use Solean\CleanProspecter\UseCase\GetOrganization\GetOrganizationResponse;
 
 use function Tests\Unit\Solean\Base\anOrganization;
@@ -38,11 +39,11 @@ class GetOrganizationImplTest extends UseCaseTest
 
     public function testExecuteOnRegular()
     {
-        $request = aRequest()->build();
+        $request = new GetOrganizationRequest(777);
         $persisted = anOrganization()
             ->withId()
             ->build();
-        $expectedResponse = aResponse()->build();
+        $expectedResponse = new GetOrganizationResponse(123, null, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, null, null, 'observ.', null, null, null, null, ['activeOrganizations' => 0]);
 
         $this->mock($persisted);
 
@@ -51,14 +52,12 @@ class GetOrganizationImplTest extends UseCaseTest
 
     public function testExecuteOnRegularWithOwner()
     {
-        $request = aRequest()->build();
+        $request = new GetOrganizationRequest(777);
         $persisted = anOrganization()
             ->withId()
             ->ownedBy(anOrganization()->withCreatorData())
             ->build();
-        $expectedResponse = aResponse()
-            ->ownedByCreator()
-            ->build() ;
+        $expectedResponse = new GetOrganizationResponse(123, 777, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, null, null, 'observ.', null, null, null, null, ['activeOrganizations' => 0]);
 
         $this->mock($persisted);
 
@@ -67,15 +66,13 @@ class GetOrganizationImplTest extends UseCaseTest
 
     public function testExecuteOnRegularWithAddress()
     {
-        $request = aRequest()->build();
+        $request = new GetOrganizationRequest(777);
         $persisted = anOrganization()
             ->withId()
             ->with('address', anAddress())
             ->with('geoPoint', aGeoPoint())
             ->build();
-        $expectedResponse =  aResponse()
-            ->withRegularAddress()
-            ->build();
+        $expectedResponse = new GetOrganizationResponse(123, null, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', '10 Downing Street', 'SW1A 2AA', 'London', 'EN', 7.7663456, 48.5554971, 'observ.', null, null, null, null, ['activeOrganizations' => 0]);
 
         $this->mock($persisted);
 
@@ -84,31 +81,26 @@ class GetOrganizationImplTest extends UseCaseTest
 
     public function testExecuteOnRegularWithLogo()
     {
-        $request = aRequest()->build();
+        $request = new GetOrganizationRequest(777);
         $persisted = anOrganization()
             ->withId()
             ->with('logo', aFile()->withImageData())
             ->build();
-        $expectedResponse = aResponse()
-            ->withLogo()
-            ->build();
+        $expectedResponse = new GetOrganizationResponse(123, null, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, null, null, 'observ.', 'http://url.net/image.png', 'png', 2500, null, ['activeOrganizations' => 0]);
 
         $this->mock($persisted);
 
         $this->target()->execute($request, $this->getMockedPresenter($expectedResponse));
-        ;
     }
 
     public function testExecuteOnHold()
     {
-        $request = aRequest()->build();
+        $request = new GetOrganizationRequest(777);
         $persisted = anOrganization()
             ->withId()
             ->with('holdBy', anOrganization()->withHoldingData())
             ->build();
-        $expectedResponse = aResponse()
-            ->hold()
-            ->build();
+        $expectedResponse = new GetOrganizationResponse(123, null, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', null, null, null, null, null, null, 'observ.', null, null, null, 456, ['activeOrganizations' => 0]);
 
         $this->mock($persisted);
 
@@ -117,7 +109,7 @@ class GetOrganizationImplTest extends UseCaseTest
 
     public function testExecuteOnFullFilled()
     {
-        $request = aRequest()->build();
+        $request = new GetOrganizationRequest(777);
         $persisted = anOrganization()
             ->withId()
             ->with('address', anAddress())
@@ -126,12 +118,7 @@ class GetOrganizationImplTest extends UseCaseTest
             ->with('logo', aFile()->withImageData())
             ->with('holdBy', anOrganization()->withHoldingData())
             ->build();
-        $expectedResponse = aResponse()
-            ->withRegularAddress()
-            ->ownedByCreator()
-            ->hold()
-            ->withLogo()
-            ->build();
+        $expectedResponse = new GetOrganizationResponse(123, 777, '03777666888', 'org@organization.com', 'EN', 'Organization', 'Limited Company', 'Consulting', '10 Downing Street', 'SW1A 2AA', 'London', 'EN', 7.7663456, 48.5554971, 'observ.', 'http://url.net/image.png', 'png', 2500, 456, ['activeOrganizations' => 0]);
 
         $this->mock($persisted);
 
@@ -140,7 +127,7 @@ class GetOrganizationImplTest extends UseCaseTest
 
     public function testThrowAnUseCaseNotFoundExceptionIfOrganizationNotFoundInGateway()
     {
-        $request = aRequest()->build();
+        $request = new GetOrganizationRequest(777);
         $gatewayException = new Gateway\NotFoundException();
 
         $this->prophesy(OrganizationGateway::class)->get($request->getId())->shouldBeCalled()->willThrow($gatewayException);
@@ -153,13 +140,4 @@ class GetOrganizationImplTest extends UseCaseTest
     {
         $this->prophesy(OrganizationGateway::class)->get(777)->shouldBeCalled()->willReturn($persisted);
     }
-}
-
-function aRequest()
-{
-    return new GetOrganizationRequestBuilder();
-}
-function aResponse()
-{
-    return new GetOrganizationResponseBuilder();
 }

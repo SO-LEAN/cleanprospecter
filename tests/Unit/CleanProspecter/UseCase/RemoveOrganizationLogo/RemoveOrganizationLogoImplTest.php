@@ -11,6 +11,8 @@ use Solean\CleanProspecter\UseCase\UseCaseConsumer;
 use Tests\Unit\Solean\Base\UseCaseTest;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\UseCase\RemoveOrganizationLogo\RemoveOrganizationLogoImpl;
+use Solean\CleanProspecter\UseCase\RemoveOrganizationLogo\RemoveOrganizationLogoRequest;
+use Solean\CleanProspecter\UseCase\RemoveOrganizationLogo\RemoveOrganizationLogoResponse;
 
 use function Tests\Unit\Solean\Base\anOrganization;
 use function Tests\Unit\Solean\Base\aFile;
@@ -38,8 +40,8 @@ class RemoveOrganizationLogoImplTest extends UseCaseTest
 
     public function testExecute()
     {
-        $request = aRequest()->build();
-        $expectedResponse = aResponse()->build();
+        $request = new RemoveOrganizationLogoRequest(123);
+        $expectedResponse = new RemoveOrganizationLogoResponse(123);
 
         $organization = anOrganization()
             ->withId()
@@ -68,7 +70,7 @@ class RemoveOrganizationLogoImplTest extends UseCaseTest
 
     public function testAnExceptionThrownWhenTryToRemoveLogoOnNonBelongToOrganization()
     {
-        $request = aRequest()->build();
+        $request = new RemoveOrganizationLogoRequest(123);
 
         $organization = anOrganization()
             ->withId()
@@ -91,13 +93,4 @@ class RemoveOrganizationLogoImplTest extends UseCaseTest
 
         $this->target()->execute($request, $this->getMockedPresenter(), $this->prophesy(UseCaseConsumer::class)->reveal());
     }
-}
-
-function aRequest()
-{
-    return new RemoveOrganizationLogoRequestBuilder();
-}
-function aResponse()
-{
-    return new RemoveOrganizationLogoResponseBuilder();
 }

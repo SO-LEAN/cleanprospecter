@@ -6,12 +6,13 @@ namespace Tests\Unit\Solean\CleanProspecter\UseCase\FindMyOwnOrganizations;
 
 use Solean\CleanProspecter\Gateway\Entity\Page;
 use Solean\CleanProspecter\Gateway\Entity\PageRequest;
+use Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsRequest;
 use Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsResponse;
+use Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsResponse\Organization;
 use Solean\CleanProspecter\UseCase\UseCaseConsumer;
 use Tests\Unit\Solean\Base\UseCaseTest;
 use Solean\CleanProspecter\Gateway\Entity\OrganizationGateway;
 use Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsImpl;
-use Tests\Unit\Solean\CleanProspecter\UseCase\FindMyOwnOrganizations\FindMyOwnOrganizationsResponse\OrganizationBuilder;
 
 use function Tests\Unit\Solean\Base\aPage;
 use function Tests\Unit\Solean\Base\aFile;
@@ -46,8 +47,7 @@ class FindMyOwnOrganizationsImplTest extends UseCaseTest
      */
     public function testExecute(FindMyOwnOrganizationsResponse $expectedResponse, Page $expectedPage)
     {
-        $request = aRequest()
-            ->build();
+        $request = new FindMyOwnOrganizationsRequest(1, 'my query', 10);
 
         $this->prophesy(UseCaseConsumer::class)
             ->getOrganizationId()
@@ -67,16 +67,12 @@ class FindMyOwnOrganizationsImplTest extends UseCaseTest
 
     public function provideExecute()
     {
-        $resp = aResponse();
         $page = aPage();
 
         (yield 'default' => [
-            $resp
-                ->with('organizations', [
-                    aDtoOrganization()
-                        ->build()
-                    ])
-                ->build(),
+            new FindMyOwnOrganizationsResponse(1, 25, 3, [
+                new Organization(123, 'Organization Limited Company', null, null, null, null, null, null)
+            ]),
             $page
                 ->with('content', [
                     anOrganization()
@@ -86,13 +82,9 @@ class FindMyOwnOrganizationsImplTest extends UseCaseTest
                 ->build()
         ]);
         (yield 'with address' => [
-            $resp
-                ->with('organizations', [
-                    aDtoOrganization()
-                        ->withAddress()
-                        ->build()
-                    ])
-                ->build(),
+            new FindMyOwnOrganizationsResponse(1, 25, 3, [
+                new Organization(123, 'Organization Limited Company', 'London', 'EN', 'SW1A 2AA', null, null, null)
+            ]),
             $page->with('content', [
                 anOrganization()
                     ->withId()
@@ -102,13 +94,9 @@ class FindMyOwnOrganizationsImplTest extends UseCaseTest
                 ->build()
         ]);
         (yield 'with logo' => [
-            $resp
-                ->with('organizations', [
-                    aDtoOrganization()
-                        ->withLogo()
-                        ->build()
-                ])
-                ->build(),
+            new FindMyOwnOrganizationsResponse(1, 25, 3, [
+                new Organization(123, 'Organization Limited Company', null, null, null, 'http://url.net/image.png', null, null)
+            ]),
             $page->with('content', [
                 anOrganization()
                     ->withId()
@@ -118,13 +106,9 @@ class FindMyOwnOrganizationsImplTest extends UseCaseTest
                 ->build()
         ]);
         (yield 'with geoPoint' => [
-            $resp
-                ->with('organizations', [
-                    aDtoOrganization()
-                        ->withGeoPoint()
-                        ->build()
-                ])
-                ->build(),
+            new FindMyOwnOrganizationsResponse(1, 25, 3, [
+                new Organization(123, 'Organization Limited Company', null, null, null, null, 7.7663456, 48.5554971)
+            ]),
             $page->with('content', [
                 anOrganization()
                     ->withId()
@@ -134,18 +118,4 @@ class FindMyOwnOrganizationsImplTest extends UseCaseTest
                 ->build()
         ]);
     }
-}
-
-function aRequest()
-{
-    return new FindMyOwnOrganizationsRequestBuilder();
-}
-function aResponse()
-{
-    return new FindMyOwnOrganizationsResponseBuilder();
-}
-
-function aDtoOrganization()
-{
-    return new OrganizationBuilder();
 }
