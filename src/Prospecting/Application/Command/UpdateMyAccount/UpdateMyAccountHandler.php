@@ -35,8 +35,8 @@ final class UpdateMyAccountHandler
             $user->updateAccount(
                 userName: $command->userName,
                 name: PersonName::fromParts($command->firstName, $command->lastName),
-                email: Email::tryFromString($command->email),
-                phoneNumber: PhoneNumber::tryFromString($command->phoneNumber),
+                email: $command->email ? Email::fromString($command->email) : null,
+                phoneNumber: $command->phoneNumber ? PhoneNumber::fromString($command->phoneNumber) : null,
                 language: $command->language,
                 password: $command->password,
             );

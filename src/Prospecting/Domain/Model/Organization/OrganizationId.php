@@ -15,11 +15,6 @@ final readonly class OrganizationId
         return new self($value);
     }
 
-    public static function tryFromString(?string $value): ?self
-    {
-        return $value !== null ? new self($value) : null;
-    }
-
     public function equals(self $other): bool
     {
         return $this->value === $other->value;

@@ -130,15 +130,15 @@ final class OrganizationBuilder
             id: OrganizationId::fromString($this->id),
             ownerId: OrganizationId::fromString($this->ownerId),
             corporateName: $this->corporateName,
-            email: Email::tryFromString($this->email),
-            phoneNumber: PhoneNumber::tryFromString($this->phoneNumber),
+            email: $this->email ? Email::fromString($this->email) : null,
+            phoneNumber: $this->phoneNumber ? PhoneNumber::fromString($this->phoneNumber) : null,
             language: $this->language,
             form: $this->form,
             type: $this->type,
             observations: $this->observations,
             address: $this->address,
             logo: $this->logo,
-            holdingId: OrganizationId::tryFromString($this->holdingId),
+            holdingId: $this->holdingId ? OrganizationId::fromString($this->holdingId) : null,
         );
 
         if ($this->geoPoint !== null) {

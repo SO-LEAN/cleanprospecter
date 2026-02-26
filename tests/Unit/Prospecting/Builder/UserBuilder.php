@@ -100,8 +100,8 @@ final class UserBuilder
             userName: $this->userName,
             organizationId: OrganizationId::fromString($this->organizationId),
             name: PersonName::fromParts($this->firstName, $this->lastName),
-            email: Email::tryFromString($this->email),
-            phoneNumber: PhoneNumber::tryFromString($this->phoneNumber),
+            email: $this->email ? Email::fromString($this->email) : null,
+            phoneNumber: $this->phoneNumber ? PhoneNumber::fromString($this->phoneNumber) : null,
             language: $this->language,
             roles: $this->roles,
         );
