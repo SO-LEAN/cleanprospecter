@@ -229,18 +229,18 @@ final readonly class OrganizationReadModel
 
 ### 6. Value Objects for IDs
 
-Each aggregate has a typed ID value object. No more `mixed $id`:
+Each aggregate has a typed ID value object with a private constructor. No more `mixed $id`:
 
 ```php
 final readonly class OrganizationId
 {
-    public function __construct(
+    private function __construct(
         public string $value,
     ) {}
 
-    public static function generate(): self
+    public static function fromString(string $value): self
     {
-        return new self(Uuid::uuid4()->toString());
+        return new self($value);
     }
 
     public function equals(self $other): bool
@@ -332,6 +332,53 @@ Prefer **composition** and **duplication** over inheritance:
 - No `Event` abstract base class. `Call`, `Email`, etc. are standalone.
 - Some duplication (email, phoneNumber on both Organization and Prospect) is acceptable and preferred over a shared hierarchy.
 
+### 15. Clean Code Principles
+
+The codebase follows **Clean Code** (Robert C. Martin) principles:
+
+- **No comments in code.** Code must be self-explanatory through clear naming. The only acceptable annotations are PHPDoc type hints (`@var`, `@param`, `@return`, `@template`) required for static analysis.
+- **Meaningful names.** Classes, methods, and variables must reveal intent. No abbreviations, no cryptic names.
+- **Small functions.** Each method does one thing. Extract private methods with intention-revealing names instead of adding comments.
+- **No dead code.** Remove unused imports, methods, and variables. Never comment out code — delete it (git has history).
+- **Boy Scout Rule.** Leave the code cleaner than you found it.
+- **Single Responsibility.** Each class has one reason to change.
+- **DRY within reason.** Eliminate duplication only when the duplicated code serves the same purpose. Prefer duplication over wrong abstraction.
+- **Fail fast.** Validate at construction time (value objects), throw exceptions early.
+- **Immutability by default.** Use `readonly` classes and properties wherever possible. Mutable state only in aggregates where it's part of the domain model.
+
+### 16. Value Objects Use Private Constructor + Named Constructor
+
+Value objects always have a **private constructor** and expose one or more **named static constructors** that reveal intent:
+
+```php
+final readonly class OrganizationId
+{
+    private function __construct(
+        public string $value,
+    ) {}
+
+    public static function fromString(string $value): self
+    {
+        return new self($value);
+    }
+}
+
+final readonly class Address
+{
+    private function __construct(
+        public ?string $street,
+        public ?string $postalCode,
+        public ?string $city,
+        public ?string $country,
+    ) {}
+
+    public static function create(?string $street, ?string $postalCode, ?string $city, ?string $country): self
+    {
+        return new self($street, $postalCode, $city, $country);
+    }
+}
+```
+
 ## Modern PHP 8.5 Features to Use
 
 - **`readonly` classes** for DTOs, value objects, read models, commands, queries, events
@@ -352,6 +399,20 @@ Prefer **composition** and **duplication** over inheritance:
 ### Philosophy: Test the Hexagon Input
 
 We test the **application layer** (command/query handlers) as the entry point to the hexagon. This is the boundary where the outside world interacts with our domain.
+
+### Test Naming Convention
+
+- Use `#[Test]` attribute instead of `test` method prefix.
+- Method names start with `should` and describe the expected behavior.
+- No comments in tests — the method name IS the documentation.
+
+```php
+#[Test]
+public function shouldRegisterAndRaiseDomainEvent(): void { ... }
+
+#[Test]
+public function shouldThrowWhenOwnerNotFound(): void { ... }
+```
 
 ### No PHPUnit Mocks
 

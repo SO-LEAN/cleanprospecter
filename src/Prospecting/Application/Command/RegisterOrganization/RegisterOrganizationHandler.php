@@ -30,14 +30,12 @@ final class RegisterOrganizationHandler
     {
         $id = $this->organizationRepository->nextId();
 
-        // Verify owner exists
         try {
             $this->organizationRepository->ofId(OrganizationId::fromString($command->ownerId));
         } catch (OrganizationNotFoundException) {
             throw new OrganizationNotFoundException(sprintf('Owner with #ID %s not found', $command->ownerId));
         }
 
-        // Verify holding exists if specified
         if ($command->holdingId !== null) {
             try {
                 $this->organizationRepository->ofId(OrganizationId::fromString($command->holdingId));

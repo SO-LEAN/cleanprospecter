@@ -29,7 +29,6 @@ final class UpdateOrganizationProfileHandler
         $organizationId = OrganizationId::fromString($command->organizationId);
         $organization = $this->organizationRepository->ofId($organizationId);
 
-        // Verify holding exists if specified
         if ($command->holdingId !== null) {
             try {
                 $this->organizationRepository->ofId(OrganizationId::fromString($command->holdingId));

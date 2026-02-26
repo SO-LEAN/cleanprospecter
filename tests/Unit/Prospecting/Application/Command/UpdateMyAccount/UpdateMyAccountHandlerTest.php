@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Prospecting\Application\Command\UpdateMyAccount;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Solean\Prospecting\Application\Command\UpdateMyAccount\UpdateMyAccountCommand;
 use Solean\Prospecting\Application\Command\UpdateMyAccount\UpdateMyAccountHandler;
@@ -45,7 +46,6 @@ final class UpdateMyAccountHandlerTest extends TestCase
             $this->notifier,
         );
 
-        // Seed data
         $owner = Organization::register(
             id: OrganizationId::fromString('100'),
             ownerId: OrganizationId::fromString('100'),
@@ -65,7 +65,8 @@ final class UpdateMyAccountHandlerTest extends TestCase
         $this->userRepository->save($user);
     }
 
-    public function testUpdateAccountBasicInfo(): void
+    #[Test]
+    public function shouldUpdateAccountBasicInfo(): void
     {
         $command = new UpdateMyAccountCommand(
             userId: '1',

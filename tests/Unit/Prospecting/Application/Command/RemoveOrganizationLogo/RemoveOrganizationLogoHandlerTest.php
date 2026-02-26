@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Prospecting\Application\Command\RemoveOrganizationLogo;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Solean\Prospecting\Application\Command\RemoveOrganizationLogo\RemoveOrganizationLogoCommand;
 use Solean\Prospecting\Application\Command\RemoveOrganizationLogo\RemoveOrganizationLogoHandler;
@@ -33,7 +34,6 @@ final class RemoveOrganizationLogoHandlerTest extends TestCase
             $this->notifier,
         );
 
-        // Seed organization with logo
         $owner = Organization::register(
             id: OrganizationId::fromString('100'),
             ownerId: OrganizationId::fromString('100'),
@@ -50,7 +50,8 @@ final class RemoveOrganizationLogoHandlerTest extends TestCase
         $this->organizationRepository->save($org);
     }
 
-    public function testRemoveLogo(): void
+    #[Test]
+    public function shouldRemoveLogoAndDeleteFile(): void
     {
         $command = new RemoveOrganizationLogoCommand(organizationId: '1');
 

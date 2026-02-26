@@ -84,8 +84,6 @@ final class User
         $this->picture = $picture;
     }
 
-    // --- Internal getters for domain logic and read model mapping ---
-
     public function id(): UserId
     {
         return $this->id;

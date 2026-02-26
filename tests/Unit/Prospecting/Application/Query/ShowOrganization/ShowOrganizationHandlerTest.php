@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Prospecting\Application\Query\ShowOrganization;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Solean\Prospecting\Application\Query\ShowOrganization\ShowOrganizationHandler;
 use Solean\Prospecting\Application\Query\ShowOrganization\ShowOrganizationQuery;
@@ -33,7 +34,6 @@ final class ShowOrganizationHandlerTest extends TestCase
             $this->organizationRepository,
         );
 
-        // Seed owner
         $owner = Organization::register(
             id: OrganizationId::fromString('100'),
             ownerId: OrganizationId::fromString('100'),
@@ -42,7 +42,8 @@ final class ShowOrganizationHandlerTest extends TestCase
         $this->organizationRepository->save($owner);
     }
 
-    public function testShowMinimalOrganization(): void
+    #[Test]
+    public function shouldShowMinimalOrganization(): void
     {
         $org = Organization::register(
             id: OrganizationId::fromString('1'),
@@ -64,7 +65,8 @@ final class ShowOrganizationHandlerTest extends TestCase
         $this->assertNull($readModel->holdingId);
     }
 
-    public function testShowFullOrganization(): void
+    #[Test]
+    public function shouldShowFullOrganization(): void
     {
         $org = Organization::register(
             id: OrganizationId::fromString('1'),
@@ -107,7 +109,8 @@ final class ShowOrganizationHandlerTest extends TestCase
         $this->assertEquals('100', $readModel->holdingId);
     }
 
-    public function testThrowsWhenOrganizationNotFound(): void
+    #[Test]
+    public function shouldThrowWhenOrganizationNotFound(): void
     {
         $this->expectException(OrganizationNotFoundException::class);
         ($this->handler)(new ShowOrganizationQuery('999'), $this->presenter);

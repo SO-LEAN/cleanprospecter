@@ -143,8 +143,6 @@ final class Organization
         $this->language = $language;
     }
 
-    // --- Internal getters for domain logic and read model mapping ---
-
     public function id(): OrganizationId
     {
         return $this->id;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Prospecting\Application\Command\RegisterOrganization;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Solean\Prospecting\Application\Command\RegisterOrganization\RegisterOrganizationCommand;
 use Solean\Prospecting\Application\Command\RegisterOrganization\RegisterOrganizationHandler;
@@ -39,7 +40,6 @@ final class RegisterOrganizationHandlerTest extends TestCase
             $this->notifier,
         );
 
-        // Seed owner organization
         $owner = Organization::register(
             id: OrganizationId::fromString('100'),
             ownerId: OrganizationId::fromString('100'),
@@ -48,7 +48,8 @@ final class RegisterOrganizationHandlerTest extends TestCase
         $this->organizationRepository->save($owner);
     }
 
-    public function testRegisterOrganizationWithMinimalData(): void
+    #[Test]
+    public function shouldRegisterWithMinimalData(): void
     {
         $command = new RegisterOrganizationCommand(
             ownerId: '100',
@@ -62,7 +63,8 @@ final class RegisterOrganizationHandlerTest extends TestCase
         $this->assertEquals('Organization created !', $this->notifier->successes[0]);
     }
 
-    public function testRegisterOrganizationWithAddress(): void
+    #[Test]
+    public function shouldRegisterWithAddress(): void
     {
         $this->geoLocation->willReturn(GeoPoint::fromCoordinates(7.7663456, 48.5554971));
 
@@ -80,7 +82,8 @@ final class RegisterOrganizationHandlerTest extends TestCase
         $this->assertEquals(2, $this->organizationRepository->count());
     }
 
-    public function testRegisterOrganizationWithHolding(): void
+    #[Test]
+    public function shouldRegisterWithHolding(): void
     {
         $holding = Organization::register(
             id: OrganizationId::fromString('200'),
@@ -100,7 +103,8 @@ final class RegisterOrganizationHandlerTest extends TestCase
         $this->assertEquals(3, $this->organizationRepository->count());
     }
 
-    public function testThrowsWhenOwnerNotFound(): void
+    #[Test]
+    public function shouldThrowWhenOwnerNotFound(): void
     {
         $command = new RegisterOrganizationCommand(
             ownerId: '999',
@@ -111,7 +115,8 @@ final class RegisterOrganizationHandlerTest extends TestCase
         ($this->handler)($command);
     }
 
-    public function testThrowsWhenHoldingNotFound(): void
+    #[Test]
+    public function shouldThrowWhenHoldingNotFound(): void
     {
         $command = new RegisterOrganizationCommand(
             ownerId: '100',
@@ -123,7 +128,8 @@ final class RegisterOrganizationHandlerTest extends TestCase
         ($this->handler)($command);
     }
 
-    public function testThrowsWhenMissingCorporateNameAndEmail(): void
+    #[Test]
+    public function shouldThrowWhenMissingCorporateNameAndEmail(): void
     {
         $command = new RegisterOrganizationCommand(
             ownerId: '100',

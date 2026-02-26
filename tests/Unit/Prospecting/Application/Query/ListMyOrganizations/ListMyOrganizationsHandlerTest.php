@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Prospecting\Application\Query\ListMyOrganizations;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Solean\Prospecting\Application\Query\ListMyOrganizations\ListMyOrganizationsHandler;
 use Solean\Prospecting\Application\Query\ListMyOrganizations\ListMyOrganizationsQuery;
@@ -30,7 +31,6 @@ final class ListMyOrganizationsHandlerTest extends TestCase
             $this->organizationRepository,
         );
 
-        // Seed owner organization
         $owner = Organization::register(
             id: OrganizationId::fromString('100'),
             ownerId: OrganizationId::fromString('100'),
@@ -39,7 +39,8 @@ final class ListMyOrganizationsHandlerTest extends TestCase
         $this->organizationRepository->save($owner);
     }
 
-    public function testListEmpty(): void
+    #[Test]
+    public function shouldReturnEmptyListWhenNoOrganizationsOwned(): void
     {
         ($this->handler)(new ListMyOrganizationsQuery(ownerOrganizationId: '999'), $this->presenter);
 
@@ -49,7 +50,8 @@ final class ListMyOrganizationsHandlerTest extends TestCase
         $this->assertCount(0, $this->presenter->organizations);
     }
 
-    public function testListOrganizations(): void
+    #[Test]
+    public function shouldListOrganizationsWithReadModelMapping(): void
     {
         $org1 = Organization::register(
             id: OrganizationId::fromString('1'),
@@ -76,7 +78,6 @@ final class ListMyOrganizationsHandlerTest extends TestCase
         $this->assertEquals(1, $this->presenter->totalPages);
         $this->assertCount(3, $this->presenter->organizations);
 
-        // Check first organization read model has proper mapping
         $acme = null;
         foreach ($this->presenter->organizations as $org) {
             if ($org->id === '1') {
@@ -93,7 +94,8 @@ final class ListMyOrganizationsHandlerTest extends TestCase
         $this->assertEquals(48.8566, $acme->latitude);
     }
 
-    public function testListWithSearchQuery(): void
+    #[Test]
+    public function shouldFilterBySearchQuery(): void
     {
         $org1 = Organization::register(
             id: OrganizationId::fromString('1'),
@@ -116,7 +118,8 @@ final class ListMyOrganizationsHandlerTest extends TestCase
         $this->assertEquals('1', $this->presenter->organizations[0]->id);
     }
 
-    public function testListWithPagination(): void
+    #[Test]
+    public function shouldPaginateResults(): void
     {
         for ($i = 1; $i <= 5; $i++) {
             $org = Organization::register(
@@ -127,7 +130,6 @@ final class ListMyOrganizationsHandlerTest extends TestCase
             $this->organizationRepository->save($org);
         }
 
-        // Page 1, 2 per page (owner + 5 orgs = 6 total owned by '100')
         ($this->handler)(new ListMyOrganizationsQuery(ownerOrganizationId: '100', page: 1, maxPerPage: 2), $this->presenter);
 
         $this->assertEquals(1, $this->presenter->currentPage);
@@ -135,16 +137,15 @@ final class ListMyOrganizationsHandlerTest extends TestCase
         $this->assertEquals(3, $this->presenter->totalPages);
         $this->assertCount(2, $this->presenter->organizations);
 
-        // Page 3
         ($this->handler)(new ListMyOrganizationsQuery(ownerOrganizationId: '100', page: 3, maxPerPage: 2), $this->presenter);
 
         $this->assertEquals(3, $this->presenter->currentPage);
         $this->assertCount(2, $this->presenter->organizations);
     }
 
-    public function testListOnlyShowsOwnedOrganizations(): void
+    #[Test]
+    public function shouldOnlyShowOwnedOrganizations(): void
     {
-        // Org owned by different owner
         $otherOwner = Organization::register(
             id: OrganizationId::fromString('200'),
             ownerId: OrganizationId::fromString('200'),
@@ -159,7 +160,6 @@ final class ListMyOrganizationsHandlerTest extends TestCase
         );
         $this->organizationRepository->save($otherOrg);
 
-        // Org owned by our owner
         $myOrg = Organization::register(
             id: OrganizationId::fromString('1'),
             ownerId: OrganizationId::fromString('100'),
@@ -169,7 +169,6 @@ final class ListMyOrganizationsHandlerTest extends TestCase
 
         ($this->handler)(new ListMyOrganizationsQuery(ownerOrganizationId: '100'), $this->presenter);
 
-        // Should only see owner (100) + myOrg (1), not otherOwner or otherOrg
         $this->assertEquals(2, $this->presenter->total);
         $ids = array_map(fn ($o) => $o->id, $this->presenter->organizations);
         $this->assertContains('100', $ids);

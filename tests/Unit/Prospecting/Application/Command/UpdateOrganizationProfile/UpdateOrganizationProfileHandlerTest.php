@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Prospecting\Application\Command\UpdateOrganizationProfile;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Solean\Prospecting\Application\Command\UpdateOrganizationProfile\UpdateOrganizationProfileCommand;
 use Solean\Prospecting\Application\Command\UpdateOrganizationProfile\UpdateOrganizationProfileHandler;
@@ -38,7 +39,6 @@ final class UpdateOrganizationProfileHandlerTest extends TestCase
             $this->notifier,
         );
 
-        // Seed organizations
         $owner = Organization::register(
             id: OrganizationId::fromString('100'),
             ownerId: OrganizationId::fromString('100'),
@@ -55,7 +55,8 @@ final class UpdateOrganizationProfileHandlerTest extends TestCase
         $this->organizationRepository->save($org);
     }
 
-    public function testUpdateProfile(): void
+    #[Test]
+    public function shouldUpdateProfile(): void
     {
         $command = new UpdateOrganizationProfileCommand(
             organizationId: '1',
@@ -74,7 +75,8 @@ final class UpdateOrganizationProfileHandlerTest extends TestCase
         $this->assertCount(1, $this->notifier->successes);
     }
 
-    public function testUpdateWithAddress(): void
+    #[Test]
+    public function shouldUpdateWithAddress(): void
     {
         $this->geoLocation->willReturn(GeoPoint::fromCoordinates(7.7663456, 48.5554971));
 
@@ -95,7 +97,8 @@ final class UpdateOrganizationProfileHandlerTest extends TestCase
         $this->assertEquals(7.7663456, $updated->geoPoint()->longitude);
     }
 
-    public function testUpdateWithHolding(): void
+    #[Test]
+    public function shouldUpdateWithHolding(): void
     {
         $holding = Organization::register(
             id: OrganizationId::fromString('200'),
@@ -117,7 +120,8 @@ final class UpdateOrganizationProfileHandlerTest extends TestCase
         $this->assertEquals('200', $updated->holdingId()->value);
     }
 
-    public function testThrowsWhenOrganizationNotFound(): void
+    #[Test]
+    public function shouldThrowWhenOrganizationNotFound(): void
     {
         $command = new UpdateOrganizationProfileCommand(
             organizationId: '999',
@@ -128,7 +132,8 @@ final class UpdateOrganizationProfileHandlerTest extends TestCase
         ($this->handler)($command);
     }
 
-    public function testThrowsWhenHoldingNotFound(): void
+    #[Test]
+    public function shouldThrowWhenHoldingNotFound(): void
     {
         $command = new UpdateOrganizationProfileCommand(
             organizationId: '1',

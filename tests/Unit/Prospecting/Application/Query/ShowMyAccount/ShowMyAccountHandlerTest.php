@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Prospecting\Application\Query\ShowMyAccount;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Solean\Prospecting\Application\Query\ShowMyAccount\ShowMyAccountHandler;
 use Solean\Prospecting\Application\Query\ShowMyAccount\ShowMyAccountQuery;
@@ -39,7 +40,6 @@ final class ShowMyAccountHandlerTest extends TestCase
             $this->organizationRepository,
         );
 
-        // Seed organization
         $org = Organization::register(
             id: OrganizationId::fromString('100'),
             ownerId: OrganizationId::fromString('100'),
@@ -49,7 +49,6 @@ final class ShowMyAccountHandlerTest extends TestCase
         );
         $this->organizationRepository->save($org);
 
-        // Seed user
         $user = User::create(
             id: UserId::fromString('1'),
             userName: 'john.doe',
@@ -62,7 +61,8 @@ final class ShowMyAccountHandlerTest extends TestCase
         $this->userRepository->save($user);
     }
 
-    public function testShowAccount(): void
+    #[Test]
+    public function shouldShowAccount(): void
     {
         ($this->handler)(new ShowMyAccountQuery('1', '100'), $this->presenter);
 
@@ -81,7 +81,8 @@ final class ShowMyAccountHandlerTest extends TestCase
         $this->assertEquals(5000, $readModel->organizationLogoSize);
     }
 
-    public function testShowAccountWithPicture(): void
+    #[Test]
+    public function shouldShowAccountWithPicture(): void
     {
         $user = $this->userRepository->ofId(UserId::fromString('1'));
         $user->attachPicture(Logo::create('http://storage.test/picture.jpg', 'jpg', 1200));
@@ -95,13 +96,15 @@ final class ShowMyAccountHandlerTest extends TestCase
         $this->assertEquals(1200, $readModel->pictureSize);
     }
 
-    public function testThrowsWhenUserNotFound(): void
+    #[Test]
+    public function shouldThrowWhenUserNotFound(): void
     {
         $this->expectException(UserNotFoundException::class);
         ($this->handler)(new ShowMyAccountQuery('999', '100'), $this->presenter);
     }
 
-    public function testThrowsWhenOrganizationNotFound(): void
+    #[Test]
+    public function shouldThrowWhenOrganizationNotFound(): void
     {
         $this->expectException(OrganizationNotFoundException::class);
         ($this->handler)(new ShowMyAccountQuery('1', '999'), $this->presenter);

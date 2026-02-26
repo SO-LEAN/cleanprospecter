@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Prospecting\Domain\Model\Organization;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Solean\Prospecting\Domain\Exception\ValidationException;
 use Solean\Prospecting\Domain\Model\Organization\Organization;
@@ -17,7 +18,8 @@ use Solean\Prospecting\Domain\Model\Shared\PhoneNumber;
 
 final class OrganizationTest extends TestCase
 {
-    public function testRegisterCreatesOrganizationAndRaisesEvent(): void
+    #[Test]
+    public function shouldRegisterAndRaiseDomainEvent(): void
     {
         $org = Organization::register(
             id: OrganizationId::fromString('1'),
@@ -37,7 +39,8 @@ final class OrganizationTest extends TestCase
         $this->assertEquals('1', $events[0]->organizationId->value);
     }
 
-    public function testRegisterFailsWithoutCorporateNameOrEmail(): void
+    #[Test]
+    public function shouldFailRegistrationWithoutCorporateNameOrEmail(): void
     {
         $this->expectException(ValidationException::class);
 
@@ -47,7 +50,8 @@ final class OrganizationTest extends TestCase
         );
     }
 
-    public function testUpdateProfile(): void
+    #[Test]
+    public function shouldUpdateProfile(): void
     {
         $org = Organization::register(
             id: OrganizationId::fromString('1'),
@@ -72,7 +76,8 @@ final class OrganizationTest extends TestCase
         $this->assertNotNull($org->address());
     }
 
-    public function testAttachAndRemoveLogo(): void
+    #[Test]
+    public function shouldAttachAndRemoveLogo(): void
     {
         $org = Organization::register(
             id: OrganizationId::fromString('1'),
@@ -89,7 +94,8 @@ final class OrganizationTest extends TestCase
         $this->assertNull($org->logo());
     }
 
-    public function testPinpoint(): void
+    #[Test]
+    public function shouldPinpoint(): void
     {
         $org = Organization::register(
             id: OrganizationId::fromString('1'),
@@ -102,7 +108,8 @@ final class OrganizationTest extends TestCase
         $this->assertEquals(2.3522, $org->geoPoint()->longitude);
     }
 
-    public function testFullName(): void
+    #[Test]
+    public function shouldConcatenateFullName(): void
     {
         $org = Organization::register(
             id: OrganizationId::fromString('1'),
