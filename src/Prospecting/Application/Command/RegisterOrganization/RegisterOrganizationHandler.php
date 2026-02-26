@@ -53,15 +53,15 @@ final class RegisterOrganizationHandler
             id: $id,
             ownerId: OrganizationId::fromString($command->ownerId),
             corporateName: $command->corporateName,
-            email: $command->email ? Email::fromString($command->email) : null,
-            phoneNumber: $command->phoneNumber ? PhoneNumber::fromString($command->phoneNumber) : null,
+            email: Email::tryFromString($command->email),
+            phoneNumber: PhoneNumber::tryFromString($command->phoneNumber),
             language: $command->language,
             form: $command->form,
             type: $command->type,
             observations: $command->observations,
             address: $address,
             logo: $logo,
-            holdingId: $command->holdingId ? OrganizationId::fromString($command->holdingId) : null,
+            holdingId: OrganizationId::tryFromString($command->holdingId),
         );
 
         if ($address !== null) {
